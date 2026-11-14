@@ -112,10 +112,16 @@ ai-office/
 - 업무 내용도 서비스·파이프라인 수준의 요약만 담습니다.
 - 이미지·아이콘에는 메타데이터(작성자·위치 등)를 넣지 않았습니다.
 
-## GitHub Pages 배포
+## GitHub Pages 배포 (완료 · 2026-11-15)
+
+- 실제 배포 주소: **https://gene4517-bot.github.io/ai-office/** (HTTPS, 빌드 완료)
+- Pages 게시 소스: `gh-pages` 브랜치 / `/ (root)` — 피클 GitHub 앱에 Pages 권한이 없어 API로 켤 수 없었고,
+  `gh-pages` 브랜치를 푸시하자 GitHub이 자동으로 Pages를 활성화했습니다.
+- **콘텐츠를 고칠 때는 `main`과 `gh-pages` 두 브랜치를 모두 갱신**해야 화면에 반영됩니다:
+  `git push origin main && git push -f origin main:gh-pages`
 
 1. 이 폴더의 내용물을 저장소 **루트**에 올립니다(`assets/` 포함, 상대경로라 그대로 동작).
-2. Settings → Pages → Branch `main` / 폴더 `/ (root)` 로 지정.
+2. (다른 계정에 다시 배포할 때) Settings → Pages → Branch `main` / 폴더 `/ (root)` 로 지정.
 3. 주소: `https://<계정>.github.io/ai-office/`
 4. `status.json` 은 같은 폴더에 두고, 갱신은 파일만 수정하면 됩니다.
    (브라우저 캐시 때문에 최대 20초 + 캐시 헤더만큼 늦을 수 있습니다.)
