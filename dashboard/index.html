@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0a0b" />
+<meta name="description" content="PC·태블릿 다크 컨트롤 대시보드 · 시스템 지표 · 화면 캡처 · 앱 실행" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="PC 컨트롤" />
+<title>PC 컨트롤 대시보드</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png" />
+<link rel="apple-touch-icon" href="../assets/icon-192.png" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header id="bar">
+  <div class="brand">
+    <span class="logo" id="brandLogo" aria-hidden="true"></span>
+    <div>
+      <b>PC 컨트롤</b>
+      <small id="barSub">오프라인 데모 모드</small>
+    </div>
+  </div>
+  <div class="bar-actions">
+    <span class="pill" id="connPill"><i></i><span id="connPillText">오프라인 데모</span></span>
+    <button class="iconbtn" id="btnRefresh" title="전체 새로고침" aria-label="전체 새로고침"></button>
+    <button class="iconbtn" id="btnSettings" title="연결 설정" aria-label="연결 설정"></button>
+  </div>
+</header>
+
+<div id="wrap">
+
+  <!-- 시스템 지표 -->
+  <section class="g4" id="metrics">
+    <button class="card c2" id="cardPC" aria-label="PC 연결 설정 열기">
+      <div class="hd">
+        <span class="ico" data-ico="monitor"></span>
+        <span class="ttl">PC 브릿지</span>
+        <span class="meta" id="pcMeta">—</span>
+      </div>
+      <div class="state">
+        <span class="big" id="pcState">오프라인</span>
+        <span class="tag" id="pcTag">데모 모드</span>
+      </div>
+      <div id="pcSub">연결 설정에서 PC 주소와 보안 토큰을 넣어 주세요.</div>
+      <div class="foot">
+        <span class="chip" id="chipCapture">화면 캡처 대기</span>
+        <span class="chip" id="chipLaunch">앱 실행 대기</span>
+        <span class="chip link" id="chipCfg">연결 설정 →</span>
+      </div>
+    </button>
+
+    <div class="card" id="cardCPU">
+      <div class="hd">
+        <span class="ico" data-ico="cpu"></span>
+        <span class="ttl">CPU</span>
+        <span class="meta" id="cpuCores"></span>
+      </div>
+      <div class="bigrow"><span class="big" id="cpuVal">—</span></div>
+      <div class="meter" id="cpuMeter"><i></i></div>
+    </div>
+
+    <div class="card" id="cardRAM">
+      <div class="hd">
+        <span class="ico" data-ico="ram"></span>
+        <span class="ttl">RAM</span>
+        <span class="meta" id="ramMeta"></span>
+      </div>
+      <div class="bigrow"><span class="big" id="ramVal">—</span></div>
+      <div class="meter" id="ramMeter"><i></i></div>
+    </div>
+
+    <div class="card" id="cardBAT">
+      <div class="hd">
+        <span class="ico" data-ico="battery"></span>
+        <span class="ttl">배터리</span>
+        <span class="meta" id="batMeta"></span>
+      </div>
+      <div class="bigrow"><span class="big" id="batVal">—</span></div>
+      <div class="meter ok" id="batMeter"><i></i></div>
+      <div class="note" id="batNote">PC 연결 후 표시</div>
+    </div>
+
+    <div class="card" id="cardWxA">
+      <div class="hd">
+        <span class="ico" data-ico="cloud"></span>
+        <span class="ttl">안성 날씨</span>
+        <span class="meta" id="wxAMeta"></span>
+      </div>
+      <div class="bigrow">
+        <span class="big" id="wxAVal">—</span>
+        <span class="aside" id="wxADesc">불러오는 중</span>
+      </div>
+      <div class="meter info" id="wxAMeter"><i></i></div>
+      <div class="note" id="wxANote">최저 — · 최고 —</div>
+    </div>
+
+    <div class="card" id="cardWxC">
+      <div class="hd">
+        <span class="ico" data-ico="cloud"></span>
+        <span class="ttl">창원 날씨</span>
+        <span class="meta" id="wxCMeta"></span>
+      </div>
+      <div class="bigrow">
+        <span class="big" id="wxCVal">—</span>
+        <span class="aside" id="wxCDesc">불러오는 중</span>
+      </div>
+      <div class="meter info" id="wxCMeter"><i></i></div>
+      <div class="note" id="wxCNote">최저 — · 최고 —</div>
+    </div>
+
+    <button class="card" id="cardShot" aria-label="PC 화면 캡처">
+      <div class="hd">
+        <span class="ico" data-ico="scan"></span>
+        <span class="ttl">화면 캡처</span>
+        <span class="meta" id="shotMeta"></span>
+      </div>
+      <div class="lbl" style="margin-top:auto;font-size:15px;font-weight:700;">PC 화면 보기</div>
+      <div class="note" id="shotNote">PC 연결 시 실제 캡처</div>
+    </button>
+  </section>
+
+  <!-- 1~12 작업 상태 + 복사 / 지우기 -->
+  <section class="g4" id="tools">
+    <div class="card c2" id="cardSlots">
+      <div class="hd">
+        <span class="ico" data-ico="grid"></span>
+        <span class="ttl">작업 상태 1–12</span>
+        <span class="meta" id="slotMeta">탭해서 색 변경</span>
+      </div>
+      <div class="slots" id="slots"></div>
+    </div>
+
+    <button class="card cmd" id="cmdCopy" data-id="copy">
+      <div class="top">
+        <span class="ico" data-ico="copy"></span>
+        <span class="mark">↵</span>
+      </div>
+      <div class="lbl">copy to clipboard</div>
+      <div class="sub">현재 상태 요약 복사</div>
+    </button>
+
+    <button class="card cmd" id="cmdClear" data-id="clear">
+      <div class="top">
+        <span class="ico" data-ico="clear"></span>
+        <span class="mark">↵</span>
+      </div>
+      <div class="lbl">clear</div>
+      <div class="sub">작업 상태 초기화</div>
+    </button>
+  </section>
+
+  <!-- 명령 · 프롬프트 -->
+  <section class="g4" id="cmds"></section>
+
+  <!-- Windows 앱 실행 -->
+  <section class="g4" id="apps"></section>
+
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<!-- 연결 설정 -->
+<div class="modal" id="modalCfg" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="cfgTitle">
+    <h2 id="cfgTitle">PC 연결 설정</h2>
+    <p class="lead">
+      PC에서 <b>start_bridge.bat</b>을 실행하면 콘솔에 주소와 보안 토큰이 나옵니다.
+      그 두 값을 아래에 넣고 저장하세요. 값은 이 브라우저(localStorage)에만 저장되고 서버로 보내지 않습니다.
+    </p>
+    <div class="field">
+      <label for="cfgUrl">PC 브릿지 주소</label>
+      <input id="cfgUrl" type="url" inputmode="url" autocomplete="off" spellcheck="false"
+             placeholder="http://192.168.0.10:8765" />
+      <div class="hint">같은 Wi-Fi면 <b>http://PC의IP:8765</b> · 이 PC 자체라면 http://localhost:8765 · Tailscale을 쓰면 <b>http://100.x.x.x:8765</b></div>
+    </div>
+    <div class="field">
+      <label for="cfgToken">보안 토큰</label>
+      <input id="cfgToken" type="text" autocomplete="off" spellcheck="false"
+             placeholder="config.json 의 token 값" />
+      <div class="hint">PC 폴더의 <b>config.json</b> 을 메모장으로 열면 <b>token</b> 항목이 있습니다. 전체를 복사해 붙여 넣으세요.</div>
+    </div>
+    <div class="field">
+      <label for="cfgNotion">노션 본부 링크 (선택)</label>
+      <input id="cfgNotion" type="url" inputmode="url" autocomplete="off" spellcheck="false" />
+      <div class="hint">‘노션 본부’ 타일을 눌렀을 때 열 주소입니다. 비워 두면 notion.so 홈으로 갑니다.</div>
+    </div>
+    <div class="row">
+      <button class="btn primary" id="cfgSave">저장하고 연결</button>
+      <button class="btn" id="cfgTest">연결 테스트</button>
+      <button class="btn ghost" id="cfgClose">닫기</button>
+    </div>
+    <div class="note" id="cfgResult" style="margin-top:14px;font-size:11.5px;color:#8b8b8f;line-height:1.6;"></div>
+  </div>
+</div>
+
+<!-- 화면 캡처 -->
+<div class="modal" id="modalShot" hidden>
+  <div class="sheet wide" role="dialog" aria-modal="true" aria-labelledby="shotTitle">
+    <h2 id="shotTitle">PC 화면 캡처</h2>
+    <p class="lead" id="shotLead">—</p>
+    <div class="shotwrap" id="shotWrap" hidden><img id="shotImg" alt="PC 화면 캡처" /></div>
+    <div class="shotph" id="shotPh">PC 화면을 캡처하는 중…</div>
+    <div class="shotbar">
+      <button class="btn primary" id="shotAgain">다시 캡처</button>
+      <a class="btn" id="shotSave" download="pc-capture.png">이미지로 저장</a>
+      <button class="btn ghost" id="shotClose">닫기</button>
+      <span class="meta" id="shotInfo"></span>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
