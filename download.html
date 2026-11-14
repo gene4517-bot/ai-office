@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 사무실 미디어 다운로드</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #141418;
+      color: #f3f4f6;
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .card {
+      width: 100%;
+      max-width: 480px;
+      background: #1e1f26;
+      border: 1px solid #2e303a;
+      border-radius: 18px;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+    h1 { font-size: 20px; margin: 0 0 8px; }
+    p { font-size: 14px; color: #a1a1aa; line-height: 1.5; margin: 0 0 18px; }
+    img {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid #2e303a;
+      margin-bottom: 18px;
+      display: block;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 14px 16px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+    .btn-primary { background: #3b82f6; color: #ffffff; }
+    .btn-secondary { background: #2c2e38; color: #e5e7eb; border: 1px solid #3f4250; }
+    .note { font-size: 12px; color: #9ca3af; margin-top: 8px; margin-bottom: 0; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🎞️ AI 사무실 스레드용 저장</h1>
+    <p>버튼을 누르면 폰의 <b>내 파일 → 다운로드</b> 폴더에 바로 저장됩니다.</p>
+    <img src="./assets/ai-office-threads.gif" alt="AI 사무실 움직이는 GIF" />
+    <a class="btn btn-primary" href="./assets/ai-office-threads.gif" download="ai-office-threads.gif">⬇️ GIF 파일 저장 (0.7MB · 3.6초)</a>
+    <a class="btn btn-secondary" href="./assets/ai-office-threads.mp4" download="ai-office-threads.mp4">🎬 MP4 동영상 저장 (스레드 멈춤 대비용)</a>
+    <p class="note">※ 스레드에 GIF가 정지 사진으로 올라가면 아래 MP4 동영상을 선택해서 올려 보세요!</p>
+  </div>
+</body>
+</html>
