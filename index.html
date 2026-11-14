@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#15120f" />
+<meta name="description" content="1인 기업 AI 사무실 라이브 대시보드 · 14명이 함께 일하는 움직이는 오피스" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png" />
+<link rel="apple-touch-icon" href="assets/icon-192.png" />
+<link rel="apple-touch-icon" sizes="192x192" href="assets/icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="AI 사무실" />
+<meta name="application-name" content="AI 사무실" />
+<title>AI 사무실 · 1인 기업 본부</title>
+<style>
+  :root{
+    --bg:#0b0908; --panel:#15110d; --card:#1d1711; --card2:#231c15; --line:#33281d;
+    --ink:#f6efe4; --dim:#bda98f; --dim2:#8a7660;
+    --gold:#f5b866; --ok:#6ee7b7; --meet:#7dd3fc; --brk:#fbbf24; --idle:#cbd5e1; --off:#94a3b8;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;height:100%;background:var(--bg);color:var(--ink);
+    font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic','Segoe UI',sans-serif;
+    -webkit-font-smoothing:antialiased}
+  body{overflow:hidden}
+  #app{display:flex;flex-direction:column;height:100vh;height:100dvh;width:100%;min-height:0}
+  #body{display:flex;flex-direction:column;flex:1 1 auto;min-height:0}
+
+  /* ---------- top bar ---------- */
+  #topbar{flex:0 0 auto;display:flex;align-items:center;gap:9px;padding:8px 11px;
+    background:linear-gradient(180deg,#1b1510,#120e0a);border-bottom:1px solid var(--line);z-index:6}
+  .brand{display:flex;align-items:center;gap:8px;min-width:0;overflow:hidden}
+  .logo{width:26px;height:26px;border-radius:9px;display:grid;place-items:center;font-size:13px;flex:0 0 auto;
+    background:linear-gradient(150deg,#f7c884,#e08b4c);color:#3a2410;font-weight:900;box-shadow:0 2px 8px rgba(224,139,76,.35)}
+  .brand b{display:block;font-size:13px;letter-spacing:-.3px;white-space:nowrap;line-height:1.2}
+  .brand small{display:block;font-size:10px;color:var(--dim2);font-variant-numeric:tabular-nums;letter-spacing:.2px}
+  #phases{margin-left:auto;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:2px 0;flex:0 1 auto;min-width:0}
+  #phases::-webkit-scrollbar{display:none}
+  #phases button{flex:0 0 auto;font:700 11px/1 inherit;color:var(--dim);background:#1a140f;border:1px solid #33281d;
+    padding:6px 9px;border-radius:999px;white-space:nowrap;cursor:pointer;transition:.15s}
+  #phases button.on{color:#2a1a08;background:linear-gradient(160deg,#ffd79b,#f0b064);border-color:#ffd79b;
+    box-shadow:0 2px 10px rgba(240,176,100,.25)}
+
+  /* ---------- stage ---------- */
+  #stage{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;background:radial-gradient(120% 90% at 50% 40%,#1a1410 0%,#0a0807 100%)}
+  #cv{display:block;width:100%;height:100%;touch-action:none}
+  .hud{position:absolute;left:8px;top:8px;display:flex;gap:3px;flex-wrap:nowrap;max-width:calc(100% - 56px);pointer-events:none;overflow:hidden}
+  .hud span{font:700 9px/1 inherit;padding:3.5px 5px;border-radius:7px;background:rgba(20,15,11,.72);
+    border:1px solid rgba(245,184,102,.14);color:#cbb79c;backdrop-filter:blur(6px);white-space:nowrap}
+  .hud span i{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:3px;vertical-align:middle}
+  .zoomctl{position:absolute;right:9px;bottom:9px;display:flex;flex-direction:column;gap:6px;z-index:4}
+  .zoomctl button{width:34px;height:34px;border-radius:10px;background:rgba(26,20,15,.86);border:1px solid var(--line);
+    color:var(--ink);font-size:15px;line-height:1;display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(8px)}
+  .zoomctl button:active{background:#2a2117}
+  .zoomctl .fit{font-size:11px;font-weight:800;letter-spacing:-.4px}
+
+  /* ---------- panel ---------- */
+  #panel{flex:0 0 auto;max-height:48vh;display:flex;flex-direction:column;background:var(--panel);border-top:1px solid var(--line);z-index:5}
+  .phead{flex:0 0 auto;padding:9px 12px 8px;border-bottom:1px solid var(--line)}
+  .prow{display:flex;align-items:center;gap:9px}
+  .prow .av{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-weight:900;font-size:12px;
+    color:#2a1a08;background:linear-gradient(145deg,#ffd79b,#e59a52);flex:0 0 auto;box-shadow:inset 0 -8px 14px rgba(0,0,0,.14)}
+  .pname{font-size:13.5px;font-weight:800;line-height:1.2}
+  .psub{font-size:10.5px;color:var(--dim);margin-top:2px}
+  .live{display:flex;align-items:center;gap:4px;margin-left:auto;font:800 9.5px/1 inherit;color:#0f1a12;
+    background:#6ee7b7;padding:5px 7px;border-radius:999px;flex:0 0 auto}
+  .live i{width:5px;height:5px;border-radius:50%;background:#0f1a12;animation:pulse 1.8s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+  .stats{display:flex;gap:5px;margin-top:8px}
+  .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:6px 7px}
+  .stat b{display:block;font-size:15px;font-weight:800;letter-spacing:-.5px;line-height:1.1}
+  .stat span{font-size:9.5px;color:var(--dim2)}
+
+  .tabs{display:flex;gap:4px;padding:7px 9px 0;flex:0 0 auto;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{flex:1 0 auto;padding:7px 9px;border-radius:9px 9px 0 0;background:transparent;border:1px solid transparent;border-bottom:none;
+    color:var(--dim);font:700 11.5px/1 inherit;cursor:pointer;white-space:nowrap}
+  .tabs button.on{background:var(--card);border-color:var(--line);color:var(--ink)}
+  .pane{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--card);
+    border-top:1px solid var(--line);padding:9px 10px calc(14px + env(safe-area-inset-bottom))}
+  .pane[hidden]{display:none}
+
+  .boardrow{display:flex;align-items:center;gap:8px;padding:8px 9px;border-radius:10px;background:var(--card2);
+    border:1px solid var(--line);margin-bottom:6px}
+  .boardrow .lab{font-size:11px;color:var(--dim)}
+  .boardrow .val{margin-left:auto;font-size:15px;font-weight:800;letter-spacing:-.4px}
+  .mini{font-size:10px;color:var(--dim2);margin:8px 2px 6px;font-weight:700}
+  .tick{font-size:10.5px;color:#9fd8c6;background:#122a24;border:1px solid #1e4038;border-radius:8px;padding:7px 9px;line-height:1.5}
+
+  .task{display:flex;gap:9px;padding:9px;border-radius:10px;background:var(--card2);border:1px solid var(--line);margin-bottom:7px}
+  .task .ico{width:24px;height:24px;border-radius:8px;display:grid;place-items:center;font-size:11px;flex:0 0 auto;font-weight:900}
+  .task .tt{font-size:11.5px;font-weight:800;line-height:1.35}
+  .task .tn{font-size:10px;color:var(--dim);margin-top:3px}
+  .bar{height:4px;border-radius:2px;background:#120e0a;margin-top:7px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:2px}
+  .tmeta{display:flex;align-items:center;gap:6px;margin-top:5px;font-size:9.5px;color:var(--dim2)}
+  .tmeta .who{color:#e6d3b8}
+
+  .srow{display:flex;align-items:center;gap:9px;padding:8px;border-radius:10px;background:var(--card2);
+    border:1px solid var(--line);margin-bottom:6px;cursor:pointer}
+  .srow.sel{border-color:#f5b866;box-shadow:0 0 0 1px rgba(245,184,102,.35) inset}
+  .sav{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:14px;flex:0 0 auto}
+  .sname{display:block;font-size:11.5px;font-weight:800;line-height:1.25}
+  .stask{display:block;font-size:9.5px;color:var(--dim2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
+  .badge{margin-left:auto;font:800 9px/1 inherit;padding:4px 6px;border-radius:999px;flex:0 0 auto;white-space:nowrap}
+
+  .lrow{display:flex;gap:8px;padding:8px 3px;border-bottom:1px dashed rgba(245,184,102,.10);font-size:11px;line-height:1.4}
+  .lrow .t{color:var(--dim2);font-variant-numeric:tabular-nums;flex:0 0 auto;font-size:10px;padding-top:1px}
+  .lrow .w{font-weight:800;flex:0 0 auto;color:#f0d7b4}
+  .lrow .x{color:#b9a68e;min-width:0}
+  .lrow.live .w{color:#7ff0d8}
+  .lrow .tag{font:800 8.5px/1 inherit;color:#0b1a18;background:#6ee7b7;padding:2px 4px;border-radius:4px;margin-left:auto;flex:0 0 auto;align-self:center}
+  .empty{color:var(--dim2);font-size:11px;padding:18px 2px;text-align:center}
+
+  @media (min-width:900px) and (min-aspect-ratio:1/1){
+    #body{flex-direction:row}
+    #panel{width:410px;max-height:none;height:auto;border-top:0;border-left:1px solid var(--line)}
+    .brand b{font-size:14px}
+    .hud span{font-size:10.5px;padding:5px 7px}
+    .stask{max-width:250px}
+  }
+  @media (max-height:640px){ .phead{padding:6px 10px 6px} .stat b{font-size:13.5px} .stats{margin-top:5px} }
+</style>
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <div class="brand">
+      <span class="logo">AI</span>
+      <div>
+        <b>AI 사무실</b>
+        <small id="clock">--:-- · 낮</small>
+      </div>
+    </div>
+    <div id="phases"></div>
+  </header>
+
+  <div id="body">
+    <div id="stage">
+      <canvas id="cv"></canvas>
+      <div class="hud" id="hud"></div>
+      <div class="zoomctl">
+        <button id="zin" aria-label="확대">+</button>
+        <button id="zout" aria-label="축소">−</button>
+        <button id="zfit" class="fit" aria-label="한눈에 보기">전체</button>
+      </div>
+    </div>
+
+    <section id="panel">
+      <div class="phead">
+        <div class="prow">
+          <div class="av">AI</div>
+          <div style="min-width:0">
+            <div class="pname" id="officeName">AI 사무실 본부</div>
+            <div class="psub" id="officeSub">대표님 1인 기업 · AI 직원 13명</div>
+          </div>
+          <div class="live"><i></i>LIVE</div>
+        </div>
+        <div class="stats" id="stats">
+          <div class="stat"><b id="stDone">27</b><span>오늘 처리</span></div>
+          <div class="stat"><b id="stProg" style="color:#f5b866">9</b><span>진행 중</span></div>
+          <div class="stat"><b id="stWait" style="color:#94a3b8">7</b><span>대기</span></div>
+          <div class="stat"><b id="stStaff">14</b><span>직원</span></div>
+        </div>
+      </div>
+
+      <div class="tabs" id="tabs">
+        <button data-tab="office" class="on">오피스</button>
+        <button data-tab="tasks">AI 업무</button>
+        <button data-tab="staff">직원 현황</button>
+        <button data-tab="log">활동 로그</button>
+      </div>
+
+      <div class="pane" id="pane-office"></div>
+      <div class="pane" id="pane-tasks" hidden></div>
+      <div class="pane" id="pane-staff" hidden></div>
+      <div class="pane" id="pane-log" hidden></div>
+    </section>
+  </div>
+</div>
+
+<script type="application/json" id="fallback-status">
+{
+  "updated_at": "2026-11-15 05:45",
+  "office": {
+    "name": "AI 사무실 본부",
+    "sub": "대표님 1인 기업 · AI 직원 13명 + 대표님",
+    "greeting": "오늘도 14명이 함께 일하고 있어요"
+  },
+  "stats": {
+    "done": 31,
+    "progress": 7,
+    "waiting": 5
+  },
+  "board": {
+    "title": "오늘의 파이프라인",
+    "rows": [
+      {
+        "label": "이벤트·설문 접수",
+        "value": "18",
+        "unit": "건",
+        "tone": "ok"
+      },
+      {
+        "label": "발표 대기",
+        "value": "7",
+        "unit": "건",
+        "tone": "wait"
+      },
+      {
+        "label": "신규 발굴",
+        "value": "3",
+        "unit": "건",
+        "tone": "info"
+      },
+      {
+        "label": "진행 중 업무",
+        "value": "7",
+        "unit": "건",
+        "tone": "busy"
+      }
+    ],
+    "ticker": "설치형 앱(PWA) 구성 완료 · vooy 초대권 레이더 가동 중 · 내일 06:40 아침 브리핑 예약"
+  },
+  "tasks": [
+    {
+      "title": "GitHub Pages 공개 배포",
+      "owner": "해이",
+      "state": "waiting",
+      "progress": 0,
+      "note": "GitHub 저장소 권한 승인 대기"
+    },
+    {
+      "title": "아침 브리핑 발송 · 날씨 + 뉴스 + 위임 현황",
+      "owner": "해이",
+      "state": "done",
+      "progress": 100,
+      "note": "06:40 발송 완료"
+    },
+    {
+      "title": "이벤트 · 설문 접수 파이프라인 3차",
+      "owner": "해이",
+      "state": "progress",
+      "progress": 80,
+      "note": "2건 접수 · 증빙 저장"
+    },
+    {
+      "title": "노션 본부 작업판 동기화",
+      "owner": "Claude",
+      "state": "done",
+      "progress": 100,
+      "note": "페이지 12개 갱신"
+    },
+    {
+      "title": "AI 사무실 웹앱 · 설치형 앱(PWA) 구성",
+      "owner": "Claude",
+      "state": "done",
+      "progress": 100,
+      "note": "manifest · sw.js · 아이콘 512/192 완료"
+    },
+    {
+      "title": "해외 레퍼런스 리서치",
+      "owner": "Cue",
+      "state": "done",
+      "progress": 100,
+      "note": "사례 8건 정리"
+    },
+    {
+      "title": "주간 보고 슬라이드 초안",
+      "owner": "Manus",
+      "state": "progress",
+      "progress": 45,
+      "note": "12장 작성 중"
+    },
+    {
+      "title": "모니터링 창 4종 상시 감시",
+      "owner": "Hark",
+      "state": "progress",
+      "progress": 70,
+      "note": "새 알림 2건 포착"
+    },
+    {
+      "title": "생활 정보 상담 정리",
+      "owner": "ChatGPT",
+      "state": "done",
+      "progress": 100,
+      "note": "3건 답변 완료"
+    },
+    {
+      "title": "X 실시간 이슈 추적",
+      "owner": "Grok",
+      "state": "progress",
+      "progress": 60,
+      "note": "키워드 6개 감시"
+    },
+    {
+      "title": "vooy 초대권 레이더 감시",
+      "owner": "Instinct",
+      "state": "progress",
+      "progress": 55,
+      "note": "정식 출시 대기 중"
+    },
+    {
+      "title": "PC 로컬 폴더 정리",
+      "owner": "루아",
+      "state": "done",
+      "progress": 100,
+      "note": "12건 정리"
+    },
+    {
+      "title": "원격 데스크톱 · 보안 VPN 점검",
+      "owner": "StarDesk",
+      "state": "waiting",
+      "progress": 0,
+      "note": "다음 점검 09:00"
+    }
+  ],
+  "staff": [
+    {
+      "id": "ceo",
+      "name": "대표님",
+      "short": "대표님",
+      "rank": "CEO",
+      "role": "지시 · 결재 · 최종 승인",
+      "status": "working",
+      "task": "오늘의 지시와 우선순위 정리",
+      "done": null,
+      "color": "#f2b134",
+      "species": "bear",
+      "bubbles": [
+        "직원들, 오늘도 잘 부탁해요",
+        "이벤트 접수는 잘 되고 있나?"
+      ]
+    },
+    {
+      "id": "haei",
+      "name": "해이",
+      "short": "해이",
+      "rank": "비서실장",
+      "role": "전체 지휘 · 업무 분배 · 보고",
+      "status": "working",
+      "task": "사무실 웹앱 배포 준비 · 파이프라인 관리",
+      "done": 12,
+      "color": "#38bdf8",
+      "species": "pickle",
+      "bubbles": [
+        "설치형 앱까지 준비했어요",
+        "Pages 배포만 남았어요",
+        "접수 18건 정리 완료"
+      ]
+    },
+    {
+      "id": "claude",
+      "name": "Claude",
+      "short": "Claude",
+      "rank": "과장",
+      "role": "전략 · 문서 · 코드",
+      "status": "working",
+      "task": "웹앱 PWA 구성 · 아이콘 · 서비스 워커",
+      "done": 5,
+      "color": "#d97757",
+      "species": "fox",
+      "bubbles": [
+        "manifest 검증 완료",
+        "홈 화면에 추가하면 앱처럼 돼요"
+      ]
+    },
+    {
+      "id": "cue",
+      "name": "Cue",
+      "short": "Cue",
+      "rank": "대리",
+      "role": "해외 리서치",
+      "status": "meeting",
+      "task": "회의실에서 레퍼런스 공유",
+      "done": 3,
+      "color": "#8b5cf6",
+      "species": "rabbit",
+      "bubbles": [
+        "해외 사례 8건 정리했어요",
+        "이 레퍼런스 좋네요"
+      ]
+    },
+    {
+      "id": "manus",
+      "name": "Manus",
+      "short": "Manus",
+      "rank": "사원",
+      "role": "문서 · PPT 제작",
+      "status": "working",
+      "task": "주간 보고 슬라이드 초안",
+      "done": 2,
+      "color": "#14b8a6",
+      "species": "koala",
+      "bubbles": [
+        "슬라이드 12장 완성",
+        "표지 디자인 고르는 중"
+      ]
+    },
+    {
+      "id": "hark",
+      "name": "Hark",
+      "short": "Hark",
+      "rank": "사원",
+      "role": "다중창 모니터링",
+      "status": "working",
+      "task": "모니터 4창 동시 감시",
+      "done": 6,
+      "color": "#f472b6",
+      "species": "owl",
+      "bubbles": [
+        "이상 신호 없음",
+        "새 알림 2건 포착"
+      ]
+    },
+    {
+      "id": "chatgpt",
+      "name": "ChatGPT",
+      "short": "GPT",
+      "rank": "차장",
+      "role": "수석 상담",
+      "status": "working",
+      "task": "생활 정보 상담 정리",
+      "done": 9,
+      "color": "#10a37f",
+      "species": "panda",
+      "bubbles": [
+        "문의 3건 답변 완료",
+        "요약본 올릴게요"
+      ]
+    },
+    {
+      "id": "grok",
+      "name": "Grok",
+      "short": "Grok",
+      "rank": "대리",
+      "role": "X 실시간 속보",
+      "status": "working",
+      "task": "실시간 키워드 추적",
+      "done": 11,
+      "color": "#64748b",
+      "species": "cat",
+      "bubbles": [
+        "지금 뜨는 이슈 포착",
+        "속보 2건 정리했어요"
+      ]
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini",
+      "short": "Gemini",
+      "rank": "사원",
+      "role": "미디어 · 구글 연동",
+      "status": "meeting",
+      "task": "회의실에서 미디어 협의",
+      "done": 4,
+      "color": "#3b82f6",
+      "species": "dog",
+      "bubbles": [
+        "구글 문서 연동 확인",
+        "사진 자료 공유할게요"
+      ]
+    },
+    {
+      "id": "muse",
+      "name": "Muse",
+      "short": "Muse",
+      "rank": "인턴",
+      "role": "SNS · 메신저",
+      "status": "break",
+      "task": "라운지에서 커피 타임",
+      "done": 1,
+      "color": "#c084fc",
+      "species": "chick",
+      "bubbles": [
+        "잠깐 커피 한 잔",
+        "메신저 답장 대기 중"
+      ]
+    },
+    {
+      "id": "instinct",
+      "name": "Instinct",
+      "short": "Instinct",
+      "rank": "인턴",
+      "role": "문자 · 초대권",
+      "status": "working",
+      "task": "초대권 문의 문자 정리",
+      "done": 2,
+      "color": "#fb923c",
+      "species": "hamster",
+      "bubbles": [
+        "문자 3건 확인",
+        "초대 링크 정리 중"
+      ]
+    },
+    {
+      "id": "rua",
+      "name": "루아",
+      "short": "루아",
+      "rank": "대리",
+      "role": "PC 로컬 정리",
+      "status": "break",
+      "task": "라운지에서 충전 중",
+      "done": 3,
+      "color": "#4ade80",
+      "species": "frog",
+      "bubbles": [
+        "폴더 정리 12건 끝",
+        "잠깐 쉬는 중이에요"
+      ]
+    },
+    {
+      "id": "stardesk",
+      "name": "StarDesk",
+      "short": "StarDesk",
+      "rank": "기사",
+      "role": "원격 데스크톱",
+      "status": "working",
+      "task": "원격 접속 상태 점검",
+      "done": 2,
+      "color": "#0ea5e9",
+      "species": "penguin",
+      "bubbles": [
+        "원격 연결 정상",
+        "화면 공유 테스트 중"
+      ]
+    },
+    {
+      "id": "tailscale",
+      "name": "Tailscale",
+      "short": "Tailscale",
+      "rank": "기사",
+      "role": "보안 VPN",
+      "status": "idle",
+      "task": "VPN 터널 상태 대기",
+      "done": 1,
+      "color": "#a78bfa",
+      "species": "deer",
+      "bubbles": [
+        "터널 정상 유지 중",
+        "보안 점검 대기"
+      ]
+    }
+  ],
+  "logs": [
+    {
+      "time": "05:45",
+      "who": "해이",
+      "text": "설치형 앱 구성 완료 (manifest · 서비스 워커 · 아이콘)",
+      "tone": "ok"
+    },
+    {
+      "time": "05:40",
+      "who": "해이",
+      "text": "이벤트·설문 누적 18건 접수 정리",
+      "tone": "ok"
+    },
+    {
+      "time": "05:20",
+      "who": "해이",
+      "text": "사무실 프로토타입 v2 렌더링 시작",
+      "tone": "ok"
+    },
+    {
+      "time": "05:12",
+      "who": "Claude",
+      "text": "아이소메트릭 좌표 매핑 완료 (14석)",
+      "tone": ""
+    },
+    {
+      "time": "04:58",
+      "who": "해이",
+      "text": "3차 설문 2건 접수 완료 · 증빙 캡처 저장",
+      "tone": "ok"
+    },
+    {
+      "time": "04:52",
+      "who": "Cue",
+      "text": "해외 사례 리서치 8건 수집",
+      "tone": ""
+    },
+    {
+      "time": "04:44",
+      "who": "Grok",
+      "text": "X 실시간 키워드 알림 점검",
+      "tone": ""
+    },
+    {
+      "time": "04:37",
+      "who": "루아",
+      "text": "PC 로컬 폴더 정리 12건",
+      "tone": ""
+    }
+  ]
+}
+</script>
+
+<script>
+(function(){
+'use strict';
+
+/* =========================================================
+   0. 상수 · 유틸
+   ========================================================= */
+const W = 1536, H = 1024, TAU = Math.PI * 2;
+const FN = "'Pretendard','Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif";
+const fw = (w, s) => w + ' ' + s + 'px ' + FN;
+const clamp = (v, a, b) => v < a ? a : (v > b ? b : v);
+const lerp = (a, b, t) => a + (b - a) * t;
+
+function rr(g, x, y, w, h, r) {
+  r = Math.min(r, Math.abs(w) / 2, Math.abs(h) / 2);
+  g.beginPath();
+  g.moveTo(x + r, y);
+  g.arcTo(x + w, y, x + w, y + h, r);
+  g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r);
+  g.arcTo(x, y, x + w, y, r);
+  g.closePath();
+}
+function shade(hex, amt) {
+  let n = parseInt(String(hex).replace('#', ''), 16);
+  let r = (n >> 16) + amt, g2 = ((n >> 8) & 255) + amt, b = (n & 255) + amt;
+  r = clamp(Math.round(r), 0, 255); g2 = clamp(Math.round(g2), 0, 255); b = clamp(Math.round(b), 0, 255);
+  return '#' + ((r << 16) | (g2 << 8) | b).toString(16).padStart(6, '0');
+}
+function hash(str) { let h = 0; for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0; return Math.abs(h); }
+const pad2 = n => (n < 10 ? '0' : '') + n;
+
+/* =========================================================
+   1. 좌표 (office-day.png 1536 x 1024 기준)
+   ========================================================= */
+const SEATS = {
+  ceo:      { x: 162,  y: 400, zone: 'exec' },
+  haei:     { x: 1292, y: 712, zone: 'reception' },
+  claude:   { x: 720,  y: 498, zone: 'deskA' },
+  cue:      { x: 858,  y: 542, zone: 'deskA' },
+  manus:    { x: 838, y: 372, zone: 'deskA' },
+  hark:     { x: 575,  y: 560, zone: 'deskB' },
+  chatgpt:  { x: 640,  y: 608, zone: 'deskB' },
+  grok:     { x: 742,  y: 646, zone: 'deskB' },
+  gemini:   { x: 940,  y: 642, zone: 'deskB' },
+  muse:     { x: 545,  y: 803, zone: 'deskC' },
+  instinct: { x: 690,  y: 850, zone: 'deskC' },
+  rua:      { x: 630,  y: 663, zone: 'deskC' },
+  stardesk: { x: 755,  y: 673, zone: 'deskC' },
+  tailscale:{ x: 900,  y: 715, zone: 'deskC' }
+};
+const MEET_SPOTS = [
+  { x: 700, y: 190 }, { x: 800, y: 190 }, { x: 868, y: 245 },
+  { x: 800, y: 300 }, { x: 700, y: 300 }, { x: 628, y: 245 }
+];
+const BREAK_SPOTS = [
+  { x: 1075, y: 420 }, { x: 1165, y: 415 }, { x: 1245, y: 412 },
+  { x: 1108, y: 484 }, { x: 1255, y: 362 }, { x: 1385, y: 402 },
+  { x: 258, y: 600 }, { x: 348, y: 604 }, { x: 428, y: 612 }, { x: 400, y: 688 }
+];
+const OFF_SPOTS = [{ x: 1180, y: 930 }, { x: 1105, y: 915 }];
+
+/* 통행 장애물 (대략) */
+const BLOCK = [
+  [145, 378, 470, 532], [188, 522, 470, 672], [328, 608, 522, 706], [228, 132, 408, 378],
+  [608, 158, 898, 348], [700, 368, 985, 478], [610, 492, 915, 600], [570, 660, 850, 790],
+  [1078, 202, 1322, 378], [1008, 288, 1262, 478], [1038, 408, 1188, 508], [1318, 308, 1536, 472],
+  [1128, 628, 1448, 878], [878, 728, 1052, 902], [1188, 518, 1412, 672]
+];
+
+/* =========================================================
+   2. 시간대
+   ========================================================= */
+const PHASES = {
+  dawn:    { label: '새벽', img: 'night', tint: 'rgba(30,50,110,0.16)',  css: '#8ea6d8' },
+  morning: { label: '아침', img: 'day',   tint: 'rgba(255,205,140,0.10)', css: '#f5c57a' },
+  day:     { label: '낮',   img: 'day',   tint: 'rgba(255,255,255,0.00)', css: '#ffd79b' },
+  evening: { label: '저녁', img: 'night', tint: 'rgba(255,130,60,0.12)',  css: '#f0a06a' },
+  night:   { label: '밤',   img: 'night', tint: 'rgba(12,20,60,0.18)',   css: '#8ea6d8' }
+};
+const PHASE_ORDER = ['dawn', 'morning', 'day', 'evening', 'night'];
+let phaseMode = 'auto';
+function autoPhase(h) {
+  if (h >= 5 && h < 8) return 'morning';
+  if (h >= 8 && h < 17) return 'day';
+  if (h >= 17 && h < 20) return 'evening';
+  if (h >= 20 || h < 2) return 'night';
+  return 'dawn';
+}
+let phaseKey = 'day';
+
+/* =========================================================
+   3. 이미지 · 캔버스 · 카메라
+   ========================================================= */
+const IMG = { day: null, night: null };
+function loadImages() {
+  ['day', 'night'].forEach(k => {
+    const im = new Image();
+    im.onload = () => { IMG[k] = im; };
+    im.src = 'assets/office-' + k + '.png';
+  });
+}
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+const stageEl = document.getElementById('stage');
+let vw = 400, vh = 400, dpr = 1;
+let cam = { x: W / 2, y: H / 2, zoom: 0.5 };
+let camT = { x: W / 2, y: H / 2, zoom: 0.5 };
+let userZoomed = false;
+
+const fitZoom = () => Math.min(vw / (W + 24), vh / (H + 24));
+function clampCam(t) {
+  const hw = vw / 2 / t.zoom, hh = vh / 2 / t.zoom;
+  if (hw * 2 >= W) t.x = W / 2; else t.x = clamp(t.x, hw, W - hw);
+  if (hh * 2 >= H) t.y = H / 2; else t.y = clamp(t.y, hh, H - hh);
+}
+function resize() {
+  const rect = stageEl.getBoundingClientRect();
+  vw = Math.max(200, rect.width);
+  vh = Math.max(200, rect.height);
+  dpr = Math.min(2, window.devicePixelRatio || 1);
+  cv.width = Math.round(vw * dpr);
+  cv.height = Math.round(vh * dpr);
+  if (!userZoomed) {
+    const portrait = vw < 760 && vh > vw * 0.95;
+    const z = portrait ? Math.max(fitZoom() * 1.6, 0.5) : fitZoom();
+    cam.zoom = z; camT.zoom = z; cam.x = W / 2; cam.y = H / 2; camT.x = W / 2; camT.y = H / 2;
+  }
+  clampCam(camT);
+  cam.x = camT.x; cam.y = camT.y;
+}
+window.addEventListener('resize', resize);
+if (window.ResizeObserver) new ResizeObserver(resize).observe(stageEl);
+
+function project(wx, wy) {
+  return { x: (wx - cam.x) * cam.zoom + vw / 2, y: (wy - cam.y) * cam.zoom + vh / 2 };
+}
+function zoomAt(factor, sx, sy) {
+  const wx = (sx - vw / 2) / cam.zoom + cam.x;
+  const wy = (sy - vh / 2) / cam.zoom + cam.y;
+  const nz = clamp(cam.zoom * factor, fitZoom() * 0.9, 2.6);
+  cam.zoom = nz;
+  cam.x = wx - (sx - vw / 2) / nz;
+  cam.y = wy - (sy - vh / 2) / nz;
+  camT.zoom = nz; userZoomed = true;
+  clampCam({ get x() { return cam.x; }, set x(v) { cam.x = v; }, get y() { return cam.y; }, set y(v) { cam.y = v; }, zoom: cam.zoom });
+  camT.x = cam.x; camT.y = cam.y;
+}
+function fitAll() {
+  userZoomed = false;
+  camT.zoom = fitZoom(); camT.x = W / 2; camT.y = H / 2;
+}
+
+/* =========================================================
+   4. 길찾기 (A*)
+   ========================================================= */
+const CELL = 32;
+const GW = Math.ceil(W / CELL), GH = Math.ceil(H / CELL);
+let grid = null;
+function buildGrid() {
+  grid = new Uint8Array(GW * GH);
+  for (let gy = 0; gy < GH; gy++) {
+    for (let gx = 0; gx < GW; gx++) {
+      const x = (gx + 0.5) * CELL, y = (gy + 0.5) * CELL;
+      let blocked = (x < 108 || x > 1462 || y < 100 || y > 952) ? 1 : 0;
+      if (!blocked) {
+        for (const b of BLOCK) {
+          if (x > b[0] - 8 && x < b[2] + 8 && y > b[1] - 8 && y < b[3] + 8) { blocked = 1; break; }
+        }
+      }
+      grid[gy * GW + gx] = blocked;
+    }
+  }
+}
+const cellFree = (gx, gy) => gx >= 0 && gy >= 0 && gx < GW && gy < GH && !grid[gy * GW + gx];
+function nearestFree(gx, gy) {
+  if (cellFree(gx, gy)) return [gx, gy];
+  for (let r = 1; r < 12; r++) {
+    for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) {
+      if (Math.abs(dx) !== r && Math.abs(dy) !== r) continue;
+      if (cellFree(gx + dx, gy + dy)) return [gx + dx, gy + dy];
+    }
+  }
+  return null;
+}
+function los(x1, y1, x2, y2) {
+  const d = Math.hypot(x2 - x1, y2 - y1);
+  const n = Math.max(2, Math.ceil(d / 12));
+  for (let i = 1; i < n; i++) {
+    const x = lerp(x1, x2, i / n), y = lerp(y1, y2, i / n);
+    const gx = Math.floor(x / CELL), gy = Math.floor(y / CELL);
+    if (!cellFree(gx, gy)) return false;
+  }
+  return true;
+}
+function findPath(sx, sy, tx, ty) {
+  if (!grid) buildGrid();
+  const s0 = Math.floor(sx / CELL), t0 = Math.floor(sy / CELL);
+  const g0x = Math.floor(tx / CELL), g0y = Math.floor(ty / CELL);
+  let s = [s0, t0], t = [g0x, g0y];
+  if (!cellFree(s[0], s[1]) || !cellFree(t[0], t[1])) {
+    s = nearestFree(s0, t0) || [s0, t0];
+    t = nearestFree(g0x, g0y) || [g0x, g0y];
+  }
+  if (!s || !t) return [{ x: tx, y: ty }];
+  const start = s[1] * GW + s[0], goal = t[1] * GW + t[0];
+  if (start === goal) return [{ x: tx, y: ty }];
+
+  const open = [start];
+  const came = new Int32Array(GW * GH).fill(-1);
+  const gScore = new Float32Array(GW * GH).fill(1e9);
+  gScore[start] = 0;
+  const fScore = new Float32Array(GW * GH).fill(1e9);
+  const h = i => Math.abs(i % GW - t[0]) + Math.abs(Math.floor(i / GW) - t[1]);
+  fScore[start] = h(start);
+  const closed = new Uint8Array(GW * GH);
+  let guard = 0;
+
+  while (open.length && guard++ < 6000) {
+    let bi = 0;
+    for (let i = 1; i < open.length; i++) if (fScore[open[i]] < fScore[open[bi]]) bi = i;
+    const cur = open.splice(bi, 1)[0];
+    if (cur === goal) break;
+    closed[cur] = 1;
+    const cx = cur % GW, cy = Math.floor(cur / GW);
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+      if (!dx && !dy) continue;
+      const nx = cx + dx, ny = cy + dy;
+      if (!cellFree(nx, ny)) continue;
+      const ni = ny * GW + nx;
+      if (closed[ni]) continue;
+      const cost = (dx && dy) ? 1.42 : 1;
+      const ng = gScore[cur] + cost;
+      if (ng < gScore[ni]) {
+        came[ni] = cur;
+        gScore[ni] = ng;
+        fScore[ni] = ng + h(ni);
+        if (open.indexOf(ni) < 0) open.push(ni);
+      }
+    }
+  }
+
+  if (came[goal] < 0 && goal !== start) return [{ x: tx, y: ty }];
+  const cells = [];
+  let c = goal;
+  while (c !== start && c >= 0) { cells.push(c); c = came[c]; if (cells.length > 900) break; }
+  cells.reverse();
+  let pts = cells.map(i => ({ x: (i % GW + 0.5) * CELL, y: (Math.floor(i / GW) + 0.5) * CELL }));
+  if (!pts.length) return [{ x: tx, y: ty }];
+  pts[pts.length - 1] = { x: tx, y: ty };
+
+  // 시야 기반 스무딩
+  const out = [];
+  let i = 0;
+  let curP = { x: sx, y: sy };
+  while (i < pts.length) {
+    let j = pts.length - 1;
+    for (; j > i; j--) { if (los(curP.x, curP.y, pts[j].x, pts[j].y)) break; }
+    out.push(pts[j]);
+    curP = pts[j];
+    i = j + 1;
+  }
+  return out;
+}
+
+/* =========================================================
+   5. 상태 · 캐릭터
+   ========================================================= */
+const STATUS_META = {
+  working: { label: '근무 중', color: '#6ee7b7', ico: '●' },
+  meeting: { label: '회의 중', color: '#7dd3fc', ico: '◆' },
+  break:   { label: '휴식 중', color: '#fbbf24', ico: '☕' },
+  idle:    { label: '대기 중', color: '#cbd5e1', ico: '○' },
+  off:     { label: '퇴근',   color: '#94a3b8', ico: '⌂' }
+};
+const SPECIES_LABEL = {
+  bear: '곰', rabbit: '토끼', fox: '여우', cat: '고양이', panda: '판다', koala: '코알라',
+  owl: '부엉이', chick: '병아리', hamster: '햄스터', frog: '개구리', penguin: '펭귄',
+  deer: '사슴', pickle: '피클', dog: '강아지'
+};
+let data = null, chars = [], logs = [], selectedId = null, localMode = false, lastSync = '';
+let lastRaw = '';
+
+function makeChar(s) {
+  const seat = SEATS[s.id] || { x: 780, y: 780, zone: 'desk' };
+  const ch = {
+    id: s.id, seat: seat,
+    x: seat.x, y: seat.y, path: [], moving: false, dir: 1, walk: 0,
+    seed: (hash(s.id) % 100) / 10,
+    pose: 'seated', action: 'working', status: 'working', targetKey: '',
+    bubble: null, bubbleStart: 0, bubbleUntil: 0, bubbleIdx: hash(s.id) % 3, nextBubble: 0,
+    startAt: 0, started: false, visible: true, order: 0,
+    name: s.name, short: s.short || s.name, rank: s.rank || '', role: s.role || '',
+    task: s.task || '', done: s.done, color: s.color || '#f5b866',
+    species: s.species || 'bear', bubbles: s.bubbles || [], scale: 1
+  };
+  ch.nextBubble = 3 + Math.random() * 9;
+  return ch;
+}
+function targetFor(ch) {
+  if (ch.status === 'meeting') {
+    const mates = chars.filter(c => c.visible && c.status === 'meeting').sort((a, b) => a.order - b.order);
+    const i = Math.max(0, mates.indexOf(ch));
+    const p = MEET_SPOTS[i % MEET_SPOTS.length];
+    return { x: p.x, y: p.y, pose: 'stand', key: 'meeting' };
+  }
+  if (ch.status === 'break') {
+    const p = BREAK_SPOTS[hash(ch.id) % BREAK_SPOTS.length];
+    return { x: p.x, y: p.y, pose: 'stand', key: 'break' };
+  }
+  if (ch.status === 'off') {
+    const p = OFF_SPOTS[hash(ch.id) % OFF_SPOTS.length];
+    return { x: p.x, y: p.y, pose: 'stand', key: 'off' };
+  }
+  return { x: ch.seat.x, y: ch.seat.y, pose: 'seated', key: ch.status };
+}
+function retarget(ch, quiet) {
+  const t = targetFor(ch);
+  if (ch.targetKey === t.key && !quiet) return;
+  const changed = ch.targetKey !== t.key && !!ch.targetKey;
+  ch.targetKey = t.key;
+  ch.path = findPath(ch.x, ch.y, t.x, t.y);
+  ch.pose = ch.path.length ? 'stand' : t.pose;
+  if (changed && !quiet) {
+    const msg = t.key === 'meeting' ? '회의실로 이동'
+      : t.key === 'break' ? '라운지로 커피 마시러 이동'
+      : t.key === 'off' ? '퇴근'
+      : t.key === 'idle' ? '자리에서 대기'
+      : '자리로 복귀';
+    pushLog(ch.name, msg, 'live');
+  }
+}
+function updateChar(ch, s) {
+  const prev = ch.status;
+  ch.name = s.name || ch.name;
+  ch.short = s.short || ch.name;
+  ch.rank = s.rank || '';
+  ch.role = s.role || '';
+  ch.task = s.task || '';
+  ch.done = (s.done === undefined ? null : s.done);
+  ch.color = s.color || ch.color;
+  ch.species = s.species || ch.species;
+  ch.bubbles = Array.isArray(s.bubbles) ? s.bubbles : ch.bubbles;
+  ch.status = STATUS_META[s.status] ? s.status : 'working';
+  return prev !== ch.status;
+}
+function applyStatus(d) {
+  if (!d || !Array.isArray(d.staff)) return false;
+  data = d;
+  const seen = {};
+  d.staff.forEach((s, i) => {
+    let ch = chars.find(c => c.id === s.id);
+    if (!ch) { ch = makeChar(s); chars.push(ch); }
+    const changed = updateChar(ch, s);
+    ch.visible = true; ch.order = i; seen[s.id] = true;
+    if (changed && ch.started) retarget(ch, true);
+  });
+  chars.forEach(c => { if (!seen[c.id]) c.visible = false; });
+  if (d.logs) logs = d.logs.map(l => ({ time: l.time || '', who: l.who || '', text: l.text || '', tone: l.tone || '', live: false }));
+  lastSync = d.updated_at || '';
+  document.getElementById('officeName').textContent = (d.office && d.office.name) || 'AI 사무실 본부';
+  document.getElementById('officeSub').textContent = (d.office && d.office.sub) || '';
+  if (d.stats) {
+    document.getElementById('stDone').textContent = d.stats.done;
+    document.getElementById('stProg').textContent = d.stats.progress;
+    document.getElementById('stWait').textContent = d.stats.waiting;
+  }
+  document.getElementById('stStaff').textContent = d.staff.length;
+  renderAll();
+  return true;
+}
+function pushLog(who, text, tone) {
+  const d = new Date();
+  logs.unshift({ time: pad2(d.getHours()) + ':' + pad2(d.getMinutes()), who, text, tone: tone || '', live: true });
+  if (logs.length > 60) logs.pop();
+  renderLog();
+}
+
+/* =========================================================
+   6. 캐릭터 그리기
+   ========================================================= */
+const SP = {
+  bear:    { face: '#d9a066', ear: 'round',  ec: '#c48a52' },
+  rabbit:  { face: '#fbf3e8', ear: 'long',   ec: '#f3e6d6' },
+  fox:     { face: '#f3a35e', ear: 'point',  ec: '#dd8639' },
+  cat:     { face: '#f7e0c0', ear: 'point',  ec: '#e5c6a0' },
+  panda:   { face: '#fdf8f0', ear: 'round',  ec: '#2f2f33', patch: true },
+  koala:   { face: '#c9ced6', ear: 'big',    ec: '#b3b9c2' },
+  owl:     { face: '#c9a227', ear: 'tuft',   ec: '#a8871f' },
+  chick:   { face: '#ffe27a', ear: 'tuft',   ec: '#f2cb3d', beak: true },
+  hamster: { face: '#e8c39e', ear: 'round',  ec: '#d3a97f' },
+  frog:    { face: '#88cf5c', ear: 'frog',   ec: '#78bd4c' },
+  penguin: { face: '#f6f7f9', ear: 'none',   ec: '#1f2937', hood: '#242e3d' },
+  deer:    { face: '#d9a066', ear: 'antler', ec: '#a87a4a' },
+  pickle:  { face: '#7dd3fc', ear: 'none',   ec: '#38bdf8', pickle: true },
+  dog:     { face: '#eccb9f', ear: 'floppy', ec: '#d3b184' }
+};
+
+function drawEars(g, sp, hy, r) {
+  const ol = 'rgba(70,42,22,0.30)';
+  g.fillStyle = sp.ec; g.strokeStyle = ol; g.lineWidth = 1.6;
+  const circ = (x, y, rr2) => { g.beginPath(); g.arc(x, y, rr2, 0, TAU); g.fill(); g.stroke(); };
+  switch (sp.ear) {
+    case 'round':
+      circ(-r * 0.82, hy - r * 0.84, r * 0.46);
+      circ(r * 0.82, hy - r * 0.84, r * 0.46);
+      g.fillStyle = 'rgba(255,255,255,0.18)';
+      g.beginPath(); g.arc(-r * 0.82, hy - r * 0.84, r * 0.24, 0, TAU); g.fill();
+      g.beginPath(); g.arc(r * 0.82, hy - r * 0.84, r * 0.24, 0, TAU); g.fill();
+      break;
+    case 'long':
+      g.beginPath(); g.ellipse(-r * 0.44, hy - r * 1.36, r * 0.24, r * 0.62, -0.12, 0, TAU); g.fill(); g.stroke();
+      g.beginPath(); g.ellipse(r * 0.44, hy - r * 1.36, r * 0.24, r * 0.62, 0.12, 0, TAU); g.fill(); g.stroke();
+      g.fillStyle = 'rgba(240,160,160,0.55)';
+      g.beginPath(); g.ellipse(-r * 0.44, hy - r * 1.34, r * 0.11, r * 0.4, -0.12, 0, TAU); g.fill();
+      g.beginPath(); g.ellipse(r * 0.44, hy - r * 1.34, r * 0.11, r * 0.4, 0.12, 0, TAU); g.fill();
+      break;
+    case 'point':
+      g.beginPath(); g.moveTo(-r * 1.02, hy - r * 0.35); g.lineTo(-r * 0.62, hy - r * 1.32); g.lineTo(-r * 0.12, hy - r * 0.78); g.closePath(); g.fill(); g.stroke();
+      g.beginPath(); g.moveTo(r * 1.02, hy - r * 0.35); g.lineTo(r * 0.62, hy - r * 1.32); g.lineTo(r * 0.12, hy - r * 0.78); g.closePath(); g.fill(); g.stroke();
+      g.fillStyle = 'rgba(255,255,255,0.22)';
+      g.beginPath(); g.moveTo(-r * 0.78, hy - r * 0.62); g.lineTo(-r * 0.6, hy - r * 1.12); g.lineTo(-r * 0.38, hy - r * 0.8); g.closePath(); g.fill();
+      break;
+    case 'big':
+      circ(-r * 0.9, hy - r * 0.5, r * 0.56);
+      circ(r * 0.9, hy - r * 0.5, r * 0.56);
+      g.fillStyle = 'rgba(255,255,255,0.22)';
+      g.beginPath(); g.arc(-r * 0.9, hy - r * 0.5, r * 0.3, 0, TAU); g.fill();
+      g.beginPath(); g.arc(r * 0.9, hy - r * 0.5, r * 0.3, 0, TAU); g.fill();
+      break;
+    case 'tuft':
+      g.beginPath(); g.moveTo(-r * 0.3, hy - r * 0.85); g.lineTo(0, hy - r * 1.6); g.lineTo(r * 0.3, hy - r * 0.85); g.closePath(); g.fill(); g.stroke();
+      break;
+    case 'antler':
+      g.strokeStyle = sp.ec; g.lineWidth = r * 0.16; g.lineCap = 'round';
+      g.beginPath();
+      g.moveTo(-r * 0.45, hy - r * 0.9); g.lineTo(-r * 0.75, hy - r * 1.55);
+      g.moveTo(-r * 0.62, hy - r * 1.24); g.lineTo(-r * 0.98, hy - r * 1.36);
+      g.moveTo(r * 0.45, hy - r * 0.9); g.lineTo(r * 0.75, hy - r * 1.55);
+      g.moveTo(r * 0.62, hy - r * 1.24); g.lineTo(r * 0.98, hy - r * 1.36);
+      g.stroke();
+      g.fillStyle = sp.ec;
+      g.beginPath(); g.ellipse(-r * 0.9, hy - r * 0.5, r * 0.26, r * 0.4, -0.5, 0, TAU); g.fill();
+      g.beginPath(); g.ellipse(r * 0.9, hy - r * 0.5, r * 0.26, r * 0.4, 0.5, 0, TAU); g.fill();
+      break;
+    case 'floppy':
+      g.beginPath(); g.ellipse(-r * 0.98, hy - r * 0.05, r * 0.3, r * 0.58, -0.22, 0, TAU); g.fill(); g.stroke();
+      g.beginPath(); g.ellipse(r * 0.98, hy - r * 0.05, r * 0.3, r * 0.58, 0.22, 0, TAU); g.fill(); g.stroke();
+      break;
+    case 'frog':
+      circ(-r * 0.66, hy - r * 0.82, r * 0.4);
+      circ(r * 0.66, hy - r * 0.82, r * 0.4);
+      break;
+  }
+}
+
+function drawChar(g, ch, t) {
+  const seated = ch.pose === 'seated';
+  const walking = ch.moving;
+  const sp = SP[ch.species] || SP.bear;
+  const s = (seated ? 1.0 : 1.14) * ch.scale;
+  const bob = walking ? Math.abs(Math.sin(ch.walk)) * 2.4 : Math.sin(t * 1.6 + ch.seed) * 0.8;
+  const x = ch.x, y = ch.y - bob;
+  const yo = seated ? -7 : 0;
+  const OL = 'rgba(72,44,22,0.30)';
+
+  // 바닥 그림자
+  g.save();
+  g.globalAlpha = walking ? 0.20 : 0.28;
+  g.fillStyle = '#2a1706';
+  g.beginPath(); g.ellipse(x, ch.y + 2, 16 * s, 6 * s, 0, 0, TAU); g.fill();
+  g.restore();
+
+  g.save();
+  g.translate(x, y + yo);
+  g.scale(s, s);
+
+  // 다리
+  if (!seated) {
+    const sw = walking ? Math.sin(ch.walk) * 4 : 0;
+    g.fillStyle = '#4a3524'; g.strokeStyle = OL; g.lineWidth = 1.2;
+    rr(g, -9 + sw, -17, 7.5, 17, 3.5); g.fill(); g.stroke();
+    rr(g, 1.5 - sw, -17, 7.5, 17, 3.5); g.fill(); g.stroke();
+    g.fillStyle = '#2b1d12';
+    rr(g, -10.5 + sw, -5, 9.5, 5, 2.2); g.fill();
+    rr(g, 1 - sw, -5, 9.5, 5, 2.2); g.fill();
+  }
+
+  // 몸통 (후드)
+  const bodyTop = seated ? -44 : -48;
+  const bodyH = 29;
+  const bg = g.createLinearGradient(0, bodyTop, 0, bodyTop + bodyH);
+  bg.addColorStop(0, shade(ch.color, 18));
+  bg.addColorStop(0.55, ch.color);
+  bg.addColorStop(1, shade(ch.color, -34));
+  g.fillStyle = bg;
+  g.strokeStyle = OL; g.lineWidth = 1.5;
+  rr(g, -13.5, bodyTop, 27, bodyH, 11); g.fill(); g.stroke();
+  // 후드 목선
+  g.fillStyle = 'rgba(255,255,255,0.75)';
+  rr(g, -6, bodyTop + 1, 12, 5, 3); g.fill();
+  // 지퍼
+  g.strokeStyle = 'rgba(0,0,0,0.16)'; g.lineWidth = 1.2;
+  g.beginPath(); g.moveTo(0, bodyTop + 6); g.lineTo(0, bodyTop + bodyH - 5); g.stroke();
+  // 명찰
+  g.fillStyle = 'rgba(255,250,240,0.95)'; g.strokeStyle = 'rgba(90,60,30,0.35)'; g.lineWidth = 1;
+  rr(g, 4, bodyTop + 13, 7, 5, 1.4); g.fill(); g.stroke();
+
+  // 팔
+  const armY = bodyTop + (seated ? 8 : 9);
+  const armC = shade(ch.color, -20);
+  if (seated) {
+    const tp = ch.status === 'idle' ? 0 : Math.sin(t * 10 + ch.seed) * 1.6;
+    g.fillStyle = armC; g.strokeStyle = OL; g.lineWidth = 1.3;
+    rr(g, -17.5, armY + tp, 7, 15, 3.4); g.fill(); g.stroke();
+    rr(g, 10.5, armY - tp, 7, 15, 3.4); g.fill(); g.stroke();
+    g.fillStyle = sp.face; g.strokeStyle = OL;
+    g.beginPath(); g.arc(-14, armY + tp + 15, 3.8, 0, TAU); g.fill(); g.stroke();
+    g.beginPath(); g.arc(14, armY - tp + 15, 3.8, 0, TAU); g.fill(); g.stroke();
+  } else {
+    const sw = walking ? Math.sin(ch.walk) * 3 : 0;
+    g.fillStyle = armC; g.strokeStyle = OL; g.lineWidth = 1.3;
+    rr(g, -18, armY + sw, 7, 17, 3.4); g.fill(); g.stroke();
+    rr(g, 11, armY - sw, 7, 17, 3.4); g.fill(); g.stroke();
+    g.fillStyle = sp.face; g.strokeStyle = OL;
+    g.beginPath(); g.arc(-14.5, armY + sw + 17, 4, 0, TAU); g.fill(); g.stroke();
+    g.beginPath(); g.arc(14.5, armY - sw + 17, 4, 0, TAU); g.fill(); g.stroke();
+    if (ch.action === 'break' && !walking) {
+      g.fillStyle = '#fdf6ea'; g.strokeStyle = 'rgba(120,90,60,0.35)'; g.lineWidth = 1;
+      rr(g, 13, armY + sw + 9, 9, 10, 2.5); g.fill(); g.stroke();
+      g.fillStyle = '#a9764f'; g.fillRect(14.2, armY + sw + 10.2, 6.6, 2.4);
+      g.strokeStyle = 'rgba(255,255,255,0.65)'; g.lineWidth = 1.1;
+      g.beginPath(); g.moveTo(17.5, armY + sw + 7); g.quadraticCurveTo(16, armY + sw + 2, 18.5, armY + sw - 2); g.stroke();
+    }
+    if (ch.action === 'meeting' && !walking) {
+      g.fillStyle = '#f6efe4'; g.strokeStyle = 'rgba(120,90,60,0.3)'; g.lineWidth = 1;
+      rr(g, -22, armY + 6, 10, 12, 2); g.fill(); g.stroke();
+      g.strokeStyle = '#b9a68e'; g.lineWidth = 0.9;
+      for (let i = 0; i < 3; i++) { g.beginPath(); g.moveTo(-20, armY + 9 + i * 3); g.lineTo(-14, armY + 9 + i * 3); g.stroke(); }
+    }
+  }
+
+  // 머리
+  const hy = seated ? -57 : -61;
+  const r = 17;
+  drawEars(g, sp, hy, r);
+
+  if (sp.hood) {
+    g.fillStyle = sp.hood; g.strokeStyle = OL; g.lineWidth = 1.5;
+    g.beginPath(); g.arc(0, hy, r + 1, 0, TAU); g.fill(); g.stroke();
+    g.fillStyle = sp.face;
+    g.beginPath(); g.ellipse(0, hy + 3.5, r * 0.8, r * 0.74, 0, 0, TAU); g.fill();
+  } else {
+    const hg = g.createRadialGradient(-4, hy - 6, 3, 0, hy, r * 1.15);
+    hg.addColorStop(0, shade(sp.face, 14));
+    hg.addColorStop(1, shade(sp.face, -12));
+    g.fillStyle = hg; g.strokeStyle = OL; g.lineWidth = 1.5;
+    g.beginPath(); g.arc(0, hy, r, 0, TAU); g.fill(); g.stroke();
+    // 볼륨 음영
+    g.fillStyle = 'rgba(120,70,40,0.10)';
+    g.beginPath(); g.ellipse(0, hy + r * 0.55, r * 0.8, r * 0.4, 0, 0, TAU); g.fill();
+  }
+
+  if (sp.pickle) {
+    g.fillStyle = 'rgba(255,255,255,0.95)';
+    g.font = fw(900, 17);
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText('ㅎ', 0, hy + 6);
+    g.textAlign = 'left'; g.textBaseline = 'alphabetic';
+  } else if (sp.patch) {
+    g.fillStyle = '#33343a';
+    g.beginPath(); g.ellipse(-6.8, hy - 1, 5, 5.8, -0.3, 0, TAU); g.fill();
+    g.beginPath(); g.ellipse(6.8, hy - 1, 5, 5.8, 0.3, 0, TAU); g.fill();
+  }
+
+  // 얼굴
+  const blink = Math.sin(t * 1.7 + ch.seed * 4) > 0.982;
+  if (!sp.pickle) {
+    g.fillStyle = sp.patch ? '#fdf8f0' : '#2a2016';
+    if (blink) {
+      g.fillRect(-7.2, hy - 0.5, 4.8, 1.6); g.fillRect(2.4, hy - 0.5, 4.8, 1.6);
+    } else {
+      g.beginPath(); g.arc(-4.8, hy, 2.6, 0, TAU); g.fill();
+      g.beginPath(); g.arc(4.8, hy, 2.6, 0, TAU); g.fill();
+      g.fillStyle = 'rgba(255,255,255,0.9)';
+      g.beginPath(); g.arc(-3.9, hy - 1, 0.95, 0, TAU); g.fill();
+      g.beginPath(); g.arc(5.7, hy - 1, 0.95, 0, TAU); g.fill();
+    }
+    if (sp.beak) {
+      g.fillStyle = '#f0a03a';
+      g.beginPath(); g.moveTo(-3.4, hy + 4); g.lineTo(3.4, hy + 4); g.lineTo(0, hy + 8); g.closePath(); g.fill();
+    } else {
+      g.fillStyle = 'rgba(120,80,50,0.8)';
+      g.beginPath(); g.ellipse(0, hy + 4.4, 2.3, 1.7, 0, 0, TAU); g.fill();
+      if (sp.ear !== 'frog') {
+        g.strokeStyle = 'rgba(90,60,40,0.55)'; g.lineWidth = 1.2; g.lineCap = 'round';
+        g.beginPath(); g.arc(0, hy + 6, 3.8, 0.35, Math.PI - 0.35); g.stroke();
+      }
+    }
+  }
+  g.fillStyle = 'rgba(240,140,120,0.28)';
+  g.beginPath(); g.arc(-10.5, hy + 5.5, 3, 0, TAU); g.fill();
+  g.beginPath(); g.arc(10.5, hy + 5.5, 3, 0, TAU); g.fill();
+
+  if (ch.id === 'ceo') {
+    g.fillStyle = '#8b2f2f';
+    g.beginPath(); g.moveTo(0, bodyTop + 4); g.lineTo(4, bodyTop + 8); g.lineTo(0, bodyTop + 21); g.lineTo(-4, bodyTop + 8); g.closePath(); g.fill();
+  }
+  g.restore();
+}
+
+function drawSelection(g, ch, t) {
+  const p = 1 + Math.sin(t * 3) * 0.05;
+  g.save();
+  g.strokeStyle = '#ffd79b'; g.globalAlpha = 0.9; g.lineWidth = 2.4;
+  g.setLineDash([6, 5]); g.lineDashOffset = -t * 14;
+  g.beginPath(); g.ellipse(ch.x, ch.y + 2, 24 * p, 9 * p, 0, 0, TAU); g.stroke();
+  g.restore();
+}
+
+/* =========================================================
+   7. 배경 위 오버레이 (전광판)
+   ========================================================= */
+function drawTVBoard(g, t) {
+  const d = data || {};
+  if (!d.board) return;
+  // 벽면 스크린 (원근에 맞춘 사각형)
+  const p = [[1206, 548], [1392, 580], [1392, 668], [1206, 636]];
+  g.save();
+  g.beginPath();
+  g.moveTo(p[0][0], p[0][1]); g.lineTo(p[1][0], p[1][1]); g.lineTo(p[2][0], p[2][1]); g.lineTo(p[3][0], p[3][1]);
+  g.closePath();
+  const grad = g.createLinearGradient(1206, 556, 1392, 688);
+  grad.addColorStop(0, 'rgba(18,32,34,0.92)');
+  grad.addColorStop(1, 'rgba(10,20,24,0.94)');
+  g.fillStyle = grad; g.fill();
+  g.strokeStyle = 'rgba(110,231,183,0.35)'; g.lineWidth = 2; g.stroke();
+  g.clip();
+
+  g.font = fw(800, 13); g.fillStyle = '#8ff3e0';
+  g.fillText(d.board.title || '오늘의 파이프라인', 1218, 574);
+  g.fillStyle = 'rgba(143,243,224,0.30)'; g.fillRect(1218, 580, 40, 1.5);
+
+  (d.board.rows || []).slice(0, 4).forEach((r, i) => {
+    const cx = 1218 + (i % 2) * 88;
+    const cy = 594 + Math.floor(i / 2) * 32;
+    g.font = fw(600, 8); g.fillStyle = 'rgba(200,230,235,0.62)';
+    g.fillText(r.label || '', cx, cy);
+    g.font = fw(800, 15);
+    g.fillStyle = r.tone === 'ok' ? '#6ee7b7' : r.tone === 'wait' ? '#fbbf24' : r.tone === 'info' ? '#7dd3fc' : '#c4b5fd';
+    g.fillText(String(r.value || '') + (r.unit || ''), cx, cy + 15);
+  });
+
+  // 티커
+  const ty = 652, tw = 168;
+  g.save();
+  g.beginPath(); g.rect(1218, ty - 10, tw, 14); g.clip();
+  g.font = fw(600, 7.5); g.fillStyle = 'rgba(143,243,224,0.7)';
+  const txt = '●  ' + (d.board.ticker || '') + '      ';
+  const tw2 = g.measureText(txt).width;
+  const off = -((t * 18) % Math.max(1, tw2));
+  g.fillText(txt, 1218 + off, ty);
+  g.fillText(txt, 1218 + off + tw2, ty);
+  g.restore();
+  g.restore();
+}
+
+/* =========================================================
+   8. 말풍선 · 이름표 (화면 좌표)
+   ========================================================= */
+function wrapText(g, text, maxW) {
+  const out = []; let line = '';
+  for (const c of Array.from(text)) {
+    const test = line + c;
+    if (g.measureText(test).width > maxW && line) { out.push(line); line = c; }
+    else line = test;
+  }
+  if (line) out.push(line);
+  return out.slice(0, 3);
+}
+function drawBubbles(g, t) {
+  const placed = [];
+  for (const ch of chars) {
+    if (!ch.visible || !ch.bubble) continue;
+    const left = ch.bubbleUntil - t;
+    if (left <= 0) continue;
+    const age = t - ch.bubbleStart;
+    const alpha = Math.min(1, age / 0.22, left / 0.35);
+    const p = project(ch.x, ch.y - 78);
+    g.save();
+    g.globalAlpha = alpha;
+    g.font = fw(700, 10.5);
+    const padX = 8, padY = 6, lh = 14;
+    const lines = wrapText(g, ch.bubble, 118);
+    let tw = 0;
+    for (const l of lines) tw = Math.max(tw, g.measureText(l).width);
+    const bw = Math.min(134, tw + padX * 2);
+    const bh = lines.length * lh + padY * 2 - 2;
+    let bx = clamp(p.x - bw / 2, 4, vw - bw - 4);
+    let by = Math.max(4, p.y - bh - 10);
+
+    g.fillStyle = 'rgba(255,251,244,0.97)';
+    g.strokeStyle = 'rgba(60,40,20,0.18)'; g.lineWidth = 1;
+    const tailX = clamp(p.x, bx + 12, bx + bw - 12);
+    g.beginPath();
+    g.moveTo(tailX - 5, by + bh - 1); g.lineTo(tailX + 1, by + bh + 7); g.lineTo(tailX + 5, by + bh - 1);
+    g.closePath(); g.fill(); g.stroke();
+    g.shadowColor = 'rgba(40,20,0,0.35)'; g.shadowBlur = 8; g.shadowOffsetY = 2;
+    g.fillStyle = 'rgba(255,251,244,0.98)';
+    rr(g, bx, by, bw, bh, 9); g.fill();
+    g.shadowColor = 'transparent'; g.shadowBlur = 0; g.shadowOffsetY = 0;
+    g.strokeStyle = 'rgba(60,40,20,0.10)'; rr(g, bx, by, bw, bh, 9); g.stroke();
+    g.fillStyle = ch.color; g.fillRect(bx, by + 8, 2.5, bh - 16);
+    g.fillStyle = '#3a2a1c';
+    g.textBaseline = 'top';
+    lines.forEach((l, i) => g.fillText(l, bx + padX + 3, by + padY + i * lh));
+    g.restore();
+    g.textBaseline = 'alphabetic';
+  }
+}
+function drawBadges(g) {
+  if (cam.zoom < 0.5) return;
+  g.save();
+  g.textAlign = 'center';
+  for (const ch of chars) {
+    if (!ch.visible) continue;
+    const p = project(ch.x, ch.y + (ch.pose === 'seated' ? -16 : 6));
+    const label = ch.short + ' · ' + ch.rank.replace(' (Runyour Bot)', '').replace(' · ', ' ');
+    g.font = fw(800, 9);
+    const tw = g.measureText(label).width;
+    const bw = tw + 13, bh = 13;
+    const bx = p.x - bw / 2, by = p.y;
+    if (bx > vw || bx + bw < 0 || by > vh || by + bh < 0) continue;
+    const st = STATUS_META[ch.status] || STATUS_META.working;
+    g.fillStyle = 'rgba(20,14,9,0.84)';
+    rr(g, bx, by, bw, bh, 7); g.fill();
+    g.strokeStyle = 'rgba(245,184,102,0.25)'; g.lineWidth = 1; rr(g, bx, by, bw, bh, 7); g.stroke();
+    g.fillStyle = ch.color;
+    g.beginPath(); g.arc(bx + 7, by + 7, 2.6, 0, TAU); g.fill();
+    g.fillStyle = 'rgba(250,240,228,0.95)';
+    g.textBaseline = 'middle';
+    g.fillText(label, bx + bw / 2 + 2, by + 7.6);
+    g.textBaseline = 'alphabetic';
+  }
+  g.restore();
+  g.textAlign = 'left';
+}
+
+/* =========================================================
+   9. 시뮬레이션 · 렌더 루프
+   ========================================================= */
+function stepChar(ch, dt) {
+  if (!ch.path.length) { ch.moving = false; return; }
+  const tg = ch.path[0];
+  const dx = tg.x - ch.x, dy = tg.y - ch.y;
+  const d = Math.hypot(dx, dy);
+  const sp = 105 * dt;
+  if (d < 3) {
+    ch.x = tg.x; ch.y = tg.y; ch.path.shift();
+    if (!ch.path.length) {
+      ch.moving = false;
+      ch.pose = (ch.action === 'working' || ch.action === 'idle') ? 'seated' : 'stand';
+    }
+  } else {
+    ch.x += dx / d * Math.min(sp, d);
+    ch.y += dy / d * Math.min(sp, d);
+    ch.dir = dx > 0.5 ? 1 : (dx < -0.5 ? -1 : ch.dir);
+    ch.walk += dt * 10;
+    ch.moving = true;
+    ch.pose = 'stand';
+  }
+}
+function tickBubbles(t) {
+  let active = 0;
+  for (const ch of chars) { if (ch.bubble && t < ch.bubbleUntil) active++; }
+  for (const ch of chars) {
+    if (!ch.visible) continue;
+    if (ch.bubble && t > ch.bubbleUntil) { ch.bubble = null; active--; }
+    let near = false;
+    for (const o of chars) {
+      if (o === ch || !o.bubble || t > o.bubbleUntil) continue;
+      if (Math.hypot(o.x - ch.x, o.y - ch.y) < 120) { near = true; break; }
+    }
+    if (!ch.bubble && !near && active < 4 && t > ch.nextBubble && ch.bubbles.length) {
+      active++;
+      ch.bubble = ch.bubbles[ch.bubbleIdx++ % ch.bubbles.length];
+      ch.bubbleStart = t;
+      ch.bubbleUntil = t + 4.8 + Math.random() * 2.2;
+      ch.nextBubble = t + 10 + Math.random() * 13;
+    }
+  }
+}
+let lastT = 0;
+function frame(now) {
+  const t = now / 1000;
+  const dt = Math.min(0.05, lastT ? t - lastT : 0.016);
+  lastT = t;
+
+  const k = 1 - Math.exp(-9 * dt);
+  cam.x = lerp(cam.x, camT.x, k);
+  cam.y = lerp(cam.y, camT.y, k);
+  cam.zoom = lerp(cam.zoom, camT.zoom, k);
+
+  for (const ch of chars) {
+    if (!ch.visible) continue;
+    if (!ch.started) {
+      if (t >= ch.startAt) { ch.started = true; retarget(ch, true); }
+      else continue;
+    }
+    const tg = targetFor(ch);
+    const key = tg.key;
+    if (ch.targetKey !== key) retarget(ch);
+    ch.action = key;
+    stepChar(ch, dt);
+  }
+  tickBubbles(t);
+
+  const want = phaseMode === 'auto' ? autoPhase(new Date().getHours()) : phaseMode;
+  phaseKey = want;
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, vw, vh);
+  ctx.fillStyle = '#0a0807'; ctx.fillRect(0, 0, vw, vh);
+
+  ctx.save();
+  ctx.translate(vw / 2, vh / 2);
+  ctx.scale(cam.zoom, cam.zoom);
+  ctx.translate(-cam.x, -cam.y);
+
+  const ph = PHASES[phaseKey];
+  const im = IMG[ph.img];
+  if (im) {
+    ctx.drawImage(im, 0, 0, W, H);
+  } else {
+    // 이미지 로딩 전 임시 바닥
+    ctx.fillStyle = '#5a4130'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    for (let y = 0; y < H; y += 64) ctx.fillRect(0, y, W, 2);
+  }
+  if (ph.tint !== 'rgba(255,255,255,0.00)') { ctx.fillStyle = ph.tint; ctx.fillRect(0, 0, W, H); }
+
+  drawTVBoard(ctx, t);
+
+  const sorted = chars.filter(c => c.visible).sort((a, b) => a.y - b.y);
+  for (const ch of sorted) {
+    if (ch.id === selectedId) drawSelection(ctx, ch, t);
+    if (ch.status === 'off') ctx.globalAlpha = 0.55;
+    drawChar(ctx, ch, t);
+    ctx.globalAlpha = 1;
+  }
+  ctx.restore();
+
+  drawBubbles(ctx, t);
+  drawBadges(ctx);
+  updateHud();
+  requestAnimationFrame(frame);
+}
+
+/* =========================================================
+   10. HUD · 패널
+   ========================================================= */
+const hudEl = document.getElementById('hud');
+let hudKey = '';
+function updateHud() {
+  const c = { working: 0, meeting: 0, break: 0, idle: 0, off: 0 };
+  chars.forEach(ch => { if (ch.visible && c[ch.status] !== undefined) c[ch.status]++; });
+  const key = Object.values(c).join('/');
+  if (key !== hudKey) {
+    hudKey = key;
+    hudEl.innerHTML =
+      '<span><i style="background:#6ee7b7"></i>근무 ' + c.working + '</span>' +
+      '<span><i style="background:#7dd3fc"></i>회의 ' + c.meeting + '</span>' +
+      '<span><i style="background:#fbbf24"></i>휴식 ' + c.break + '</span>' +
+      '<span><i style="background:#cbd5e1"></i>대기 ' + c.idle + '</span>' +
+      '<span><i style="background:#94a3b8"></i>퇴근 ' + c.off + '</span>';
+  }
+}
+
+function renderAll() { renderOffice(); renderTasks(); renderStaff(); renderLog(); }
+
+function renderOffice() {
+  const d = data || {};
+  const el = document.getElementById('pane-office');
+  const rows = ((d.board && d.board.rows) || []).map(r => {
+    const col = r.tone === 'ok' ? '#6ee7b7' : r.tone === 'wait' ? '#fbbf24' : r.tone === 'info' ? '#7dd3fc' : '#c4b5fd';
+    return '<div class="boardrow"><span class="lab">' + r.label + '</span><span class="val" style="color:' + col + '">' + r.value + (r.unit || '') + '</span></div>';
+  }).join('');
+  const doneTasks = ((d.tasks) || []).filter(x => x.state === 'done').slice(0, 3).map(x =>
+    '<div class="task"><div class="ico" style="background:#12352b;color:#6ee7b7">✓</div>' +
+    '<div style="min-width:0"><div class="tt">' + x.title + '</div><div class="tn">' + (x.note || '') + ' · ' + x.owner + '</div></div></div>').join('');
+  el.innerHTML =
+    '<div class="mini">' + ((d.office && d.office.greeting) || '오늘도 함께 일하고 있어요') + '</div>' +
+    rows +
+    '<div class="tick">● ' + ((d.board && d.board.ticker) || '') + '</div>' +
+    '<div class="mini">최근 완료</div>' + (doneTasks || '<div class="empty">완료된 업무가 없습니다</div>') +
+    '<div class="mini">데이터 ' + (localMode ? '내장' : 'status.json') + ' · 갱신 ' + (lastSync || '-') + '</div>';
+}
+function renderTasks() {
+  const d = data || {};
+  const el = document.getElementById('pane-tasks');
+  const order = { progress: 0, waiting: 1, done: 2 };
+  const list = ((d.tasks) || []).slice().sort((a, b) => (order[a.state] ?? 3) - (order[b.state] ?? 3));
+  if (!list.length) { el.innerHTML = '<div class="empty">표시할 업무가 없습니다</div>'; return; }
+  el.innerHTML = list.map(x => {
+    const st = x.state === 'done' ? { c: '#6ee7b7', bg: '#12352b', t: '완료', ico: '✓' }
+      : x.state === 'waiting' ? { c: '#94a3b8', bg: '#1e2430', t: '대기', ico: '⋯' }
+      : { c: '#f5b866', bg: '#3a2a12', t: '진행 중', ico: '▸' };
+    return '<div class="task">' +
+      '<div class="ico" style="background:' + st.bg + ';color:' + st.c + '">' + st.ico + '</div>' +
+      '<div style="min-width:0;flex:1">' +
+        '<div class="tt">' + x.title + '</div>' +
+        '<div class="bar"><i style="width:' + (x.progress || 0) + '%;background:' + st.c + '"></i></div>' +
+        '<div class="tmeta"><span class="who">' + x.owner + '</span><span>·</span><span>' + st.t + '</span>' +
+          (x.note ? '<span style="margin-left:auto">' + x.note + '</span>' : '') + '</div>' +
+      '</div></div>';
+  }).join('');
+}
+function renderStaff() {
+  const el = document.getElementById('pane-staff');
+  const list = chars.filter(c => c.visible).sort((a, b) => a.order - b.order);
+  el.innerHTML = list.map(ch => {
+    const st = STATUS_META[ch.status] || STATUS_META.working;
+    return '<div class="srow' + (ch.id === selectedId ? ' sel' : '') + '" data-id="' + ch.id + '">' +
+      '<span class="sav" style="background:' + ch.color + '22;border:1px solid ' + ch.color + '55">' +
+        '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + ch.color + '"></span></span>' +
+      '<span style="min-width:0;flex:1"><span class="sname">' + ch.name + ' <span style="color:#8a7660;font-weight:700">· ' + ch.rank + '</span></span>' +
+      '<span class="stask">' + (ch.task || '') + '</span></span>' +
+      '<span class="badge" style="color:' + st.color + ';background:' + st.color + '18;border:1px solid ' + st.color + '44">' + st.label + '</span>' +
+    '</div>';
+  }).join('');
+  el.querySelectorAll('.srow').forEach(row => {
+    row.addEventListener('click', () => selectStaff(row.getAttribute('data-id'), true));
+  });
+}
+function renderLog() {
+  const el = document.getElementById('pane-log');
+  if (!logs.length) { el.innerHTML = '<div class="empty">기록이 없습니다</div>'; return; }
+  el.innerHTML = logs.slice(0, 40).map(l =>
+    '<div class="lrow' + (l.live ? ' live' : '') + '">' +
+      '<span class="t">' + (l.time || '') + '</span>' +
+      '<span class="w">' + (l.who || '') + '</span>' +
+      '<span class="x">' + (l.text || '') + '</span>' +
+      (l.live ? '<span class="tag">LIVE</span>' : '') +
+    '</div>').join('');
+}
+function selectStaff(id, focus) {
+  selectedId = (selectedId === id) ? null : id;
+  renderStaff();
+  if (selectedId && focus) {
+    const ch = chars.find(c => c.id === selectedId);
+    if (ch) {
+      camT.x = ch.x; camT.y = ch.y - 20;
+      camT.zoom = Math.max(camT.zoom, 0.95);
+      userZoomed = true;
+      clampCam(camT);
+    }
+  }
+  if (selectedId) switchTab('staff');
+}
+function switchTab(name) {
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.getAttribute('data-tab') === name));
+  ['office', 'tasks', 'staff', 'log'].forEach(k => {
+    document.getElementById('pane-' + k).hidden = k !== name;
+  });
+}
+
+/* =========================================================
+   11. UI 바인딩
+   ========================================================= */
+const phasesEl = document.getElementById('phases');
+phasesEl.innerHTML = [['auto', '자동']].concat(PHASE_ORDER.map(k => [k, PHASES[k].label]))
+  .map(([k, l]) => '<button data-ph="' + k + '"' + (k === 'auto' ? ' class="on"' : '') + '>' + l + '</button>').join('');
+phasesEl.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  phaseMode = b.getAttribute('data-ph');
+  phasesEl.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+});
+document.getElementById('tabs').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  switchTab(b.getAttribute('data-tab'));
+});
+document.getElementById('zin').addEventListener('click', () => zoomAt(1.3, vw / 2, vh / 2));
+document.getElementById('zout').addEventListener('click', () => zoomAt(1 / 1.3, vw / 2, vh / 2));
+document.getElementById('zfit').addEventListener('click', fitAll);
+
+function tickClock() {
+  const d = new Date();
+  const ph = PHASES[phaseMode === 'auto' ? autoPhase(d.getHours()) : phaseMode];
+  document.getElementById('clock').textContent = pad2(d.getHours()) + ':' + pad2(d.getMinutes()) + ' · ' + ph.label;
+  document.getElementById('clock').style.color = ph.css;
+}
+setInterval(tickClock, 5000);
+tickClock();
+
+/* 포인터 */
+const pointers = new Map();
+let dragMoved = false, downTime = 0, pinchStart = 0, pinchZoom0 = 1;
+function cpos(e) { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+cv.addEventListener('pointerdown', e => {
+  cv.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId, cpos(e));
+  dragMoved = false; downTime = performance.now();
+  if (pointers.size === 2) {
+    const [a, b] = Array.from(pointers.values());
+    pinchStart = Math.hypot(a.x - b.x, a.y - b.y);
+    pinchZoom0 = cam.zoom;
+  }
+});
+cv.addEventListener('pointermove', e => {
+  if (!pointers.has(e.pointerId)) return;
+  const prev = pointers.get(e.pointerId), p = cpos(e);
+  pointers.set(e.pointerId, p);
+  if (pointers.size === 2) {
+    const [a, b] = Array.from(pointers.values());
+    const d = Math.hypot(a.x - b.x, a.y - b.y);
+    if (pinchStart > 10) {
+      const z = clamp(pinchZoom0 * (d / pinchStart), fitZoom() * 0.9, 2.6);
+      const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      const wx = (mx - vw / 2) / cam.zoom + cam.x, wy = (my - vh / 2) / cam.zoom + cam.y;
+      cam.zoom = z; camT.zoom = z;
+      cam.x = wx - (mx - vw / 2) / z; cam.y = wy - (my - vh / 2) / z;
+      camT.x = cam.x; camT.y = cam.y; userZoomed = true;
+      clampCam(camT); cam.x = camT.x; cam.y = camT.y;
+    }
+    dragMoved = true;
+    return;
+  }
+  const dx = p.x - prev.x, dy = p.y - prev.y;
+  if (Math.abs(dx) + Math.abs(dy) > 2) dragMoved = true;
+  if (dragMoved) {
+    cam.x -= dx / cam.zoom; cam.y -= dy / cam.zoom;
+    camT.x = cam.x; camT.y = cam.y;
+    clampCam(camT); cam.x = camT.x; cam.y = camT.y;
+  }
+});
+function endPointer(e) {
+  if (!pointers.has(e.pointerId)) return;
+  const p = pointers.get(e.pointerId);
+  pointers.delete(e.pointerId);
+  if (pointers.size === 0 && !dragMoved && performance.now() - downTime < 620) {
+    const wx = (p.x - vw / 2) / cam.zoom + cam.x;
+    const wy = (p.y - vh / 2) / cam.zoom + cam.y;
+    let best = null, bd = 34;
+    for (const ch of chars) {
+      if (!ch.visible) continue;
+      const d = Math.hypot(wx - ch.x, wy - (ch.y - 30));
+      if (d < bd) { bd = d; best = ch; }
+    }
+    if (best) selectStaff(best.id, false);
+    else if (selectedId) { selectedId = null; renderStaff(); }
+  }
+}
+cv.addEventListener('pointerup', endPointer);
+cv.addEventListener('pointercancel', e => pointers.delete(e.pointerId));
+cv.addEventListener('wheel', e => { e.preventDefault(); const p = cpos(e); zoomAt(e.deltaY > 0 ? 0.9 : 1.1, p.x, p.y); }, { passive: false });
+
+/* =========================================================
+   12. 데이터
+   ========================================================= */
+function fallbackData() {
+  try { return JSON.parse(document.getElementById('fallback-status').textContent); } catch (e) { return null; }
+}
+async function loadStatus(first) {
+  const fb = fallbackData();
+  try {
+    const res = await fetch('status.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const txt = await res.text();
+    lastRaw = txt;
+    const d = JSON.parse(txt);
+    localMode = false;
+    applyStatus(d);
+  } catch (e) {
+    localMode = true;
+    if (first && fb) applyStatus(fb);
+  }
+  if (first) chars.forEach((ch, i) => { ch.startAt = 0.9 + i * 0.22; });
+}
+async function poll() {
+  try {
+    const res = await fetch('status.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) return;
+    const txt = await res.text();
+    if (txt === lastRaw) return;
+    lastRaw = txt;
+    const d = JSON.parse(txt);
+    if (applyStatus(d)) pushLog('해이', 'status.json 갱신 반영', 'live');
+  } catch (e) {}
+}
+
+/* =========================================================
+   13. 시작
+   ========================================================= */
+function boot() {
+  buildGrid();
+  loadImages();
+  const fb = fallbackData();
+  if (fb) applyStatus(fb);
+  resize();
+  renderAll();
+  loadStatus(true).then(() => { resize(); renderAll(); });
+  requestAnimationFrame(frame);
+  setInterval(poll, 20000);
+}
+window.AI_OFFICE = {
+  setStatus: d => applyStatus(d),
+  chars: () => chars.map(c => ({ id: c.id, name: c.name, status: c.status, x: Math.round(c.x), y: Math.round(c.y), pose: c.pose, moving: c.moving })),
+  phase: () => phaseKey,
+  zoom: () => cam.zoom
+};
+boot();
+})();
+</script>
+
+<script>
+/* PWA: 서비스 워커 등록 (설치형 앱 요건) */
+(function () {
+  if (!('serviceWorker' in navigator)) return;
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js').catch(function () {});
+  });
+})();
+</script>
+</body>
+</html>
