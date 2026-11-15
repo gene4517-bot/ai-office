@@ -1087,7 +1087,6 @@
     picker.focus();
     picker.click();
   }
-  $('#dateLabel').addEventListener('click', openPicker);
   $('#weekdayLabel').addEventListener('click', openPicker);
   picker.addEventListener('change', function () { if (picker.value) setDate(picker.value); });
 

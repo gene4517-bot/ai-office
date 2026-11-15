@@ -113,10 +113,13 @@ body::before{
 .date-picker{
   position:absolute;
   left:0; top:0;
-  width:1px; height:1px;
+  width:100%; height:100%;
   opacity:0;
-  pointer-events:none;
-  border:0; padding:0;
+  border:0; padding:0; margin:0;
+  cursor:pointer;
+  z-index:2;
+  font-size:0;
+  -webkit-appearance:none;
 }
 
 .weekday{
