@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>데일리 4X 플래너</title>
+<meta name="description" content="하루를 정갈하게 기록하는 데일리 4X 플래너 · 시간표 · 운동 · 습관 · 메모">
+<meta name="theme-color" content="#efe6db">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="4X 플래너">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<div class="sheet">
+  <div class="wrap">
+
+    <header class="topbar">
+      <div class="date-cluster">
+        <button class="nav-btn" id="prevDay" type="button" aria-label="전날">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="date-block">
+          <h1 class="date" id="dateLabel" title="날짜 선택">2026.11.15</h1>
+          <input type="date" id="datePicker" class="date-picker" aria-label="날짜 선택">
+        </div>
+        <button class="weekday" id="weekdayLabel" type="button" aria-label="날짜 선택">일요일</button>
+        <button class="nav-btn" id="nextDay" type="button" aria-label="다음날">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="brand" aria-label="데일리 4X 플래너">
+        <span class="brand-a">데일리</span><b class="brand-x">4X</b><span class="brand-a">플래너</span>
+      </div>
+    </header>
+
+    <section class="summary card" aria-label="오늘의 달성 요약">
+      <div class="gauge">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <circle class="gauge-track" cx="50" cy="50" r="43" pathLength="100"></circle>
+          <circle class="gauge-fill" id="gaugeFill" cx="50" cy="50" r="43" pathLength="100"></circle>
+        </svg>
+        <span class="gauge-num" id="gaugeNum">0%</span>
+      </div>
+      <div class="stat">
+        <div class="stat-num"><b id="statDone">0</b><span id="statTotal">/0</span></div>
+        <div class="stat-cap">실행한 계획</div>
+      </div>
+      <div class="stat stat-set">
+        <div class="stat-num"><b id="statSet">0</b></div>
+        <div class="stat-cap">SET</div>
+      </div>
+      <div class="cats" id="catSummary"></div>
+    </section>
+
+    <main class="layout">
+
+      <section class="card table-card" aria-label="시간표">
+        <div class="table-tools">
+          <span class="save-flag" id="saveFlag" aria-live="polite">저장됨</span>
+          <div class="tool-actions">
+            <button class="ghost-btn" id="copyPrev" type="button">전날 루틴 복사</button>
+            <button class="ghost-btn" id="resetDay" type="button">초기화</button>
+            <button class="ghost-btn install-btn" id="installBtn" type="button" hidden>앱 설치</button>
+          </div>
+        </div>
+
+        <div class="grid-head" aria-hidden="true">
+          <div class="gh gh-set">SET</div>
+          <div class="gh gh-time">TIME</div>
+          <div class="gh gh-cat">분류</div>
+          <div class="gh gh-action">ACTION</div>
+          <div class="gh gh-pr">우선순위</div>
+          <div class="gh gh-ck">✓</div>
+          <div class="gh gh-plan">PLAN</div>
+        </div>
+
+        <div class="grid" id="gridDesktop"></div>
+        <div class="rows-mobile" id="gridMobile"></div>
+
+        <div class="table-foot">
+          <button class="add-row" id="addRow" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            행 추가
+          </button>
+          <span class="hint">칸을 눌러 바로 적고, 동그라미를 누르면 완료됩니다.</span>
+        </div>
+      </section>
+
+      <aside class="side">
+
+        <section class="card fitness" aria-label="운동 기록">
+          <div class="card-head">
+            <span class="card-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </span>
+            <h2 class="card-title">FITNESS</h2>
+            <div class="card-meta fit-meta">
+              <span>수면 <input class="mini-in" id="sleepIn" inputmode="decimal" aria-label="수면 시간" placeholder="0">시간</span>
+              <span class="dot-sep">·</span>
+              <span>체중 <input class="mini-in wide" id="weightIn" inputmode="decimal" aria-label="체중" placeholder="0">kg</span>
+            </div>
+          </div>
+
+          <div class="fit-head" aria-hidden="true">
+            <span class="fit-name-h"></span>
+            <div class="fit-cells-head" id="fitHead"></div>
+            <span class="fit-total-h">합계</span>
+          </div>
+
+          <div class="fit-rows" id="fitRows"></div>
+
+          <button class="add-mini" id="addFit" type="button">+ 운동 항목 추가</button>
+        </section>
+
+        <section class="card habits" aria-label="습관">
+          <div class="card-head">
+            <span class="card-ico ico-green" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M5 13l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <h2 class="card-title">HABITS</h2>
+            <div class="card-meta"><span id="habitCount">0/0</span></div>
+          </div>
+          <div class="habits-grid" id="habitRows"></div>
+          <button class="add-mini" id="addHabit" type="button">+ 습관 추가</button>
+        </section>
+
+        <section class="card note" aria-label="메모">
+          <div class="card-head">
+            <span class="card-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 20l4.2-1 9.3-9.3-3.2-3.2L5 15.8 4 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14.6 5.9l3.2 3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </span>
+            <h2 class="card-title">NOTE</h2>
+          </div>
+
+          <div class="note-sec">
+            <span class="pill">KEYWORD</span>
+            <div class="note-body" contenteditable="true" data-note="keyword" data-ph="키워드를 적어 두세요" spellcheck="false"><div><br></div></div>
+          </div>
+          <div class="note-sec">
+            <span class="pill">IDEA</span>
+            <div class="note-body" contenteditable="true" data-note="idea" data-ph="떠오른 아이디어를 적어 두세요" spellcheck="false"><div><br></div></div>
+          </div>
+          <div class="note-sec">
+            <span class="pill">ETC.</span>
+            <div class="note-body" contenteditable="true" data-note="etc" data-ph="그 밖에 기억할 것" spellcheck="false"><div><br></div></div>
+          </div>
+        </section>
+
+      </aside>
+    </main>
+
+    <footer class="foot">데일리 4X 플래너</footer>
+  </div>
+</div>
+
+<div class="pop" id="catMenu" hidden></div>
+<div class="toast" id="toast" hidden><span id="toastText"></span><button type="button" id="toastUndo" hidden>되돌리기</button></div>
+
+<script src="./app.js"></script>
+</body>
+</html>
