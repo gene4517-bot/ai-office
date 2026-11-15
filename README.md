@@ -64,6 +64,7 @@ Windows PC를 갤럭시 태블릿/폰에서 제어하는 **다크 컨트롤 대�
 
 - 주소: **https://gene4517-bot.github.io/ai-office/dashboard/** (이 폴더를 그대로 배포하면 됨)
 - 파일: `index.html` · `app.js` · `style.css` · `manifest.json` (외부 라이브러리 없음)
+- 홈 화면 아이콘: `icon-192.png` / `icon-512.png` (3D 입체 스튜디오 덱) + `icon-maskable-*.png` (안드로이드 적응형 아이콘용)
 - 화면: PC 연결 상태 · CPU · RAM · 배터리 · 안성/창원 날씨 · 화면 캡처 · 1~12 작업 상태 · 명령 카드 · Windows 앱 실행 타일
 - 반응형: 태블릿 가로(1280×800) 4열 / 태블릿 세로·폰 2열
 
