@@ -22,6 +22,13 @@
   var WEEK = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
   var SETS = 10;
 
+  /* 보기 모드 : 'fit'(한눈에 · 기본) / 'zoom'(크게) */
+  var VIEW_KEY = 'daily4x.view.v1';
+  var FIT_W = 1000;
+  var FIT_MAX = 1023;
+  var viewMode = 'fit';
+  try { if (localStorage.getItem(VIEW_KEY) === 'zoom') viewMode = 'zoom'; } catch (e) {}
+
   var CHECK_SVG =
     '<svg viewBox="0 0 24 24" aria-hidden="true">' +
     '<path d="M5 12.5l4.4 4.4L19 7.6" fill="none" stroke="#fff" stroke-width="3" ' +
@@ -739,8 +746,64 @@
   }
 
   /* ---------------- 편집 처리 ---------------- */
+  function fitOn() {
+    return document.documentElement.classList.contains('fit');
+  }
+
   function visibleRoot() {
+    if (fitOn()) return $('#gridDesktop');
     return window.matchMedia('(max-width: 700px)').matches ? $('#gridMobile') : $('#gridDesktop');
+  }
+
+  /* ---------------- 보기 모드 ---------------- */
+  function applyView() {
+    var vw = document.documentElement.clientWidth || window.innerWidth || 390;
+    var canFit = vw <= FIT_MAX;
+    var useFit = canFit && viewMode !== 'zoom';
+
+    document.documentElement.classList.toggle('fit', useFit);
+    if (useFit) {
+      var avail = vw - 6;
+      var z = Math.max(0.2, Math.min(1, avail / FIT_W));
+      document.documentElement.style.setProperty('--pz', String(z));
+      /* 세로가 모자라는 화면(태블릿 가로 등)은 한 면이 다 보이도록 한 번 더 줄입니다. */
+      var wrapEl = $('.wrap');
+      if (wrapEl) {
+        var maxH = (window.innerHeight || 800) - 78;
+        var h = wrapEl.getBoundingClientRect().height;
+        if (h > maxH && h > 0) {
+          var z2 = Math.max(0.2, z * (maxH / h));
+          /* 너무 작아지면(폰 가로 등) 억지로 맞추지 않고 폭에 맞춰 스크롤합니다. */
+          if (z2 >= z * 0.55) {
+            z = z2;
+            document.documentElement.style.setProperty('--pz', String(z));
+          }
+        }
+      }
+    } else {
+      document.documentElement.style.removeProperty('--pz');
+    }
+
+    var bf = $('#btnFit'), bz = $('#btnZoom'), hint = $('#viewHint');
+    if (bf && bz) {
+      bf.classList.toggle('on', useFit);
+      bf.setAttribute('aria-pressed', useFit ? 'true' : 'false');
+      bz.classList.toggle('on', canFit && !useFit);
+      bz.setAttribute('aria-pressed', (canFit && !useFit) ? 'true' : 'false');
+    }
+    if (hint) {
+      hint.textContent = useFit
+        ? '한 면 전체 보기 · 두 손가락으로 확대'
+        : '읽기 편한 크기 · 입력은 이 화면에서';
+    }
+  }
+
+  function setView(mode) {
+    viewMode = (mode === 'zoom') ? 'zoom' : 'fit';
+    try { localStorage.setItem(VIEW_KEY, viewMode); } catch (e) {}
+    closeCatMenu();
+    applyView();
+    if (fitOn()) window.scrollTo(0, 0);
   }
 
   function rowById(id) {
@@ -1069,9 +1132,16 @@
     }, 0);
   });
 
+  var resizeTimer = null;
   window.addEventListener('resize', function () {
     if (!catMenuEl.hidden) closeCatMenu();
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(applyView, 80);
   });
+
+  var btnFit = $('#btnFit'), btnZoom = $('#btnZoom');
+  if (btnFit) btnFit.addEventListener('click', function () { setView('fit'); });
+  if (btnZoom) btnZoom.addEventListener('click', function () { setView('zoom'); });
 
   document.addEventListener('scroll', function () {
     if (!catMenuEl.hidden) closeCatMenu();
@@ -1122,6 +1192,7 @@
   }
 
   /* ---------------- 시작 ---------------- */
+  applyView();
   day = getDay(date);
   state.lastDate = date;
   render();

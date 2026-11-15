@@ -2,7 +2,7 @@
    - 홈 화면 추가(설치) 요건 충족 + 오프라인에서도 열리도록 최소 캐시
    - 네트워크 우선: 항상 최신 파일을 먼저 시도하고, 실패했을 때만 캐시로 대체
    - 화면 기록은 localStorage 에 있으므로 캐시와 무관합니다 */
-const CACHE = 'daily4x-planner-v1';
+const CACHE = 'daily4x-planner-v2';
 const PRECACHE = [
   './',
   './index.html',

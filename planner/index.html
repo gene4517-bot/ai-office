@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, viewport-fit=cover">
 <title>데일리 4X 플래너</title>
 <meta name="description" content="하루를 정갈하게 기록하는 데일리 4X 플래너 · 시간표 · 운동 · 습관 · 메모">
 <meta name="theme-color" content="#efe6db">
@@ -16,8 +16,32 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="./style.css">
+<script>
+  /* 첫 페인트 전에 보기 모드를 정해 1단/2단이 깜빡이지 않게 합니다. */
+  (function () {
+    try {
+      var v = 'fit';
+      try { if (localStorage.getItem('daily4x.view.v1') === 'zoom') v = 'zoom'; } catch (e) {}
+      var vw = document.documentElement.clientWidth || window.innerWidth || 390;
+      if (v === 'fit' && vw <= 1023) {
+        document.documentElement.classList.add('fit');
+        document.documentElement.style.setProperty('--pz', String(Math.min(1, (vw - 6) / 1000)));
+      }
+    } catch (e) {}
+  })();
+</script>
 </head>
 <body>
+
+<div class="viewbar" id="viewBar">
+  <div class="viewbar-in">
+    <span class="viewhint" id="viewHint">한 면 전체 보기 · 두 손가락으로 확대</span>
+    <div class="viewswitch" role="group" aria-label="보기 방식">
+      <button type="button" id="btnFit" class="on" aria-pressed="true">한눈에</button>
+      <button type="button" id="btnZoom" aria-pressed="false">크게</button>
+    </div>
+  </div>
+</div>
 
 <div class="sheet">
   <div class="wrap">

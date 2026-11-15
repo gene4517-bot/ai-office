@@ -1189,8 +1189,216 @@ body::before{
   .brand{ font-size:13px; }
 }
 
+/* =========================================================
+   보기 전환 바 — [한눈에 / 크게]
+   캔버스(zoom) 밖에 두어 축소돼도 손가락으로 누를 수 있게 합니다.
+   ========================================================= */
+.viewbar{ display:none; }
+
+@media (max-width:1023px){
+  .viewbar{
+    display:block;
+    position:sticky;
+    top:0;
+    z-index:40;
+    padding:7px 10px 8px;
+    background:linear-gradient(180deg, rgba(244,236,226,.97) 0%, rgba(244,236,226,.9) 62%, rgba(244,236,226,0) 100%);
+    -webkit-backdrop-filter:blur(6px);
+    backdrop-filter:blur(6px);
+  }
+  .viewbar-in{ display:flex; align-items:center; gap:8px; }
+  .viewhint{
+    font-size:10.5px;
+    letter-spacing:-.01em;
+    color:#8d867b;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    min-width:0;
+  }
+  .viewswitch{
+    margin-left:auto;
+    flex:0 0 auto;
+    display:flex;
+    gap:2px;
+    padding:2px;
+    border-radius:999px;
+    background:rgba(255,255,255,.78);
+    box-shadow:inset 0 0 0 1px rgba(120,100,80,.14), 0 4px 14px -11px rgba(82,63,44,.95);
+  }
+  .viewswitch button{
+    border:0;
+    background:transparent;
+    font-family:inherit;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:-.01em;
+    color:#7d766c;
+    padding:5px 11px;
+    border-radius:999px;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .viewswitch button.on{ background:#1b1a17; color:#fff; }
+}
+
+/* =========================================================
+   한눈에 보기 — 폰에서도 사진처럼 한 면에 좌우 2단 전체
+   · html.fit 일 때만: 1000px 고정 캔버스를 화면 폭에 맞춰 축소(--pz)
+   · 아래 규칙은 위쪽 반응형 규칙보다 우선하도록 맨 뒤에 둡니다.
+   ========================================================= */
+
+html.fit body{
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+}
+html.fit .sheet{
+  width:100%;
+  flex:0 0 auto;
+  margin-top:auto;
+  margin-bottom:auto;
+}
+
+html.fit .wrap{
+  width:1000px;
+  max-width:none;
+  margin:0 auto;
+  padding:10px 16px 6px;
+  zoom:var(--pz, 1);
+}
+
+html.fit .topbar{
+  flex-wrap:nowrap;
+  align-items:center;
+  gap:12px;
+  margin:0 2px 10px;
+}
+html.fit .date-cluster{ gap:8px; }
+html.fit .date{ font-size:40px; }
+html.fit .weekday{ font-size:13px; padding:7px 15px; margin-top:3px; }
+html.fit .nav-btn{ width:28px; height:28px; }
+html.fit .brand{ font-size:19px; letter-spacing:.16em; margin-top:0; }
+
+html.fit .summary{
+  display:flex;
+  flex-wrap:nowrap;
+  align-items:center;
+  gap:0;
+  padding:11px 20px;
+  min-height:92px;
+  margin-bottom:12px;
+  border-radius:20px;
+}
+html.fit .gauge{ width:74px; height:74px; flex:0 0 74px; margin-right:16px; }
+html.fit .gauge-num{ font-size:18px; }
+html.fit .stat{ border-left:1px solid var(--line-soft); padding:2px 16px; min-width:0; }
+html.fit .stat-set{ min-width:0; }
+html.fit .stat-num b{ font-size:30px; }
+html.fit .stat-num span{ font-size:26px; }
+html.fit .stat-cap{ font-size:11px; margin-top:4px; }
+html.fit .cats{
+  margin-left:auto;
+  padding-left:12px;
+  width:auto;
+  flex-wrap:nowrap;
+  justify-content:flex-end;
+  gap:14px;
+  border-top:0;
+}
+html.fit .cat{ min-width:0; gap:3px; }
+html.fit .cat-v{ font-size:16px; }
+html.fit .cat-v small{ font-size:10px; }
+html.fit .cat-k{ font-size:10px; letter-spacing:.04em; gap:4px; }
+html.fit .cat-k i{ width:7px; height:7px; }
+
+html.fit .layout{
+  display:grid;
+  grid-template-columns:minmax(0,1.62fr) minmax(0,1fr);
+  gap:14px;
+  align-items:start;
+}
+html.fit .side{ display:flex; flex-direction:column; gap:14px; }
+html.fit .table-card{ padding:9px 11px 5px; border-radius:20px; }
+html.fit .table-tools{ min-height:20px; padding:0 2px 4px; gap:8px; }
+html.fit .tool-actions{ gap:5px; }
+html.fit .ghost-btn{ font-size:10px; padding:3px 9px; }
+html.fit .save-flag{ font-size:9.5px; }
+
+html.fit .grid-head,
+html.fit .grid{
+  display:grid;
+  grid-template-columns:28px 72px 82px minmax(0,1fr) 28px 30px 94px;
+}
+html.fit .gh{ font-size:9px; letter-spacing:.06em; padding:1px 4px; }
+html.fit .gh-pr{ font-size:8px; }
+html.fit .gh-ck{ font-size:11px; }
+html.fit .rows-mobile{ display:none; }
+html.fit .cell{ min-height:50px; padding:2px 4px; }
+html.fit .c-time{ font-size:11.5px; padding-left:3px; }
+html.fit .c-time .ap{ font-size:9.5px; margin-right:3px; }
+html.fit .c-act{ font-size:12px; padding:5px 6px; line-height:1.3; }
+html.fit .c-act .a-sub{ font-size:10.5px; }
+html.fit .badge{ font-size:9.5px; padding:3px 6px; letter-spacing:.03em; }
+html.fit .setbar{ width:22px; border-radius:7px; }
+html.fit .setbar > .set-in{ font-size:11px; }
+html.fit .check{ width:19px; height:19px; }
+html.fit .check svg{ width:10px; height:10px; }
+html.fit .plan-box{ font-size:11px; padding:4px 7px; border-radius:8px; }
+html.fit .pr-in{ width:18px; font-size:11px; }
+html.fit .table-foot{ padding:6px 2px 1px; gap:8px; }
+html.fit .add-row{ font-size:11px; padding:5px 11px; }
+html.fit .hint{ font-size:9.5px; }
+html.fit .foot{ font-size:11px; letter-spacing:.3em; margin:14px 0 2px; }
+
+html.fit .fitness,
+html.fit .habits,
+html.fit .note{ padding:13px 14px 11px; border-radius:20px; }
+html.fit .card-head{ gap:8px; margin-bottom:8px; }
+html.fit .card-ico{ width:27px; height:27px; flex:0 0 27px; border-radius:8px; }
+html.fit .card-ico svg{ width:15px; height:15px; }
+html.fit .card-title{ font-size:13px; letter-spacing:.14em; }
+html.fit .card-meta{ font-size:10px; }
+html.fit .mini-in{ width:22px; font-size:10px; }
+html.fit .mini-in.wide{ width:32px; }
+
+html.fit .fit-head,
+html.fit .fit-row{
+  display:grid;
+  grid-template-columns:82px minmax(0,1fr) 36px;
+  grid-template-areas:none;
+  gap:4px;
+}
+html.fit .fit-head{ align-items:center; padding:1px 0 4px; }
+html.fit .fit-row{ align-items:center; min-height:36px; padding:0; }
+html.fit .fit-name,
+html.fit .fit-cells,
+html.fit .fit-total{ grid-area:auto; }
+html.fit .fit-cells-head span{ font-size:8.5px; }
+html.fit .fit-total-h{ font-size:8.5px; }
+html.fit .fit-name{ font-size:11px; gap:3px; }
+html.fit .fit-name .n{ max-width:62px; font-size:11px; }
+html.fit .fit-name .u{ font-size:9px; }
+html.fit .fit-cells{ gap:0; padding-top:0; }
+html.fit .fit-in{ font-size:10px; padding:4px 0; background:transparent; border-radius:5px; }
+html.fit .fit-total{ font-size:11.5px; }
+html.fit .add-mini{ font-size:10px; margin-top:6px; padding:3px 2px; }
+
+html.fit .habits-grid{ grid-template-columns:1fr 1fr; gap:7px 10px; }
+html.fit .habit{ gap:6px; }
+html.fit .habit .check{ width:18px; height:18px; }
+html.fit .habit .check svg{ width:9px; height:9px; }
+html.fit .habit-t{ font-size:11.5px; }
+html.fit .habit-del{ opacity:.28; font-size:11px; }
+
+html.fit .pill{ font-size:8.5px; padding:4px 9px; margin:5px 0 5px; letter-spacing:.14em; }
+html.fit .note-sec{ margin-bottom:4px; }
+html.fit .note-body{ font-size:11px; line-height:1.5; min-height:16px; }
+html.fit .note-body > div{ padding-left:9px; }
+
 /* 인쇄 */
 @media print{
+  .viewbar{ display:none; }
   body{ background:#fff; }
   body::before{ display:none; }
   .topbar .nav-btn, .table-tools, .table-foot, .add-mini{ display:none; }
