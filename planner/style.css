@@ -1055,6 +1055,9 @@ body::before{
   }
   .m-row.tint{ background:#f5f9fd; border-color:#dfe9f3; }
   .m-row.done{ background:#fbfaf7; }
+  .m-row.empty{ padding:4px 10px 5px; }
+  .m-row.empty .m-plan{ display:none; }
+  .m-row.empty .m-act{ min-height:16px; }
 
   .m-top{
     display:flex;

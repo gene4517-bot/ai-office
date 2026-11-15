@@ -448,8 +448,10 @@
     host.innerHTML = '';
     rows.forEach(function (row) {
       var hasSet = String(row.set || '').trim() !== '';
+      var isEmpty = !hasSet && !row.cat && !row.done &&
+        String(row.action || '').trim() === '' && String(row.plan || '').trim() === '';
       var card = document.createElement('div');
-      card.className = 'm-row' + (hasSet ? ' tint' : '') + (row.done ? ' done' : '');
+      card.className = 'm-row' + (hasSet ? ' tint' : '') + (row.done ? ' done' : '') + (isEmpty ? ' empty' : '');
       card.setAttribute('data-row', row.id);
 
       var top = document.createElement('div');
