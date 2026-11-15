@@ -4,7 +4,8 @@
    - PC 브릿지(http://192.168.x.x:8765 · http://localhost:8765 · Tailscale)나 날씨 API 같은
      외부 요청은 절대 가로채지 않고 그대로 통과시킵니다. */
 const CACHE = 'pc-dashboard-v1';
-const PRECACHE = ['./', './index.html', './manifest.json'];
+const PRECACHE = ['./', './index.html', './style.css', './app.js', './manifest.json',
+                  './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', (e) => {
   self.skipWaiting();
