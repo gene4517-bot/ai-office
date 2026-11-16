@@ -799,6 +799,7 @@ const stageEl = document.getElementById('stage');
 let vw = 400, vh = 400, dpr = 1;
 let cam = { x: W / 2, y: H / 2, zoom: 0.5 };
 let camDrift = { x: 0, y: 0, z: 1 };
+let driftOn = true;
 let camT = { x: W / 2, y: H / 2, zoom: 0.5 };
 let userZoomed = false;
 
@@ -1541,7 +1542,7 @@ function frame(now) {
   cam.y = lerp(cam.y, camT.y, k);
   cam.zoom = lerp(cam.zoom, camT.zoom, k);
   // 은은한 카메라 드리프트 (사용자가 직접 만지지 않았을 때만)
-  camDrift = userZoomed ? { x: camDrift.x, y: camDrift.y, z: camDrift.z } : {
+  camDrift = (userZoomed || !driftOn) ? { x: 0, y: 0, z: 1 } : {
     x: Math.sin(t * 0.115) * 13,
     y: Math.cos(t * 0.092) * 7,
     z: 1 + Math.sin(t * 0.061) * 0.011
@@ -1870,6 +1871,8 @@ function boot() {
 }
 window.AI_OFFICE = {
   setStatus: d => applyStatus(d),
+  setDrift: on => { driftOn = !!on; },
+  setPhase: ph => { phaseMode = ph; },
   chars: () => chars.map(c => ({ id: c.id, name: c.name, status: c.status, x: Math.round(c.x), y: Math.round(c.y), pose: c.pose, moving: c.moving })),
   phase: () => phaseKey,
   zoom: () => cam.zoom
