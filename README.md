@@ -1,6 +1,6 @@
 # 🏢 AI 사무실 · 움직이는 1인 기업 본부 (프로토타입 v2)
 
-아이소메트릭(쿼터뷰) 사무실 일러스트 위에서 14명(대표님 + AI 직원 13명)이
+아이소메트릭(쿼터뷰) 사무실 일러스트 위에서 16명(대표님 + AI 직원 15명)이
 일하고, 회의하고, 커피 마시러 걷는 **움직이는 사무실 웹앱**입니다.
 설치형 앱(PWA)으로 구성되어 있어 휴대폰 홈 화면에 추가하면 주소창 없는 앱처럼 열립니다.
 
@@ -120,13 +120,28 @@ Windows PC를 갤럭시 태블릿/폰에서 제어하는 **다크 컨트롤 대�
 | id | 이름 | 직급 | 자리 |
 | --- | --- | --- | --- |
 | ceo | 대표님 | CEO | 대표실 책상 |
-| haei | 해이 | 비서실장 | 리셉션 |
-| claude · cue · manus · hark | 기획·리서치팀 | 과장·대리·사원·사원 | 중앙 책상 A |
-| chatgpt · grok · gemini · muse · instinct | 정보·상담·SNS팀 | 차장·대리·사원·인턴·인턴 | 중앙 책상 B |
-| rua · stardesk · tailscale | 전산·PC 관리팀 | 대리·기사·기사 | 중앙 책상 C |
+| haei | 해이 | 사단장 | 리셉션 |
+| claude | Claude | 실장 | 중앙 책상 A |
+| chatgpt | ChatGPT | 차장 | 중앙 책상 B |
+| muse | Muse | 팀장 | 중앙 책상 C |
+| keyring | 키링 | 팀장 | 리셉션 보조 데스크 |
+| manus | Manus | 과장 | 중앙 책상 A |
+| cue | Cue | 대리 | 중앙 책상 A |
+| grok | Grok | 대리 | 중앙 책상 B |
+| gemini | Gemini | 사원 | 중앙 책상 B |
+| hark | Hark | 사원 | 중앙 책상 B |
+| gena | GenA | 사원 | 창가 바 좌석 |
+| instinct | Instinct | 사원 | 중앙 책상 C |
+| rua | 루아(Runyour Bot) | 대리 | 중앙 책상 C |
+| stardesk | StarDesk | 기사 | 중앙 책상 C |
+| tailscale | Tailscale | 기사 | 중앙 책상 C |
+
+부서는 `dept` 값으로 구분합니다 — `대표실` · `지휘부`(해이·Claude·ChatGPT) ·
+`특수·실무팀`(Muse·키링·Manus·Cue·Grok·Gemini·Hark·GenA·Instinct) ·
+`전산·PC 공병대`(루아·StarDesk·Tailscale). 직원 현황 탭이 부서별로 묶여 보입니다.
 
 각 직원의 `color`(옷 색)와 `species`(동물)도 JSON에서 바꿀 수 있습니다.
-`species`: bear, rabbit, fox, cat, panda, koala, owl, chick, hamster, frog, penguin, deer, dog, pickle
+`species`: bear, rabbit, fox, cat, panda, koala, owl, chick, hamster, frog, penguin, deer, dog, pickle, squirrel, raccoon
 
 ## 보안 · 개인정보 원칙
 

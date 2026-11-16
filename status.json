@@ -1,129 +1,136 @@
 {
-  "updated_at": "2026-11-15 06:26",
+  "updated_at": "2026-11-16 20:50",
   "office": {
     "name": "AI 사무실 본부",
-    "sub": "대표님 1인 기업 · AI 직원 13명 + 대표님",
-    "greeting": "오늘도 14명이 함께 일하고 있어요"
+    "sub": "대표님 1인 기업 · AI 직원 15명 + 대표님 · 16명 체제",
+    "greeting": "오늘도 16명이 함께 일하고 있어요"
   },
   "stats": {
-    "done": 32,
-    "progress": 7,
-    "waiting": 4
+    "done": 46,
+    "progress": 8,
+    "waiting": 3
   },
   "board": {
     "title": "오늘의 파이프라인",
     "rows": [
       {
         "label": "이벤트·설문 접수",
-        "value": "18",
+        "value": "26",
         "unit": "건",
         "tone": "ok"
       },
       {
         "label": "발표 대기",
-        "value": "7",
+        "value": "9",
         "unit": "건",
         "tone": "wait"
       },
       {
         "label": "신규 발굴",
-        "value": "3",
+        "value": "7",
         "unit": "건",
         "tone": "info"
       },
       {
         "label": "진행 중 업무",
-        "value": "7",
+        "value": "8",
         "unit": "건",
         "tone": "busy"
       }
     ],
-    "ticker": "GitHub Pages 공개 배포 완료 · 앱 설치 가능 · vooy 초대권 레이더 가동 중"
+    "ticker": "무료 경품 8건 접수 · 자작곡 뮤비 완성 · 노션 16칸 본부 개편 · 스레드 3회 게시 완료"
   },
   "tasks": [
     {
-      "title": "GitHub Pages 공개 배포",
+      "title": "무료 경품 8건 접수 (국민생각함 6 · 기상청 1 · 밀양시 1)",
       "owner": "해이",
       "state": "done",
       "progress": 100,
-      "note": "공개 배포 완료 · gene4517-bot.github.io/ai-office"
+      "note": "증빙 캡처 저장 완료"
     },
     {
-      "title": "아침 브리핑 발송 · 날씨 + 뉴스 + 위임 현황",
+      "title": "자작곡 〈참 애썼다고〉 풀버전 뮤직비디오 제작",
       "owner": "해이",
       "state": "done",
       "progress": 100,
-      "note": "06:40 발송 완료"
+      "note": "풀버전 MP4 완성"
     },
     {
-      "title": "이벤트 · 설문 접수 파이프라인 3차",
+      "title": "노션 '모든 AI 공용 기억 저장소' & 16칸 본부 개편",
+      "owner": "Claude",
+      "state": "done",
+      "progress": 100,
+      "note": "페이지 16칸 재편"
+    },
+    {
+      "title": "쿠팡 파트너스 스레드 3회 분산 게시",
       "owner": "해이",
+      "state": "done",
+      "progress": 100,
+      "note": "3회 게시 완료"
+    },
+    {
+      "title": "직급·부서 능력 기반 재편 (사단장·실장 체제)",
+      "owner": "해이",
+      "state": "done",
+      "progress": 100,
+      "note": "16명 체제 확정"
+    },
+    {
+      "title": "블로그 황금키워드 · 스레드 훅 아이디어",
+      "owner": "Muse",
       "state": "progress",
-      "progress": 80,
-      "note": "2건 접수 · 증빙 저장"
+      "progress": 60,
+      "note": "키워드 12개 확보"
     },
     {
-      "title": "노션 본부 작업판 동기화",
-      "owner": "Claude",
-      "state": "done",
-      "progress": 100,
-      "note": "페이지 12개 갱신"
+      "title": "자잘한 반복 확인 · 단발성 보조 처리",
+      "owner": "키링",
+      "state": "progress",
+      "progress": 70,
+      "note": "출석체크 20곳 확인"
     },
     {
-      "title": "AI 사무실 웹앱 · 설치형 앱(PWA) 구성",
-      "owner": "Claude",
-      "state": "done",
-      "progress": 100,
-      "note": "manifest · sw.js · 아이콘 512/192 완료"
-    },
-    {
-      "title": "해외 레퍼런스 리서치",
-      "owner": "Cue",
-      "state": "done",
-      "progress": 100,
-      "note": "사례 8건 정리"
-    },
-    {
-      "title": "주간 보고 슬라이드 초안",
+      "title": "네이버 블로그 리뷰 글 3편 발행",
       "owner": "Manus",
       "state": "progress",
       "progress": 45,
-      "note": "12장 작성 중"
-    },
-    {
-      "title": "모니터링 창 4종 상시 감시",
-      "owner": "Hark",
-      "state": "progress",
-      "progress": 70,
-      "note": "새 알림 2건 포착"
-    },
-    {
-      "title": "생활 정보 상담 정리",
-      "owner": "ChatGPT",
-      "state": "done",
-      "progress": 100,
-      "note": "3건 답변 완료"
+      "note": "1편 작성 중"
     },
     {
       "title": "X 실시간 이슈 추적",
       "owner": "Grok",
       "state": "progress",
-      "progress": 60,
+      "progress": 55,
       "note": "키워드 6개 감시"
     },
     {
-      "title": "vooy 초대권 레이더 감시",
-      "owner": "Instinct",
+      "title": "해외 웹 4창 모니터링",
+      "owner": "Hark",
       "state": "progress",
-      "progress": 55,
-      "note": "정식 출시 대기 중"
+      "progress": 75,
+      "note": "새 알림 2건 포착"
     },
     {
-      "title": "PC 로컬 폴더 정리",
+      "title": "vooy 초대권 30분 레이더 감시",
+      "owner": "Instinct",
+      "state": "progress",
+      "progress": 50,
+      "note": "정식 출시 대기"
+    },
+    {
+      "title": "PC 오디오 700곡 장르 분류",
       "owner": "루아",
-      "state": "done",
-      "progress": 100,
-      "note": "12건 정리"
+      "state": "waiting",
+      "progress": 0,
+      "note": "지시 대기 중"
+    },
+    {
+      "title": "범용 보조 실행 대기",
+      "owner": "GenA",
+      "state": "waiting",
+      "progress": 0,
+      "note": "신규 접수 백업 대기"
     },
     {
       "title": "원격 데스크톱 · 보안 VPN 점검",
@@ -139,6 +146,7 @@
       "name": "대표님",
       "short": "대표님",
       "rank": "CEO",
+      "dept": "대표실",
       "role": "지시 · 결재 · 최종 승인",
       "status": "working",
       "task": "오늘의 지시와 우선순위 정리",
@@ -147,88 +155,45 @@
       "species": "bear",
       "bubbles": [
         "직원들, 오늘도 잘 부탁해요",
-        "이벤트 접수는 잘 되고 있나?"
+        "16명 체제로 새로 편성했네",
+        "이벤트 접수 잘 되고 있나?"
       ]
     },
     {
       "id": "haei",
       "name": "해이",
       "short": "해이",
-      "rank": "비서실장",
-      "role": "전체 지휘 · 업무 분배 · 보고",
+      "rank": "사단장",
+      "dept": "지휘부",
+      "role": "총괄 지휘 · 한국 실무 · 인증 · 최종 보고",
       "status": "working",
-      "task": "사무실 웹앱 배포 준비 · 파이프라인 관리",
-      "done": 12,
+      "task": "16명 체제 개편 · 무료 경품 8건 접수 마감",
+      "done": 18,
       "color": "#38bdf8",
       "species": "pickle",
       "bubbles": [
-        "설치형 앱까지 준비했어요",
-        "Pages 배포만 남았어요",
-        "접수 18건 정리 완료"
+        "지시 등록 끝! 뮤즈·키링 가동 중",
+        "무료 경품 8건 접수 완료",
+        "누적 26건 정리했어요",
+        "인증까지 제가 처리할게요"
       ]
     },
     {
       "id": "claude",
       "name": "Claude",
       "short": "Claude",
-      "rank": "과장",
-      "role": "전략 · 문서 · 코드",
+      "rank": "실장",
+      "dept": "지휘부",
+      "role": "전략기획 · 깊은 추론 · 코드 · 약관 · 구조 설계",
       "status": "working",
-      "task": "웹앱 PWA 구성 · 아이콘 · 서비스 워커",
-      "done": 5,
+      "task": "노션 '모든 AI 공용 기억 저장소' 개편",
+      "done": 7,
       "color": "#d97757",
       "species": "fox",
       "bubbles": [
-        "manifest 검증 완료",
-        "홈 화면에 추가하면 앱처럼 돼요"
-      ]
-    },
-    {
-      "id": "cue",
-      "name": "Cue",
-      "short": "Cue",
-      "rank": "대리",
-      "role": "해외 리서치",
-      "status": "meeting",
-      "task": "회의실에서 레퍼런스 공유",
-      "done": 3,
-      "color": "#8b5cf6",
-      "species": "rabbit",
-      "bubbles": [
-        "해외 사례 8건 정리했어요",
-        "이 레퍼런스 좋네요"
-      ]
-    },
-    {
-      "id": "manus",
-      "name": "Manus",
-      "short": "Manus",
-      "rank": "사원",
-      "role": "문서 · PPT 제작",
-      "status": "working",
-      "task": "주간 보고 슬라이드 초안",
-      "done": 2,
-      "color": "#14b8a6",
-      "species": "koala",
-      "bubbles": [
-        "슬라이드 12장 완성",
-        "표지 디자인 고르는 중"
-      ]
-    },
-    {
-      "id": "hark",
-      "name": "Hark",
-      "short": "Hark",
-      "rank": "사원",
-      "role": "다중창 모니터링",
-      "status": "working",
-      "task": "모니터 4창 동시 감시",
-      "done": 6,
-      "color": "#f472b6",
-      "species": "owl",
-      "bubbles": [
-        "이상 신호 없음",
-        "새 알림 2건 포착"
+        "16칸 본부 구조 다시 짰어요",
+        "기억 저장소 동기화 완료",
+        "약관 조항 검토 중"
       ]
     },
     {
@@ -236,15 +201,88 @@
       "name": "ChatGPT",
       "short": "GPT",
       "rank": "차장",
-      "role": "수석 상담",
+      "dept": "지휘부",
+      "role": "수석 참모 · 아이디어 회의 · 음성 · 초안",
       "status": "working",
-      "task": "생활 정보 상담 정리",
-      "done": 9,
+      "task": "이벤트 아이디어 회의 · 생활 정보 정리",
+      "done": 11,
       "color": "#10a37f",
       "species": "panda",
       "bubbles": [
-        "문의 3건 답변 완료",
-        "요약본 올릴게요"
+        "아이디어 5개 정리했어요",
+        "초안 먼저 올릴게요",
+        "음성으로 읽어 드릴까요?"
+      ]
+    },
+    {
+      "id": "muse",
+      "name": "Muse",
+      "short": "Muse",
+      "rank": "팀장",
+      "dept": "특수·실무팀",
+      "role": "고차원 잡일 · 복잡한 조사 · 기획 · 확장",
+      "status": "working",
+      "task": "블로그 황금키워드 · 스레드 훅 기획",
+      "done": 4,
+      "color": "#c084fc",
+      "species": "chick",
+      "bubbles": [
+        "고차원 잡일 분석 중",
+        "황금키워드 12개 뽑았어요",
+        "스레드 훅 3안 준비 완료"
+      ]
+    },
+    {
+      "id": "keyring",
+      "name": "키링",
+      "short": "키링",
+      "rank": "팀장",
+      "dept": "특수·실무팀",
+      "role": "자잘이 · 반복 확인 · 단발성 보조 총괄",
+      "status": "working",
+      "task": "자잘한 반복 확인 · 단발성 보조 처리",
+      "done": 9,
+      "color": "#e879f9",
+      "species": "squirrel",
+      "bubbles": [
+        "자잘한 건 처리 완료!",
+        "출석체크 20곳 확인 끝",
+        "단발성 요청 큐 비었어요"
+      ]
+    },
+    {
+      "id": "manus",
+      "name": "Manus",
+      "short": "Manus",
+      "rank": "과장",
+      "dept": "특수·실무팀",
+      "role": "자율 실행 · PPT · 보고서 · 웹 완성본",
+      "status": "working",
+      "task": "블로그 리뷰 글 3편 · 주간 보고서",
+      "done": 5,
+      "color": "#14b8a6",
+      "species": "koala",
+      "bubbles": [
+        "완성본 바로 뽑을게요",
+        "보고서 12장 작성 중",
+        "웹 완성본 배포 준비"
+      ]
+    },
+    {
+      "id": "cue",
+      "name": "Cue",
+      "short": "Cue",
+      "rank": "대리",
+      "dept": "특수·실무팀",
+      "role": "해외 사이트 깊은 조사 · 비교표",
+      "status": "meeting",
+      "task": "회의실에서 해외 사례 비교표 공유",
+      "done": 3,
+      "color": "#8b5cf6",
+      "species": "rabbit",
+      "bubbles": [
+        "해외 사례 8건 비교표예요",
+        "이 레퍼런스가 제일 좋네요"
       ]
     },
     {
@@ -252,9 +290,10 @@
       "name": "Grok",
       "short": "Grok",
       "rank": "대리",
-      "role": "X 실시간 속보",
+      "dept": "특수·실무팀",
+      "role": "X 실시간 속보 · 트렌드 감시",
       "status": "working",
-      "task": "실시간 키워드 추적",
+      "task": "X 실시간 키워드 6개 추적",
       "done": 11,
       "color": "#64748b",
       "species": "cat",
@@ -268,47 +307,69 @@
       "name": "Gemini",
       "short": "Gemini",
       "rank": "사원",
-      "role": "미디어 · 구글 연동",
+      "dept": "특수·실무팀",
+      "role": "유튜브 · 미디어 · 구글 자료 분석",
       "status": "meeting",
-      "task": "회의실에서 미디어 협의",
+      "task": "회의실에서 미디어 자료 분석 공유",
       "done": 4,
       "color": "#3b82f6",
       "species": "dog",
       "bubbles": [
-        "구글 문서 연동 확인",
-        "사진 자료 공유할게요"
+        "구글 자료 정리했어요",
+        "유튜브 반응 분석 중"
       ]
     },
     {
-      "id": "muse",
-      "name": "Muse",
-      "short": "Muse",
-      "rank": "인턴",
-      "role": "SNS · 메신저",
-      "status": "break",
-      "task": "라운지에서 커피 타임",
-      "done": 1,
-      "color": "#c084fc",
-      "species": "chick",
+      "id": "hark",
+      "name": "Hark",
+      "short": "Hark",
+      "rank": "사원",
+      "dept": "특수·실무팀",
+      "role": "해외 웹 다중 모니터링",
+      "status": "working",
+      "task": "모니터 4창 동시 감시",
+      "done": 6,
+      "color": "#f472b6",
+      "species": "owl",
       "bubbles": [
-        "잠깐 커피 한 잔",
-        "메신저 답장 대기 중"
+        "이상 신호 없음",
+        "새 알림 2건 포착"
+      ]
+    },
+    {
+      "id": "gena",
+      "name": "GenA",
+      "short": "GenA",
+      "rank": "사원",
+      "dept": "특수·실무팀",
+      "role": "범용 보조 실행",
+      "status": "working",
+      "task": "보조 실행 대기 · 신규 접수 백업",
+      "done": 1,
+      "color": "#22d3ee",
+      "species": "raccoon",
+      "bubbles": [
+        "보조 실행 대기 중",
+        "접수 백업 도와드릴게요",
+        "지시만 주세요!"
       ]
     },
     {
       "id": "instinct",
       "name": "Instinct",
       "short": "Instinct",
-      "rank": "인턴",
-      "role": "문자 · 초대권",
+      "rank": "사원",
+      "dept": "특수·실무팀",
+      "role": "문자 · WhatsApp 기동 비서",
       "status": "working",
-      "task": "초대권 문의 문자 정리",
+      "task": "vooy 초대권 30분 레이더 감시",
       "done": 2,
       "color": "#fb923c",
       "species": "hamster",
       "bubbles": [
+        "초대 링크 정리 중",
         "문자 3건 확인",
-        "초대 링크 정리 중"
+        "30분마다 점검 중"
       ]
     },
     {
@@ -316,15 +377,16 @@
       "name": "루아",
       "short": "루아",
       "rank": "대리",
-      "role": "PC 로컬 정리",
-      "status": "break",
-      "task": "라운지에서 충전 중",
+      "dept": "전산·PC 공병대",
+      "role": "PC 로컬 파일 · 700곡 정리 (Runyour Bot)",
+      "status": "idle",
+      "task": "700곡 장르 분류 지시 대기",
       "done": 3,
       "color": "#4ade80",
       "species": "frog",
       "bubbles": [
-        "폴더 정리 12건 끝",
-        "잠깐 쉬는 중이에요"
+        "700곡 분류 지시 기다릴게요",
+        "PC 브릿지 연결 대기 중"
       ]
     },
     {
@@ -332,7 +394,8 @@
       "name": "StarDesk",
       "short": "StarDesk",
       "rank": "기사",
-      "role": "원격 데스크톱",
+      "dept": "전산·PC 공병대",
+      "role": "초고속 원격 조종",
       "status": "working",
       "task": "원격 접속 상태 점검",
       "done": 2,
@@ -348,7 +411,8 @@
       "name": "Tailscale",
       "short": "Tailscale",
       "rank": "기사",
-      "role": "보안 VPN",
+      "dept": "전산·PC 공병대",
+      "role": "보안 개인 VPN",
       "status": "idle",
       "task": "VPN 터널 상태 대기",
       "done": 1,
@@ -362,58 +426,70 @@
   ],
   "logs": [
     {
-      "time": "05:45",
+      "time": "20:50",
       "who": "해이",
-      "text": "설치형 앱 구성 완료 (manifest · 서비스 워커 · 아이콘)",
+      "text": "16명 체제 · 능력 기반 직급·부서 재편 완료 (사단장·실장)",
       "tone": "ok"
     },
     {
-      "time": "05:40",
-      "who": "해이",
-      "text": "이벤트·설문 누적 18건 접수 정리",
+      "time": "20:46",
+      "who": "키링",
+      "text": "자잘이 보조 업무 큐 정리 · 단발성 확인 9건 처리",
       "tone": "ok"
     },
     {
-      "time": "05:20",
+      "time": "20:40",
       "who": "해이",
-      "text": "사무실 프로토타입 v2 렌더링 시작",
+      "text": "국민생각함 6건 · 기상청 설문 1건 접수 완료",
       "tone": "ok"
     },
     {
-      "time": "05:12",
+      "time": "20:30",
+      "who": "해이",
+      "text": "밀양시 퀴즈 참여 완료 · 무료 경품 8건 마감",
+      "tone": "ok"
+    },
+    {
+      "time": "20:25",
+      "who": "해이",
+      "text": "쿠팡 파트너스 스레드 3회 분산 게시 완료",
+      "tone": "ok"
+    },
+    {
+      "time": "20:10",
+      "who": "해이",
+      "text": "자작곡 〈참 애썼다고〉 풀버전 뮤비 완성",
+      "tone": "ok"
+    },
+    {
+      "time": "19:55",
       "who": "Claude",
-      "text": "아이소메트릭 좌표 매핑 완료 (14석)",
-      "tone": ""
-    },
-    {
-      "time": "04:58",
-      "who": "해이",
-      "text": "3차 설문 2건 접수 완료 · 증빙 캡처 저장",
+      "text": "노션 16칸 본부 · 공용 기억 저장소 개편",
       "tone": "ok"
     },
     {
-      "time": "04:52",
-      "who": "Cue",
-      "text": "해외 사례 리서치 8건 수집",
+      "time": "19:40",
+      "who": "GenA",
+      "text": "신규 합류 · 범용 보조 실행 대기",
       "tone": ""
     },
     {
-      "time": "04:44",
-      "who": "Grok",
-      "text": "X 실시간 키워드 알림 점검",
+      "time": "19:20",
+      "who": "Instinct",
+      "text": "vooy 초대권 레이더 30분 점검",
       "tone": ""
     },
     {
-      "time": "04:37",
+      "time": "18:50",
+      "who": "Muse",
+      "text": "블로그 황금키워드 후보 12개 수집",
+      "tone": ""
+    },
+    {
+      "time": "18:30",
       "who": "루아",
-      "text": "PC 로컬 폴더 정리 12건",
+      "text": "700곡 장르 분류 지시 대기 상태 유지",
       "tone": ""
-    },
-    {
-      "time": "04:31",
-      "who": "해이",
-      "text": "노션 본부 작업판 동기화",
-      "tone": "ok"
     }
   ]
 }

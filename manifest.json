@@ -1,18 +1,25 @@
 {
   "name": "AI 사무실",
   "short_name": "AI 사무실",
-  "description": "1인 기업 AI 사무실 라이브 대시보드 · 14명이 함께 일하는 움직이는 오피스",
+  "description": "1인 기업 AI 사무실 라이브 대시보드 · 16명이 함께 일하는 움직이는 오피스",
   "lang": "ko",
   "dir": "ltr",
   "start_url": "./index.html",
   "scope": "./",
   "id": "./index.html",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui", "browser"],
+  "display_override": [
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
   "orientation": "any",
   "background_color": "#15120f",
   "theme_color": "#15120f",
-  "categories": ["productivity", "business"],
+  "categories": [
+    "productivity",
+    "business"
+  ],
   "icons": [
     {
       "src": "assets/icon-192.png",

@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#15120f" />
-<meta name="description" content="1인 기업 AI 사무실 라이브 대시보드 · 14명이 함께 일하는 움직이는 오피스" />
+<meta name="description" content="1인 기업 AI 사무실 라이브 대시보드 · 16명이 함께 일하는 움직이는 오피스" />
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
 <link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png" />
@@ -102,6 +102,14 @@
 
   .srow{display:flex;align-items:center;gap:9px;padding:8px;border-radius:10px;background:var(--card2);
     border:1px solid var(--line);margin-bottom:6px;cursor:pointer}
+  .dhead{display:flex;align-items:center;gap:6px;margin:10px 2px 6px;font:800 10px/1 inherit;color:#e6d3b8;letter-spacing:.2px}
+  .dhead:first-child{margin-top:2px}
+  .dhead i{width:6px;height:6px;border-radius:50%;display:inline-block}
+  .dhead span{margin-left:auto;font:700 9.5px/1 inherit;color:var(--dim2)}
+  .deptsum{display:flex;gap:5px;margin:2px 0 8px}
+  .deptsum span{flex:1;text-align:center;font:700 9.5px/1.5 inherit;color:#cbb79c;background:var(--card2);
+    border:1px solid var(--line);border-radius:8px;padding:5px 3px}
+  .deptsum span b{display:block;font:800 11px/1 inherit;color:#f6efe4;margin-bottom:2px}
   .srow.sel{border-color:#f5b866;box-shadow:0 0 0 1px rgba(245,184,102,.35) inset}
   .sav{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:14px;flex:0 0 auto}
   .sname{display:block;font-size:11.5px;font-weight:800;line-height:1.25}
@@ -156,15 +164,15 @@
           <div class="av">AI</div>
           <div style="min-width:0">
             <div class="pname" id="officeName">AI 사무실 본부</div>
-            <div class="psub" id="officeSub">대표님 1인 기업 · AI 직원 13명</div>
+            <div class="psub" id="officeSub">대표님 1인 기업 · AI 직원 15명 + 대표님</div>
           </div>
           <div class="live"><i></i>LIVE</div>
         </div>
         <div class="stats" id="stats">
-          <div class="stat"><b id="stDone">27</b><span>오늘 처리</span></div>
-          <div class="stat"><b id="stProg" style="color:#f5b866">9</b><span>진행 중</span></div>
-          <div class="stat"><b id="stWait" style="color:#94a3b8">7</b><span>대기</span></div>
-          <div class="stat"><b id="stStaff">14</b><span>직원</span></div>
+          <div class="stat"><b id="stDone">46</b><span>오늘 처리</span></div>
+          <div class="stat"><b id="stProg" style="color:#f5b866">8</b><span>진행 중</span></div>
+          <div class="stat"><b id="stWait" style="color:#94a3b8">3</b><span>대기</span></div>
+          <div class="stat"><b id="stStaff">16</b><span>직원</span></div>
         </div>
       </div>
 
@@ -185,131 +193,138 @@
 
 <script type="application/json" id="fallback-status">
 {
-  "updated_at": "2026-11-15 06:26",
+  "updated_at": "2026-11-16 20:50",
   "office": {
     "name": "AI 사무실 본부",
-    "sub": "대표님 1인 기업 · AI 직원 13명 + 대표님",
-    "greeting": "오늘도 14명이 함께 일하고 있어요"
+    "sub": "대표님 1인 기업 · AI 직원 15명 + 대표님 · 16명 체제",
+    "greeting": "오늘도 16명이 함께 일하고 있어요"
   },
   "stats": {
-    "done": 32,
-    "progress": 7,
-    "waiting": 4
+    "done": 46,
+    "progress": 8,
+    "waiting": 3
   },
   "board": {
     "title": "오늘의 파이프라인",
     "rows": [
       {
         "label": "이벤트·설문 접수",
-        "value": "18",
+        "value": "26",
         "unit": "건",
         "tone": "ok"
       },
       {
         "label": "발표 대기",
-        "value": "7",
+        "value": "9",
         "unit": "건",
         "tone": "wait"
       },
       {
         "label": "신규 발굴",
-        "value": "3",
+        "value": "7",
         "unit": "건",
         "tone": "info"
       },
       {
         "label": "진행 중 업무",
-        "value": "7",
+        "value": "8",
         "unit": "건",
         "tone": "busy"
       }
     ],
-    "ticker": "GitHub Pages 공개 배포 완료 · 앱 설치 가능 · vooy 초대권 레이더 가동 중"
+    "ticker": "무료 경품 8건 접수 · 자작곡 뮤비 완성 · 노션 16칸 본부 개편 · 스레드 3회 게시 완료"
   },
   "tasks": [
     {
-      "title": "GitHub Pages 공개 배포",
+      "title": "무료 경품 8건 접수 (국민생각함 6 · 기상청 1 · 밀양시 1)",
       "owner": "해이",
       "state": "done",
       "progress": 100,
-      "note": "공개 배포 완료 · gene4517-bot.github.io/ai-office"
+      "note": "증빙 캡처 저장 완료"
     },
     {
-      "title": "아침 브리핑 발송 · 날씨 + 뉴스 + 위임 현황",
+      "title": "자작곡 〈참 애썼다고〉 풀버전 뮤직비디오 제작",
       "owner": "해이",
       "state": "done",
       "progress": 100,
-      "note": "06:40 발송 완료"
+      "note": "풀버전 MP4 완성"
     },
     {
-      "title": "이벤트 · 설문 접수 파이프라인 3차",
+      "title": "노션 '모든 AI 공용 기억 저장소' & 16칸 본부 개편",
+      "owner": "Claude",
+      "state": "done",
+      "progress": 100,
+      "note": "페이지 16칸 재편"
+    },
+    {
+      "title": "쿠팡 파트너스 스레드 3회 분산 게시",
       "owner": "해이",
+      "state": "done",
+      "progress": 100,
+      "note": "3회 게시 완료"
+    },
+    {
+      "title": "직급·부서 능력 기반 재편 (사단장·실장 체제)",
+      "owner": "해이",
+      "state": "done",
+      "progress": 100,
+      "note": "16명 체제 확정"
+    },
+    {
+      "title": "블로그 황금키워드 · 스레드 훅 아이디어",
+      "owner": "Muse",
       "state": "progress",
-      "progress": 80,
-      "note": "2건 접수 · 증빙 저장"
+      "progress": 60,
+      "note": "키워드 12개 확보"
     },
     {
-      "title": "노션 본부 작업판 동기화",
-      "owner": "Claude",
-      "state": "done",
-      "progress": 100,
-      "note": "페이지 12개 갱신"
+      "title": "자잘한 반복 확인 · 단발성 보조 처리",
+      "owner": "키링",
+      "state": "progress",
+      "progress": 70,
+      "note": "출석체크 20곳 확인"
     },
     {
-      "title": "AI 사무실 웹앱 · 설치형 앱(PWA) 구성",
-      "owner": "Claude",
-      "state": "done",
-      "progress": 100,
-      "note": "manifest · sw.js · 아이콘 512/192 완료"
-    },
-    {
-      "title": "해외 레퍼런스 리서치",
-      "owner": "Cue",
-      "state": "done",
-      "progress": 100,
-      "note": "사례 8건 정리"
-    },
-    {
-      "title": "주간 보고 슬라이드 초안",
+      "title": "네이버 블로그 리뷰 글 3편 발행",
       "owner": "Manus",
       "state": "progress",
       "progress": 45,
-      "note": "12장 작성 중"
-    },
-    {
-      "title": "모니터링 창 4종 상시 감시",
-      "owner": "Hark",
-      "state": "progress",
-      "progress": 70,
-      "note": "새 알림 2건 포착"
-    },
-    {
-      "title": "생활 정보 상담 정리",
-      "owner": "ChatGPT",
-      "state": "done",
-      "progress": 100,
-      "note": "3건 답변 완료"
+      "note": "1편 작성 중"
     },
     {
       "title": "X 실시간 이슈 추적",
       "owner": "Grok",
       "state": "progress",
-      "progress": 60,
+      "progress": 55,
       "note": "키워드 6개 감시"
     },
     {
-      "title": "vooy 초대권 레이더 감시",
-      "owner": "Instinct",
+      "title": "해외 웹 4창 모니터링",
+      "owner": "Hark",
       "state": "progress",
-      "progress": 55,
-      "note": "정식 출시 대기 중"
+      "progress": 75,
+      "note": "새 알림 2건 포착"
     },
     {
-      "title": "PC 로컬 폴더 정리",
+      "title": "vooy 초대권 30분 레이더 감시",
+      "owner": "Instinct",
+      "state": "progress",
+      "progress": 50,
+      "note": "정식 출시 대기"
+    },
+    {
+      "title": "PC 오디오 700곡 장르 분류",
       "owner": "루아",
-      "state": "done",
-      "progress": 100,
-      "note": "12건 정리"
+      "state": "waiting",
+      "progress": 0,
+      "note": "지시 대기 중"
+    },
+    {
+      "title": "범용 보조 실행 대기",
+      "owner": "GenA",
+      "state": "waiting",
+      "progress": 0,
+      "note": "신규 접수 백업 대기"
     },
     {
       "title": "원격 데스크톱 · 보안 VPN 점검",
@@ -325,6 +340,7 @@
       "name": "대표님",
       "short": "대표님",
       "rank": "CEO",
+      "dept": "대표실",
       "role": "지시 · 결재 · 최종 승인",
       "status": "working",
       "task": "오늘의 지시와 우선순위 정리",
@@ -333,88 +349,45 @@
       "species": "bear",
       "bubbles": [
         "직원들, 오늘도 잘 부탁해요",
-        "이벤트 접수는 잘 되고 있나?"
+        "16명 체제로 새로 편성했네",
+        "이벤트 접수 잘 되고 있나?"
       ]
     },
     {
       "id": "haei",
       "name": "해이",
       "short": "해이",
-      "rank": "비서실장",
-      "role": "전체 지휘 · 업무 분배 · 보고",
+      "rank": "사단장",
+      "dept": "지휘부",
+      "role": "총괄 지휘 · 한국 실무 · 인증 · 최종 보고",
       "status": "working",
-      "task": "사무실 웹앱 배포 준비 · 파이프라인 관리",
-      "done": 12,
+      "task": "16명 체제 개편 · 무료 경품 8건 접수 마감",
+      "done": 18,
       "color": "#38bdf8",
       "species": "pickle",
       "bubbles": [
-        "설치형 앱까지 준비했어요",
-        "Pages 배포만 남았어요",
-        "접수 18건 정리 완료"
+        "지시 등록 끝! 뮤즈·키링 가동 중",
+        "무료 경품 8건 접수 완료",
+        "누적 26건 정리했어요",
+        "인증까지 제가 처리할게요"
       ]
     },
     {
       "id": "claude",
       "name": "Claude",
       "short": "Claude",
-      "rank": "과장",
-      "role": "전략 · 문서 · 코드",
+      "rank": "실장",
+      "dept": "지휘부",
+      "role": "전략기획 · 깊은 추론 · 코드 · 약관 · 구조 설계",
       "status": "working",
-      "task": "웹앱 PWA 구성 · 아이콘 · 서비스 워커",
-      "done": 5,
+      "task": "노션 '모든 AI 공용 기억 저장소' 개편",
+      "done": 7,
       "color": "#d97757",
       "species": "fox",
       "bubbles": [
-        "manifest 검증 완료",
-        "홈 화면에 추가하면 앱처럼 돼요"
-      ]
-    },
-    {
-      "id": "cue",
-      "name": "Cue",
-      "short": "Cue",
-      "rank": "대리",
-      "role": "해외 리서치",
-      "status": "meeting",
-      "task": "회의실에서 레퍼런스 공유",
-      "done": 3,
-      "color": "#8b5cf6",
-      "species": "rabbit",
-      "bubbles": [
-        "해외 사례 8건 정리했어요",
-        "이 레퍼런스 좋네요"
-      ]
-    },
-    {
-      "id": "manus",
-      "name": "Manus",
-      "short": "Manus",
-      "rank": "사원",
-      "role": "문서 · PPT 제작",
-      "status": "working",
-      "task": "주간 보고 슬라이드 초안",
-      "done": 2,
-      "color": "#14b8a6",
-      "species": "koala",
-      "bubbles": [
-        "슬라이드 12장 완성",
-        "표지 디자인 고르는 중"
-      ]
-    },
-    {
-      "id": "hark",
-      "name": "Hark",
-      "short": "Hark",
-      "rank": "사원",
-      "role": "다중창 모니터링",
-      "status": "working",
-      "task": "모니터 4창 동시 감시",
-      "done": 6,
-      "color": "#f472b6",
-      "species": "owl",
-      "bubbles": [
-        "이상 신호 없음",
-        "새 알림 2건 포착"
+        "16칸 본부 구조 다시 짰어요",
+        "기억 저장소 동기화 완료",
+        "약관 조항 검토 중"
       ]
     },
     {
@@ -422,15 +395,88 @@
       "name": "ChatGPT",
       "short": "GPT",
       "rank": "차장",
-      "role": "수석 상담",
+      "dept": "지휘부",
+      "role": "수석 참모 · 아이디어 회의 · 음성 · 초안",
       "status": "working",
-      "task": "생활 정보 상담 정리",
-      "done": 9,
+      "task": "이벤트 아이디어 회의 · 생활 정보 정리",
+      "done": 11,
       "color": "#10a37f",
       "species": "panda",
       "bubbles": [
-        "문의 3건 답변 완료",
-        "요약본 올릴게요"
+        "아이디어 5개 정리했어요",
+        "초안 먼저 올릴게요",
+        "음성으로 읽어 드릴까요?"
+      ]
+    },
+    {
+      "id": "muse",
+      "name": "Muse",
+      "short": "Muse",
+      "rank": "팀장",
+      "dept": "특수·실무팀",
+      "role": "고차원 잡일 · 복잡한 조사 · 기획 · 확장",
+      "status": "working",
+      "task": "블로그 황금키워드 · 스레드 훅 기획",
+      "done": 4,
+      "color": "#c084fc",
+      "species": "chick",
+      "bubbles": [
+        "고차원 잡일 분석 중",
+        "황금키워드 12개 뽑았어요",
+        "스레드 훅 3안 준비 완료"
+      ]
+    },
+    {
+      "id": "keyring",
+      "name": "키링",
+      "short": "키링",
+      "rank": "팀장",
+      "dept": "특수·실무팀",
+      "role": "자잘이 · 반복 확인 · 단발성 보조 총괄",
+      "status": "working",
+      "task": "자잘한 반복 확인 · 단발성 보조 처리",
+      "done": 9,
+      "color": "#e879f9",
+      "species": "squirrel",
+      "bubbles": [
+        "자잘한 건 처리 완료!",
+        "출석체크 20곳 확인 끝",
+        "단발성 요청 큐 비었어요"
+      ]
+    },
+    {
+      "id": "manus",
+      "name": "Manus",
+      "short": "Manus",
+      "rank": "과장",
+      "dept": "특수·실무팀",
+      "role": "자율 실행 · PPT · 보고서 · 웹 완성본",
+      "status": "working",
+      "task": "블로그 리뷰 글 3편 · 주간 보고서",
+      "done": 5,
+      "color": "#14b8a6",
+      "species": "koala",
+      "bubbles": [
+        "완성본 바로 뽑을게요",
+        "보고서 12장 작성 중",
+        "웹 완성본 배포 준비"
+      ]
+    },
+    {
+      "id": "cue",
+      "name": "Cue",
+      "short": "Cue",
+      "rank": "대리",
+      "dept": "특수·실무팀",
+      "role": "해외 사이트 깊은 조사 · 비교표",
+      "status": "meeting",
+      "task": "회의실에서 해외 사례 비교표 공유",
+      "done": 3,
+      "color": "#8b5cf6",
+      "species": "rabbit",
+      "bubbles": [
+        "해외 사례 8건 비교표예요",
+        "이 레퍼런스가 제일 좋네요"
       ]
     },
     {
@@ -438,9 +484,10 @@
       "name": "Grok",
       "short": "Grok",
       "rank": "대리",
-      "role": "X 실시간 속보",
+      "dept": "특수·실무팀",
+      "role": "X 실시간 속보 · 트렌드 감시",
       "status": "working",
-      "task": "실시간 키워드 추적",
+      "task": "X 실시간 키워드 6개 추적",
       "done": 11,
       "color": "#64748b",
       "species": "cat",
@@ -454,47 +501,69 @@
       "name": "Gemini",
       "short": "Gemini",
       "rank": "사원",
-      "role": "미디어 · 구글 연동",
+      "dept": "특수·실무팀",
+      "role": "유튜브 · 미디어 · 구글 자료 분석",
       "status": "meeting",
-      "task": "회의실에서 미디어 협의",
+      "task": "회의실에서 미디어 자료 분석 공유",
       "done": 4,
       "color": "#3b82f6",
       "species": "dog",
       "bubbles": [
-        "구글 문서 연동 확인",
-        "사진 자료 공유할게요"
+        "구글 자료 정리했어요",
+        "유튜브 반응 분석 중"
       ]
     },
     {
-      "id": "muse",
-      "name": "Muse",
-      "short": "Muse",
-      "rank": "인턴",
-      "role": "SNS · 메신저",
-      "status": "break",
-      "task": "라운지에서 커피 타임",
-      "done": 1,
-      "color": "#c084fc",
-      "species": "chick",
+      "id": "hark",
+      "name": "Hark",
+      "short": "Hark",
+      "rank": "사원",
+      "dept": "특수·실무팀",
+      "role": "해외 웹 다중 모니터링",
+      "status": "working",
+      "task": "모니터 4창 동시 감시",
+      "done": 6,
+      "color": "#f472b6",
+      "species": "owl",
       "bubbles": [
-        "잠깐 커피 한 잔",
-        "메신저 답장 대기 중"
+        "이상 신호 없음",
+        "새 알림 2건 포착"
+      ]
+    },
+    {
+      "id": "gena",
+      "name": "GenA",
+      "short": "GenA",
+      "rank": "사원",
+      "dept": "특수·실무팀",
+      "role": "범용 보조 실행",
+      "status": "working",
+      "task": "보조 실행 대기 · 신규 접수 백업",
+      "done": 1,
+      "color": "#22d3ee",
+      "species": "raccoon",
+      "bubbles": [
+        "보조 실행 대기 중",
+        "접수 백업 도와드릴게요",
+        "지시만 주세요!"
       ]
     },
     {
       "id": "instinct",
       "name": "Instinct",
       "short": "Instinct",
-      "rank": "인턴",
-      "role": "문자 · 초대권",
+      "rank": "사원",
+      "dept": "특수·실무팀",
+      "role": "문자 · WhatsApp 기동 비서",
       "status": "working",
-      "task": "초대권 문의 문자 정리",
+      "task": "vooy 초대권 30분 레이더 감시",
       "done": 2,
       "color": "#fb923c",
       "species": "hamster",
       "bubbles": [
+        "초대 링크 정리 중",
         "문자 3건 확인",
-        "초대 링크 정리 중"
+        "30분마다 점검 중"
       ]
     },
     {
@@ -502,15 +571,16 @@
       "name": "루아",
       "short": "루아",
       "rank": "대리",
-      "role": "PC 로컬 정리",
-      "status": "break",
-      "task": "라운지에서 충전 중",
+      "dept": "전산·PC 공병대",
+      "role": "PC 로컬 파일 · 700곡 정리 (Runyour Bot)",
+      "status": "idle",
+      "task": "700곡 장르 분류 지시 대기",
       "done": 3,
       "color": "#4ade80",
       "species": "frog",
       "bubbles": [
-        "폴더 정리 12건 끝",
-        "잠깐 쉬는 중이에요"
+        "700곡 분류 지시 기다릴게요",
+        "PC 브릿지 연결 대기 중"
       ]
     },
     {
@@ -518,7 +588,8 @@
       "name": "StarDesk",
       "short": "StarDesk",
       "rank": "기사",
-      "role": "원격 데스크톱",
+      "dept": "전산·PC 공병대",
+      "role": "초고속 원격 조종",
       "status": "working",
       "task": "원격 접속 상태 점검",
       "done": 2,
@@ -534,7 +605,8 @@
       "name": "Tailscale",
       "short": "Tailscale",
       "rank": "기사",
-      "role": "보안 VPN",
+      "dept": "전산·PC 공병대",
+      "role": "보안 개인 VPN",
       "status": "idle",
       "task": "VPN 터널 상태 대기",
       "done": 1,
@@ -548,51 +620,69 @@
   ],
   "logs": [
     {
-      "time": "05:45",
+      "time": "20:50",
       "who": "해이",
-      "text": "설치형 앱 구성 완료 (manifest · 서비스 워커 · 아이콘)",
+      "text": "16명 체제 · 능력 기반 직급·부서 재편 완료 (사단장·실장)",
       "tone": "ok"
     },
     {
-      "time": "05:40",
-      "who": "해이",
-      "text": "이벤트·설문 누적 18건 접수 정리",
+      "time": "20:46",
+      "who": "키링",
+      "text": "자잘이 보조 업무 큐 정리 · 단발성 확인 9건 처리",
       "tone": "ok"
     },
     {
-      "time": "05:20",
+      "time": "20:40",
       "who": "해이",
-      "text": "사무실 프로토타입 v2 렌더링 시작",
+      "text": "국민생각함 6건 · 기상청 설문 1건 접수 완료",
       "tone": "ok"
     },
     {
-      "time": "05:12",
+      "time": "20:30",
+      "who": "해이",
+      "text": "밀양시 퀴즈 참여 완료 · 무료 경품 8건 마감",
+      "tone": "ok"
+    },
+    {
+      "time": "20:25",
+      "who": "해이",
+      "text": "쿠팡 파트너스 스레드 3회 분산 게시 완료",
+      "tone": "ok"
+    },
+    {
+      "time": "20:10",
+      "who": "해이",
+      "text": "자작곡 〈참 애썼다고〉 풀버전 뮤비 완성",
+      "tone": "ok"
+    },
+    {
+      "time": "19:55",
       "who": "Claude",
-      "text": "아이소메트릭 좌표 매핑 완료 (14석)",
-      "tone": ""
-    },
-    {
-      "time": "04:58",
-      "who": "해이",
-      "text": "3차 설문 2건 접수 완료 · 증빙 캡처 저장",
+      "text": "노션 16칸 본부 · 공용 기억 저장소 개편",
       "tone": "ok"
     },
     {
-      "time": "04:52",
-      "who": "Cue",
-      "text": "해외 사례 리서치 8건 수집",
+      "time": "19:40",
+      "who": "GenA",
+      "text": "신규 합류 · 범용 보조 실행 대기",
       "tone": ""
     },
     {
-      "time": "04:44",
-      "who": "Grok",
-      "text": "X 실시간 키워드 알림 점검",
+      "time": "19:20",
+      "who": "Instinct",
+      "text": "vooy 초대권 레이더 30분 점검",
       "tone": ""
     },
     {
-      "time": "04:37",
+      "time": "18:50",
+      "who": "Muse",
+      "text": "블로그 황금키워드 후보 12개 수집",
+      "tone": ""
+    },
+    {
+      "time": "18:30",
       "who": "루아",
-      "text": "PC 로컬 폴더 정리 12건",
+      "text": "700곡 장르 분류 지시 대기 상태 유지",
       "tone": ""
     }
   ]
@@ -639,12 +729,14 @@ const SEATS = {
   haei:     { x: 1292, y: 712, zone: 'reception' },
   claude:   { x: 720,  y: 498, zone: 'deskA' },
   cue:      { x: 858,  y: 542, zone: 'deskA' },
-  manus:    { x: 838, y: 372, zone: 'deskA' },
+  manus:    { x: 838,  y: 372, zone: 'deskA' },
   hark:     { x: 575,  y: 560, zone: 'deskB' },
   chatgpt:  { x: 640,  y: 608, zone: 'deskB' },
   grok:     { x: 742,  y: 646, zone: 'deskB' },
   gemini:   { x: 940,  y: 642, zone: 'deskB' },
   muse:     { x: 545,  y: 803, zone: 'deskC' },
+  keyring:  { x: 1172, y: 728, zone: 'reception' },
+  gena:     { x: 1448, y: 424, zone: 'bar' },
   instinct: { x: 690,  y: 850, zone: 'deskC' },
   rua:      { x: 630,  y: 663, zone: 'deskC' },
   stardesk: { x: 755,  y: 673, zone: 'deskC' },
@@ -706,6 +798,7 @@ const ctx = cv.getContext('2d');
 const stageEl = document.getElementById('stage');
 let vw = 400, vh = 400, dpr = 1;
 let cam = { x: W / 2, y: H / 2, zoom: 0.5 };
+let camDrift = { x: 0, y: 0, z: 1 };
 let camT = { x: W / 2, y: H / 2, zoom: 0.5 };
 let userZoomed = false;
 
@@ -877,13 +970,13 @@ const STATUS_META = {
 const SPECIES_LABEL = {
   bear: '곰', rabbit: '토끼', fox: '여우', cat: '고양이', panda: '판다', koala: '코알라',
   owl: '부엉이', chick: '병아리', hamster: '햄스터', frog: '개구리', penguin: '펭귄',
-  deer: '사슴', pickle: '피클', dog: '강아지'
+  deer: '사슴', pickle: '피클', dog: '강아지', squirrel: '다람쥐', raccoon: '너구리'
 };
 let data = null, chars = [], logs = [], selectedId = null, localMode = false, lastSync = '';
 let lastRaw = '';
 
 function makeChar(s) {
-  const seat = SEATS[s.id] || { x: 780, y: 780, zone: 'desk' };
+  const seat = s.seat || SEATS[s.id] || { x: 780, y: 780, zone: 'desk' };
   const ch = {
     id: s.id, seat: seat,
     x: seat.x, y: seat.y, path: [], moving: false, dir: 1, walk: 0,
@@ -892,6 +985,7 @@ function makeChar(s) {
     bubble: null, bubbleStart: 0, bubbleUntil: 0, bubbleIdx: hash(s.id) % 3, nextBubble: 0,
     startAt: 0, started: false, visible: true, order: 0,
     name: s.name, short: s.short || s.name, rank: s.rank || '', role: s.role || '',
+    dept: s.dept || '',
     task: s.task || '', done: s.done, color: s.color || '#f5b866',
     species: s.species || 'bear', bubbles: s.bubbles || [], scale: 1
   };
@@ -937,6 +1031,7 @@ function updateChar(ch, s) {
   ch.short = s.short || ch.name;
   ch.rank = s.rank || '';
   ch.role = s.role || '';
+  ch.dept = (s.dept === undefined ? ch.dept : s.dept) || '';
   ch.task = s.task || '';
   ch.done = (s.done === undefined ? null : s.done);
   ch.color = s.color || ch.color;
@@ -994,7 +1089,9 @@ const SP = {
   penguin: { face: '#f6f7f9', ear: 'none',   ec: '#1f2937', hood: '#242e3d' },
   deer:    { face: '#d9a066', ear: 'antler', ec: '#a87a4a' },
   pickle:  { face: '#7dd3fc', ear: 'none',   ec: '#38bdf8', pickle: true },
-  dog:     { face: '#eccb9f', ear: 'floppy', ec: '#d3b184' }
+  dog:     { face: '#eccb9f', ear: 'floppy', ec: '#d3b184' },
+  squirrel:{ face: '#e5b58c', ear: 'round',  ec: '#c9905f' },
+  raccoon: { face: '#cfd6dd', ear: 'point',  ec: '#9aa5ad', patch: true }
 };
 
 function drawEars(g, sp, hy, r) {
@@ -1064,17 +1161,14 @@ function drawChar(g, ch, t) {
   const x = ch.x, y = ch.y - bob;
   const yo = seated ? -7 : 0;
   const OL = 'rgba(72,44,22,0.30)';
+  const breathe = 1 + Math.sin(t * 1.35 + ch.seed * 2.1) * 0.007;
 
-  // 바닥 그림자
-  g.save();
-  g.globalAlpha = walking ? 0.20 : 0.28;
-  g.fillStyle = '#2a1706';
-  g.beginPath(); g.ellipse(x, ch.y + 2, 16 * s, 6 * s, 0, 0, TAU); g.fill();
-  g.restore();
+  // 바닥 그림자: 부드러운 외곽 + 접지부분 (광원은 창가쪽)
+  drawGroundShadow(g, ch, s, walking);
 
   g.save();
   g.translate(x, y + yo);
-  g.scale(s, s);
+  g.scale(s, s * breathe);
 
   // 다리
   if (!seated) {
@@ -1142,7 +1236,7 @@ function drawChar(g, ch, t) {
   }
 
   // 머리
-  const hy = seated ? -57 : -61;
+  const hy = (seated ? -57 : -61) + (seated ? Math.sin(t * 2.2 + ch.seed * 1.7) * 0.5 : 0);
   const r = 17;
   drawEars(g, sp, hy, r);
 
@@ -1216,6 +1310,28 @@ function drawSelection(g, ch, t) {
   g.strokeStyle = '#ffd79b'; g.globalAlpha = 0.9; g.lineWidth = 2.4;
   g.setLineDash([6, 5]); g.lineDashOffset = -t * 14;
   g.beginPath(); g.ellipse(ch.x, ch.y + 2, 24 * p, 9 * p, 0, 0, TAU); g.stroke();
+  g.restore();
+}
+
+function drawGroundShadow(g, ch, s, walking) {
+  const cx = ch.x + 3.2 * s, cy = ch.y + 1.4 * s;   // 광원이 창가(오른쪽 위)라 살짝 왼쪽 아래로
+  const rw = (walking ? 17.5 : 15.5) * s, rh = (walking ? 6.6 : 5.6) * s;
+  g.save();
+  g.translate(cx, cy);
+  g.scale(1, rh / rw);
+  const grd = g.createRadialGradient(0, 0, 0, 0, 0, rw);
+  grd.addColorStop(0, 'rgba(26,14,4,0.40)');
+  grd.addColorStop(0.45, 'rgba(26,14,4,0.26)');
+  grd.addColorStop(0.78, 'rgba(26,14,4,0.10)');
+  grd.addColorStop(1, 'rgba(26,14,4,0)');
+  g.fillStyle = grd;
+  g.beginPath(); g.arc(0, 0, rw, 0, TAU); g.fill();
+  g.restore();
+  // 발/의자와 닿는 진한 접지 그림자
+  g.save();
+  g.globalAlpha = walking ? 0.30 : 0.34;
+  g.fillStyle = '#241305';
+  g.beginPath(); g.ellipse(cx, cy, rw * 0.44, rh * 0.5, 0, 0, TAU); g.fill();
   g.restore();
 }
 
@@ -1347,6 +1463,29 @@ function drawBadges(g) {
   g.textAlign = 'left';
 }
 
+/* 모니터·스크린의 은은한 빛 (숨쉬듯 천천히 밝아졌다 어두워짐) */
+function drawScreenGlow(g, t) {
+  const screens = [
+    [632, 388], [700, 420], [812, 405], [890, 450], [612, 528], [672, 566],
+    [752, 604], [842, 626], [482, 738], [602, 768], [240, 392], [1290, 604], [780, 250]
+  ];
+  g.save();
+  g.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < screens.length; i++) {
+    const x = screens[i][0], y = screens[i][1];
+    const p = 0.5 + 0.5 * Math.sin(t * (0.62 + (i % 5) * 0.09) + i * 1.7);
+    const r = 50 + 9 * p;
+    const a = 0.035 + 0.045 * p;
+    const grd = g.createRadialGradient(x, y - 3, 1, x, y - 3, r);
+    grd.addColorStop(0, 'rgba(168,214,255,' + a.toFixed(3) + ')');
+    grd.addColorStop(0.5, 'rgba(130,180,255,' + (a * 0.42).toFixed(3) + ')');
+    grd.addColorStop(1, 'rgba(130,180,255,0)');
+    g.fillStyle = grd;
+    g.beginPath(); g.arc(x, y - 3, r, 0, TAU); g.fill();
+  }
+  g.restore();
+}
+
 /* =========================================================
    9. 시뮬레이션 · 렌더 루프
    ========================================================= */
@@ -1401,6 +1540,12 @@ function frame(now) {
   cam.x = lerp(cam.x, camT.x, k);
   cam.y = lerp(cam.y, camT.y, k);
   cam.zoom = lerp(cam.zoom, camT.zoom, k);
+  // 은은한 카메라 드리프트 (사용자가 직접 만지지 않았을 때만)
+  camDrift = userZoomed ? { x: camDrift.x, y: camDrift.y, z: camDrift.z } : {
+    x: Math.sin(t * 0.115) * 13,
+    y: Math.cos(t * 0.092) * 7,
+    z: 1 + Math.sin(t * 0.061) * 0.011
+  };
 
   for (const ch of chars) {
     if (!ch.visible) continue;
@@ -1425,8 +1570,8 @@ function frame(now) {
 
   ctx.save();
   ctx.translate(vw / 2, vh / 2);
-  ctx.scale(cam.zoom, cam.zoom);
-  ctx.translate(-cam.x, -cam.y);
+  ctx.scale(cam.zoom * camDrift.z, cam.zoom * camDrift.z);
+  ctx.translate(-(cam.x + camDrift.x), -(cam.y + camDrift.y));
 
   const ph = PHASES[phaseKey];
   const im = IMG[ph.img];
@@ -1441,6 +1586,7 @@ function frame(now) {
   if (ph.tint !== 'rgba(255,255,255,0.00)') { ctx.fillStyle = ph.tint; ctx.fillRect(0, 0, W, H); }
 
   drawTVBoard(ctx, t);
+  drawScreenGlow(ctx, t);
 
   const sorted = chars.filter(c => c.visible).sort((a, b) => a.y - b.y);
   for (const ch of sorted) {
@@ -1493,8 +1639,17 @@ function renderOffice() {
     '<div class="mini">' + ((d.office && d.office.greeting) || '오늘도 함께 일하고 있어요') + '</div>' +
     rows +
     '<div class="tick">● ' + ((d.board && d.board.ticker) || '') + '</div>' +
+    deptSum() +
     '<div class="mini">최근 완료</div>' + (doneTasks || '<div class="empty">완료된 업무가 없습니다</div>') +
     '<div class="mini">데이터 ' + (localMode ? '내장' : 'status.json') + ' · 갱신 ' + (lastSync || '-') + '</div>';
+}
+function deptSum() {
+  const order = ['지휘부', '특수·실무팀', '전산·PC 공병대'];
+  const cnt = {};
+  chars.forEach(c => { if (!c.visible) return; const d = c.dept || (c.id === 'ceo' ? '대표실' : '기타'); cnt[d] = (cnt[d] || 0) + 1; });
+  const cells = order.map(k => '<span><b>' + (cnt[k] || 0) + '</b>' + k + '</span>').join('');
+  return '<div class="mini">부서 편성 · AI 직원 ' + (chars.filter(c => c.visible && c.id !== 'ceo').length) + '명 + 대표님</div>' +
+    '<div class="deptsum">' + cells + '</div>';
 }
 function renderTasks() {
   const d = data || {};
@@ -1519,16 +1674,26 @@ function renderTasks() {
 function renderStaff() {
   const el = document.getElementById('pane-staff');
   const list = chars.filter(c => c.visible).sort((a, b) => a.order - b.order);
-  el.innerHTML = list.map(ch => {
+  const DC = { '대표실': '#f2b134', '지휘부': '#f5b866', '특수·실무팀': '#7dd3fc', '전산·PC 공병대': '#a78bfa' };
+  let out = '', last = null;
+  list.forEach(ch => {
     const st = STATUS_META[ch.status] || STATUS_META.working;
-    return '<div class="srow' + (ch.id === selectedId ? ' sel' : '') + '" data-id="' + ch.id + '">' +
+    const dept = ch.dept || (ch.id === 'ceo' ? '대표실' : '기타');
+    if (dept !== last) {
+      last = dept;
+      const n = list.filter(c => (c.dept || (c.id === 'ceo' ? '대표실' : '기타')) === dept).length;
+      out += '<div class="dhead"><i style="background:' + (DC[dept] || '#cbb79c') + '"></i>' + dept +
+        '<span>' + n + (dept === '대표실' ? '명 · 대표님 포함' : '명') + '</span></div>';
+    }
+    out += '<div class="srow' + (ch.id === selectedId ? ' sel' : '') + '" data-id="' + ch.id + '">' +
       '<span class="sav" style="background:' + ch.color + '22;border:1px solid ' + ch.color + '55">' +
         '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + ch.color + '"></span></span>' +
       '<span style="min-width:0;flex:1"><span class="sname">' + ch.name + ' <span style="color:#8a7660;font-weight:700">· ' + ch.rank + '</span></span>' +
-      '<span class="stask">' + (ch.task || '') + '</span></span>' +
+      '<span class="stask">' + (ch.role ? ch.role + ' — ' : '') + (ch.task || '') + '</span></span>' +
       '<span class="badge" style="color:' + st.color + ';background:' + st.color + '18;border:1px solid ' + st.color + '44">' + st.label + '</span>' +
     '</div>';
-  }).join('');
+  });
+  el.innerHTML = out;
   el.querySelectorAll('.srow').forEach(row => {
     row.addEventListener('click', () => selectStaff(row.getAttribute('data-id'), true));
   });
