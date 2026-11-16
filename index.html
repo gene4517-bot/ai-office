@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#15120f" />
-<meta name="description" content="1인 기업 AI 사무실 라이브 대시보드 · 실사 오피스에서 17명이 함께 일하는 화면" />
+<meta name="description" content="1인 기업 AI 지휘실 · 실사 오피스에서 19명(대표 + AI 직원 + 전문 자문단)이 살아 움직이는 라이브 대시보드" />
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" href="favicon.ico" sizes="any" />
 <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon-96.png" />
@@ -77,12 +77,11 @@
   .stat b{display:block;font-size:15px;font-weight:800;letter-spacing:-.5px;line-height:1.1}
   .stat span{font-size:9.5px;color:var(--dim2)}
 
-  .tabs{display:flex;gap:4px;padding:7px 9px 0;flex:0 0 auto;overflow-x:auto;scrollbar-width:none}
+  .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:7px 9px 0;flex:0 0 auto}
   .tabs::-webkit-scrollbar{display:none}
-  .tabs button{flex:1 0 auto;padding:7px 9px;border-radius:9px 9px 0 0;background:transparent;border:1px solid transparent;border-bottom:none;
-    color:var(--dim);font:700 11.5px/1 inherit;cursor:pointer;white-space:nowrap}
-  .tabs button.on{background:var(--card);border-color:var(--line);color:var(--ink)}
-  .pane{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--card);
+  .tabs button{min-width:0;padding:7px 4px;border-radius:9px;background:#17120d;border:1px solid #2a2118;
+    color:var(--dim);font:700 10.5px/1 inherit;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tabs button.on{background:var(--card);border-color:var(--line);color:var(--ink)}  .pane{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--card);
     border-top:1px solid var(--line);padding:9px 10px calc(14px + env(safe-area-inset-bottom))}
   .pane[hidden]{display:none}
 
@@ -168,6 +167,56 @@
   .vrow .w{font-weight:800;color:#f0d7b4;flex:0 0 auto}
   .vrow .x{color:#b9a68e;min-width:0}
 
+  /* ---------- 전문 자문단 · 도구 · 스케줄 ---------- */
+  .advtabs{display:flex;gap:4px;margin:0 0 8px}
+  .advtabs button{flex:1;font:700 10.5px/1 inherit;padding:8px 5px;border-radius:9px;background:#1a140f;color:var(--dim);
+    border:1px solid var(--line);cursor:pointer;white-space:nowrap}
+  .advtabs button.on{color:#2a1a08;background:linear-gradient(160deg,#ffd79b,#f0b064);border-color:#ffd79b}
+  .advcard{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px}
+  .advtop{display:flex;align-items:center;gap:8px}
+  .advico{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;font-size:16px;flex:0 0 auto;
+    background:#241c14;border:1px solid #3a2f22}
+  .advtop b{display:block;font-size:12px;font-weight:800;line-height:1.2}
+  .advtop small{display:block;font-size:9.5px;color:var(--dim2);margin-top:2px}
+  .advline{margin-top:8px;font:700 10.5px/1.45 inherit;color:#ffe0b0;background:#2a1f12;
+    border:1px solid #46341c;border-radius:8px;padding:7px 9px}
+  .advrow{display:flex;gap:7px;padding:7px 2px;border-bottom:1px dashed rgba(245,184,102,.10);font-size:10.5px;line-height:1.4}
+  .advrow:last-child{border-bottom:0}
+  .advrow .ic{flex:0 0 auto;font-size:10px;padding-top:1px;width:12px;text-align:center}
+  .advrow .bd{flex:1 1 auto;min-width:0}
+  .advrow .tx{color:#e6d3b8;font-weight:700;display:block}
+  .advrow .nt{color:var(--dim2);font-size:9.5px;margin-top:2px;line-height:1.35;display:block}
+  .advrow .vv{margin-left:auto;font:800 11.5px/1 inherit;color:#f6efe4;white-space:nowrap}
+  .advacts{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap}
+  .advacts button{flex:1 1 auto;font:800 10px/1 inherit;padding:8px 6px;border-radius:9px;border:0;cursor:pointer;
+    color:#0f1a12;background:#6ee7b7;white-space:nowrap}
+  .advacts button.ghost{color:#e6d3b8;background:#241d15;border:1px solid #3a2f22}
+  .toolgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .tool{display:flex;gap:7px;align-items:flex-start;padding:8px;border-radius:10px;background:var(--card2);
+    border:1px solid var(--line);cursor:pointer;text-align:left;width:100%}
+  .tool:active{background:#2a2117}
+  .tool .ti{font-size:15px;line-height:1.05;flex:0 0 auto}
+  .tool b{display:block;font-size:10.5px;font-weight:800;color:#f6efe4;line-height:1.25}
+  .tool small{display:block;font-size:9px;color:var(--dim2);margin-top:2px;line-height:1.3}
+  .toolchips{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;margin:0 0 8px}
+  .toolchips::-webkit-scrollbar{display:none}
+  .toolchips button{flex:0 0 auto;font:700 10px/1 inherit;color:#e6d3b8;background:#1c1710;border:1px solid #3a2f22;
+    padding:7px 9px;border-radius:999px;cursor:pointer}
+  .sched{display:flex;gap:7px;align-items:center;padding:7px 8px;border-radius:9px;background:var(--card2);
+    border:1px solid var(--line);margin-bottom:5px;font-size:10px}
+  .sched .si{font-size:12px;flex:0 0 auto}
+  .sched b{font-weight:800;color:#e6d3b8;display:block;font-size:10.5px}
+  .sched small{color:var(--dim2);font-size:9px;display:block;margin-top:1px}
+  .sched .st{margin-left:auto;font:800 8.5px/1 inherit;padding:3px 5px;border-radius:999px;white-space:nowrap}
+  .loop{display:flex;gap:4px;margin:6px 0 10px}
+  .loop div{flex:1;text-align:center;font:700 9px/1.35 inherit;color:#cbb79c;background:#1b1610;
+    border:1px solid var(--line);border-radius:8px;padding:7px 4px}
+  .loop div b{display:block;font-size:12px;margin-bottom:3px}
+  .stat2{display:flex;gap:5px;margin-bottom:8px}
+  .stat2 span{flex:1;font:700 9px/1.4 inherit;color:#cbb79c;background:#1b1610;border:1px solid var(--line);
+    border-radius:8px;padding:6px 4px;text-align:center}
+  .stat2 span b{display:block;font:800 10.5px/1.2 inherit;color:#f6efe4}
+
   /* 전체 화면(사진만 크게) 모드: ?full=1 */
   body.full #topbar, body.full #panel{display:none}
   body.full #stage{flex:1 1 100vh}
@@ -228,6 +277,8 @@
         <button data-tab="office" class="on">오피스</button>
         <button data-tab="tasks">AI 업무</button>
         <button data-tab="staff">직원 현황</button>
+        <button data-tab="advisor">👔 자문단</button>
+        <button data-tab="tools">⚡ 도구</button>
         <button data-tab="log">활동 로그</button>
         <button data-tab="voice">🎤 음성 지휘</button>
       </div>
@@ -235,6 +286,8 @@
       <div class="pane" id="pane-office"></div>
       <div class="pane" id="pane-tasks" hidden></div>
       <div class="pane" id="pane-staff" hidden></div>
+      <div class="pane" id="pane-advisor" hidden></div>
+      <div class="pane" id="pane-tools" hidden></div>
       <div class="pane" id="pane-log" hidden></div>
       <div class="pane" id="pane-voice" hidden></div>
     </section>
@@ -246,8 +299,8 @@
   "updated_at": "2026-11-16 21:40",
   "office": {
     "name": "AI 사무실 본부",
-    "sub": "gene 대표 · AI 직원 15명 + 대표 = 16명 체제",
-    "greeting": "오늘도 gene 대표님과 16명이 함께 일하고 있어요"
+    "sub": "gene 대표 · AI 직원 18명 + 대표 = 19명 체제",
+    "greeting": "오늘도 gene 대표님과 19명이 함께 일하고 있어요"
   },
   "stats": {
     "done": 47,
@@ -463,6 +516,60 @@
         "아이디어 5개 정리했어요",
         "초안 먼저 올릴게요",
         "음성으로 읽어 드릴까요?"
+      ]
+    },
+    {
+      "id": "lawyer",
+      "name": "AI 변호사",
+      "short": "변호사",
+      "rank": "법무 고문",
+      "dept": "전문 자문단",
+      "role": "법무·약관·표시광고법·환불/해지 규정 검수",
+      "status": "working",
+      "task": "공모전 약관·개인정보 조항 검수",
+      "done": 3,
+      "color": "#a78bfa",
+      "species": "owl",
+      "bubbles": [
+        "공모전 약관·개인정보 조항 검수 중",
+        "표시광고법 대가성 문구 확인했어요",
+        "해지 조건 법적 근거 정리 중"
+      ]
+    },
+    {
+      "id": "accountant",
+      "name": "AI 회계사",
+      "short": "회계사",
+      "rank": "세무·수익 고문",
+      "dept": "전문 자문단",
+      "role": "포인트·캐시·수익 정산·환급금·세무 관리",
+      "status": "working",
+      "task": "이번 주 만료 예정 포인트·수익 정산 체크",
+      "done": 5,
+      "color": "#34d399",
+      "species": "hamster",
+      "bubbles": [
+        "이번 주 만료 예정 포인트·수익 정산 체크",
+        "쿠팡 파트너스 정산 집계 중",
+        "숨은 환급금 조회 진행"
+      ]
+    },
+    {
+      "id": "creative",
+      "name": "AI 크리에이티브 디렉터",
+      "short": "CD",
+      "rank": "콘텐츠 고문",
+      "dept": "전문 자문단",
+      "role": "스레드 훅 카피·블로그 기획·비주얼/뮤비 디렉팅",
+      "status": "working",
+      "task": "스레드 후킹 카피 5종 디렉팅 중",
+      "done": 6,
+      "color": "#f472b6",
+      "species": "rabbit",
+      "bubbles": [
+        "스레드 후킹 카피 5종 디렉팅 중",
+        "블로그 썸네일 3안 비교 중",
+        "뮤비 컬러톤 통일 작업"
       ]
     },
     {
@@ -748,7 +855,107 @@
       "text": "700곡 장르 분류 지시 대기 상태 유지",
       "tone": ""
     }
-  ]
+  ],
+  "advisors": {
+    "lawyer": {
+      "headline": "공모전 약관·개인정보 조항 검수 중",
+      "updated": "오늘 22:05",
+      "rows": [
+        {
+          "t": "표시광고법 · 쿠팡 파트너스 대가성 문구",
+          "n": "게시물마다 「파트너스 활동의 일환으로 수수료를 받을 수 있음」 고지",
+          "tone": "ok"
+        },
+        {
+          "t": "공모전·이벤트 개인정보 수집·이용 동의",
+          "n": "필수/선택 구분, 제3자 제공 항목 확인",
+          "tone": "ok"
+        },
+        {
+          "t": "KBS 수신료 자동납부 취소 근거",
+          "n": "TV 수신료 분리 납부 신청(방송법 시행령) 근거 정리",
+          "tone": "ok"
+        },
+        {
+          "t": "블로그 리뷰 경제적 이해관계 고지",
+          "n": "리뷰 상단 1줄 고지 문구 통일 필요",
+          "tone": "warn"
+        },
+        {
+          "t": "이벤트 당첨자 개인정보 파기",
+          "n": "발표 후 7일 내 파기·기록 남기기",
+          "tone": "todo"
+        }
+      ]
+    },
+    "accountant": {
+      "headline": "이번 주 만료 예정 포인트·수익 정산 체크",
+      "updated": "오늘 21:55",
+      "rows": [
+        {
+          "t": "확인된 포인트·캐시",
+          "v": "1,151원",
+          "n": "G마켓 스마일캐시 648원 · OK캐쉬백 503원 (11/15~16 적립분)",
+          "tone": "ok"
+        },
+        {
+          "t": "소멸 임박 포인트",
+          "v": "확인 필요",
+          "n": "사이트별 만료일은 출석 점검 때 함께 조회",
+          "tone": "todo"
+        },
+        {
+          "t": "쿠팡 파트너스 수익",
+          "v": "집계 중",
+          "n": "AF1478377 · 첫 정산 기준(15만원) 전",
+          "tone": "warn"
+        },
+        {
+          "t": "블로그 수익",
+          "v": "준비 중",
+          "n": "애드포스트 승인 전 · 매일 3편 누적",
+          "tone": "todo"
+        },
+        {
+          "t": "숨은 환급금 · 휴면예금",
+          "v": "조회 필요",
+          "n": "정부24·휴면예금 조회 결과 정리",
+          "tone": "todo"
+        }
+      ]
+    },
+    "creative": {
+      "headline": "스레드 훅 카피 5종 디렉팅 중",
+      "updated": "오늘 22:10",
+      "rows": [
+        {
+          "t": "스레드 @ogenegun 파이프라인",
+          "n": "쿠팡 파트너스 3회/일 — 07:30 · 13:00 · 19:30",
+          "tone": "ok"
+        },
+        {
+          "t": "네이버 블로그 3편/일",
+          "n": "09:00 발행 · 애드포스트 승인 준비",
+          "tone": "ok"
+        },
+        {
+          "t": "비주얼 에셋",
+          "n": "뮤비(참 애썼다고) · AI 지휘실 GIF v4 · 조직도 v4",
+          "tone": "ok"
+        },
+        {
+          "t": "훅 카피 테스트",
+          "n": "후킹 문장 5종 중 반응 좋은 2종 정리 중",
+          "tone": "warn"
+        },
+        {
+          "t": "모션 디렉팅",
+          "n": "실사 오피스 살아 움직이는 모션 v4 적용",
+          "tone": "ok"
+        }
+      ]
+    }
+  }
 }
 </script>
 
@@ -804,7 +1011,12 @@ const SEATS = {
   instinct: { ax: 470,  ay: 542, lx: 470,  ly: 510 },   // 전면 가운데 모니터
   rua:      { ax: 588,  ay: 546, lx: 596,  ly: 514 },   // 전면 가운데 모니터
   stardesk: { ax: 862,  ay: 522, lx: 862,  ly: 490 },   // 로봇 앞 모니터
-  tailscale:{ ax: 1436, ay: 470, lx: 1400, ly: 430 }    // 오른쪽 유리벽 안쪽 먼 데스크
+  tailscale:{ ax: 1436, ay: 470, lx: 1400, ly: 430 },   // 오른쪽 유리벽 안쪽 먼 데스크
+
+  /* --- 전문 자문단 3인 (유리 회의실 자리) --- */
+  lawyer:    { ax: 1150, ay: 468, lx: 1186, ly: 420 },
+  accountant:{ ax: 1332, ay: 448, lx: 1360, ly: 400 },
+  creative:  { ax: 972,  ay: 430, lx: 950,  ly: 386 }
 };
 
 /* 회의·휴식·퇴근 시 이름표가 옮겨 가는 자리 */
@@ -1195,6 +1407,279 @@ function drawScreenGlow(g, t) {
   }
   g.restore();
 }
+/* =========================================================
+   6-B. 살아있는 오피스 — living photo
+   - 실사 사진은 그대로 두고, 사람·로봇·식물 영역만 아주 작게
+     호흡·기울기·고개 움직임을 준다(가장자리 페더 마스크).
+   - 모니터 화면은 코드가 흐르고 커서가 깜빡이며, 창밖은 불빛이
+     반짝이고, 공기 중 먼지와 조명이 천천히 흐른다.
+   - 모든 주기는 루프 주기 S8(8초)의 정수 배 → GIF도 끊김 없이 반복
+   ========================================================= */
+const S8 = 8;                 // 루프 기준 주기(초)
+const F0 = 1 / S8;            // 8초에 1회
+const F1 = 2 / S8;            // 8초에 2회
+const F2 = 3 / S8;            // 8초에 3회
+const F3 = 4 / S8;            // 8초에 4회
+let motionOn = true;
+
+function makeLayer(w, h) {
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(w)); c.height = Math.max(1, Math.round(h));
+  return { c, g: c.getContext('2d'), w: c.width, h: c.height };
+}
+
+/* 인물·로봇·식물 영역(사진 1536×1024 좌표) */
+const ACTORS = [
+  { id: 'manus',   x: 0,    y: 340, w: 205, h: 275, mx: 82,   my: 448, rx: 92,  ry: 112, pv: 0.72, sway: 0.7, bob: 1.0, br: 0.5, ph: 0.00, gsw: 1.0, gdy: 1.4, gp: 0.06, gw: 0.17 },
+  { id: 'gena',    x: 190,  y: 330, w: 135, h: 200, mx: 262,  my: 428, rx: 62,  ry: 88,  pv: 0.74, sway: 0.8, bob: 0.9, br: 0.5, ph: 0.31, gsw: 1.4, gdy: 1.2, gp: 0.44, gw: 0.15 },
+  { id: 'buddy',   x: 372,  y: 336, w: 150, h: 190, mx: 447,  my: 430, rx: 70,  ry: 82,  pv: 0.72, sway: 0.9, bob: 1.1, br: 0.6, ph: 0.62, gsw: 1.5, gdy: 1.6, gp: 0.70, gw: 0.16 },
+  { id: 'chatgpt', x: 512,  y: 470, w: 300, h: 360, mx: 650,  my: 625, rx: 132, ry: 162, pv: 0.74, sway: 0.6, bob: 1.0, br: 0.45, ph: 0.18, gsw: 0.9, gdy: 1.4, gp: 0.55, gw: 0.18 },
+  { id: 'claude',  x: 862,  y: 456, w: 268, h: 360, mx: 982,  my: 622, rx: 118, ry: 162, pv: 0.74, sway: 0.6, bob: 0.9, br: 0.45, ph: 0.47, gsw: 1.3, gdy: 1.2, gp: 0.30, gw: 0.16 },
+  { id: 'muse',    x: 1236, y: 456, w: 190, h: 300, mx: 1316, my: 588, rx: 86,  ry: 132, pv: 0.72, sway: 0.8, bob: 1.0, br: 0.55, ph: 0.86, gsw: 1.3, gdy: 1.5, gp: 0.66, gw: 0.17 },
+  { id: 'ceo',     x: 998,  y: 214, w: 200, h: 270, mx: 1066, my: 330, rx: 70,  ry: 112, pv: 0.70, sway: 1.0, bob: 1.2, br: 0.5, ph: 0.12, gsw: 1.2, gdy: 1.6, gp: 0.20, gw: 0.20 },
+  { id: 'haei',    x: 802,  y: 306, w: 148, h: 195, mx: 872,  my: 396, rx: 66,  ry: 88,  pv: 0.74, sway: 0.9, bob: 1.0, br: 0.55, ph: 0.73, gsw: 1.4, gdy: 1.2, gp: 0.88, gw: 0.15 },
+  /* 식물 — 아주 미세한 흔들림 */
+  { id: 'plant-mid',   x: 596, y: 172, w: 165, h: 285, mx: 672, my: 300, rx: 82, ry: 142, pv: 0.96, sway: 0.7, bob: 0.0, br: 0.0, ph: 0.40, gsw: 0.9, gdy: 0, gp: 0.10, gw: 0.22 },
+  { id: 'plant-right', x: 1296, y: 374, w: 145, h: 175, mx: 1360, my: 452, rx: 72, ry: 86, pv: 0.96, sway: 0.9, bob: 0.0, br: 0.0, ph: 0.55, gsw: 1.1, gdy: 0, gp: 0.50, gw: 0.20 },
+  { id: 'plant-left',  x: 0,   y: 592, w: 175, h: 432, mx: 70,  my: 808, rx: 88, ry: 216, pv: 0.98, sway: 0.5, bob: 0.0, br: 0.0, ph: 0.20, gsw: 0.6, gdy: 0, gp: 0.30, gw: 0.24 }
+];
+let actorsReady = false;
+/* 고개만 따로 — 몸 기울기와 별개로 고개를 끄덕·돌려 본다(손님에게 말 거는 느낌) */
+const HEADS = [
+  { id: 'ceo-h',     parent: 'ceo',     x: 1022, y: 224, w: 96,  h: 96,  mx: 1066, my: 268, rx: 40, ry: 44, pv: 0.98, sway: 3.0, bob: 1.8, br: 0.0, ph: 0.05, gsw: 4.2, gdy: 2.6, gp: 0.14, gw: 0.20 },
+  { id: 'chatgpt-h', parent: 'chatgpt', x: 566, y: 500, w: 150, h: 200, mx: 638, my: 600, rx: 58, ry: 86, pv: 0.98, sway: 2.4, bob: 1.8, br: 0.0, ph: 0.41, gsw: 3.6, gdy: 2.2, gp: 0.60, gw: 0.18 },
+  { id: 'claude-h',  parent: 'claude',  x: 928, y: 478, w: 132, h: 120, mx: 990, my: 540, rx: 56, ry: 54, pv: 0.98, sway: 2.8, bob: 1.5, br: 0.0, ph: 0.27, gsw: 4.0, gdy: 2.0, gp: 0.36, gw: 0.17 },
+  { id: 'muse-h',    parent: 'muse',    x: 1272, y: 474, w: 96,  h: 108, mx: 1318, my: 526, rx: 42, ry: 48, pv: 0.98, sway: 3.0, bob: 1.6, br: 0.0, ph: 0.78, gsw: 4.0, gdy: 2.2, gp: 0.72, gw: 0.18 }
+];
+function initActors() {
+  if (actorsReady) return;
+  actorsReady = true;
+  for (const A of ACTORS.concat(HEADS)) {
+    A.layer = makeLayer(A.w, A.h);
+    A._cx = A.mx - A.x; A._cy = A.my - A.y;
+    A._R = Math.max(A.rx, A.ry);
+    const gr = A.layer.g.createRadialGradient(0, 0, 0, 0, 0, A._R);
+    gr.addColorStop(0, 'rgba(0,0,0,1)');
+    gr.addColorStop(0.62, 'rgba(0,0,0,1)');
+    gr.addColorStop(0.86, 'rgba(0,0,0,0.52)');
+    gr.addColorStop(1, 'rgba(0,0,0,0)');
+    A._grad = gr;
+  }
+  for (const Hd of HEADS) Hd._parent = ACTORS.find(a => a.id === Hd.parent);
+}
+
+/* 인물 1명의 이번 프레임 자세 */
+const MOTION_GAIN = 1.0;       // 몸 움직임 세기 (고개는 HEADS 쪽에서 더 크게)
+function actorPose(A, t) {
+  const p = A.ph * TAU;
+  const ang = MOTION_GAIN * A.sway * (0.62 * Math.sin(t * TAU * F0 + p) + 0.38 * Math.sin(t * TAU * F1 + p * 1.7));
+  const dy = MOTION_GAIN * A.bob * Math.sin(t * TAU * F1 + p * 1.3);
+  const sy = 1 + A.br * 0.01 * Math.sin(t * TAU * F1 + p * 0.8);
+  let e = 0;
+  const cyc = (t * F0 + A.gp) % 1;
+  if (cyc < A.gw) e = Math.sin(Math.PI * (cyc / A.gw));
+  e *= e;
+  return { ang: (ang + A.gsw * MOTION_GAIN * e) * Math.PI / 180, dy: dy + A.gdy * MOTION_GAIN * e, sy };
+}
+
+function drawActorLayer(g, im, A, t) {
+  const L = A.layer, lg = L.g;
+  const pose = actorPose(A, t);
+  let extraY = 0;
+  if (A._parent) {
+    const pp = actorPose(A._parent, t);
+    extraY = pp.dy;
+  }
+  const px = A._cx, py = A.my + A.ry * (A.pv == null ? 0.72 : A.pv) - A.y;
+  lg.setTransform(1, 0, 0, 1, 0, 0);
+  lg.globalCompositeOperation = 'source-over';
+  lg.clearRect(0, 0, L.w, L.h);
+  lg.save();
+  lg.translate(px, py + pose.dy + extraY);
+  lg.rotate(pose.ang);
+  lg.scale(1, pose.sy);
+  lg.translate(-px, -py);
+  lg.drawImage(im, A.x, A.y, A.w, A.h, 0, 0, A.w, A.h);
+  lg.restore();
+  lg.globalCompositeOperation = 'destination-in';
+  lg.save();
+  lg.translate(A._cx, A._cy);
+  lg.scale(A.rx / A._R, A.ry / A._R);
+  lg.fillStyle = A._grad;
+  lg.beginPath(); lg.arc(0, 0, A._R, 0, TAU); lg.fill();
+  lg.restore();
+  lg.globalCompositeOperation = 'source-over';
+  g.drawImage(L.c, A.x, A.y);
+}
+
+function drawActors(g, im, t) {
+  if (!motionOn || !im) return;
+  initActors();
+  for (let i = 0; i < ACTORS.length; i++) drawActorLayer(g, im, ACTORS[i], t);
+  for (let i = 0; i < HEADS.length; i++) drawActorLayer(g, im, HEADS[i], t);
+}
+
+/* ---- 모니터 화면: 코드 스크롤 · 커서 깜빡임 · 화면 숨결 ---- */
+const PANELS = [
+  { x: 243, y: 556, w: 200, h: 176, ph: 0.00, rows: 9,  a: 1.00, sp: 1 },
+  { x: 447, y: 550, w: 122, h: 142, ph: 0.30, rows: 7,  a: 0.72, sp: 2 },
+  { x: 680, y: 530, w: 140, h: 142, ph: 0.60, rows: 8,  a: 0.80, sp: 1 },
+  { x: 830, y: 522, w: 82,  h: 124, ph: 0.15, rows: 6,  a: 0.62, sp: 2 },
+  { x: 1112, y: 496, w: 134, h: 86, ph: 0.45, rows: 5,  a: 0.85, sp: 1 },
+  { x: 1046, y: 494, w: 70,  h: 102, ph: 0.75, rows: 6,  a: 0.72, sp: 2 }
+];
+const GLOW_SPR = (() => {
+  const S = 64, c = document.createElement('canvas'); c.width = c.height = S;
+  const g = c.getContext('2d');
+  const gr = g.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
+  gr.addColorStop(0, 'rgba(255,255,255,1)');
+  gr.addColorStop(0.35, 'rgba(255,255,255,0.52)');
+  gr.addColorStop(0.72, 'rgba(255,255,255,0.13)');
+  gr.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, S, S);
+  return c;
+})();
+function dot(g, x, y, r, a, col) {
+  if (a <= 0.004) return;
+  g.globalAlpha = a > 1 ? 1 : a;
+  g.drawImage(GLOW_SPR, x - r, y - r, r * 2, r * 2);
+}
+
+function drawScreenLife(g, t, ph, im) {
+  if (!motionOn) return;
+  const night = ph.img === 'night';
+  const gain = night ? 1.0 : 0.78;
+  g.save();
+  g.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < PANELS.length; i++) {
+    const P = PANELS[i];
+    const breathe = 0.40 + 0.60 * (0.5 + 0.5 * Math.sin(t * TAU * F2 + P.ph * 6.1));
+    /* 화면 숨결 — 가운데가 밝고 가장자리로 사라지는 타원 (직사각 경계 없음) */
+    g.globalAlpha = 0.05 * gain * breathe;
+    g.fillStyle = '#a8ccff';
+    g.beginPath();
+    g.ellipse(P.x + P.w / 2, P.y + P.h / 2, P.w * 0.52, P.h * 0.52, 0, 0, TAU);
+    g.fill();
+
+    /* 코드 줄 — 위로 아주 천천히 흐르고 가장자리에서 옅어진다 */
+    const lh = Math.max(5, P.h / 12);
+    const travel = ((t * F0 * (P.sp || 1) + P.ph) % 1) * lh * 3;
+    const rows = 11;
+    for (let k = 0; k < rows; k++) {
+      const u = (k + travel / lh) % rows;
+      const y = P.y + P.h * 0.10 + (u / rows) * P.h * 0.80;
+      const edge = Math.sin((u / rows) * Math.PI);
+      const seed = ((i * 41 + k * 67) % 97) / 97;
+      const wid = P.w * (0.18 + 0.54 * Math.abs(Math.sin((k + i) * 2.11)));
+      g.globalAlpha = (0.035 + 0.05 * seed) * gain * edge * (0.55 + 0.45 * breathe);
+      g.fillStyle = seed > 0.7 ? '#cfe6ff' : '#8db6ea';
+      g.fillRect(P.x + P.w * 0.09, y, wid, Math.max(1, lh * 0.16));
+    }
+    /* 타이핑 커서 */
+    const blink = (t * F3 + P.ph) % 1;
+    if (blink < 0.55) {
+      const u = 0.25 + 0.5 * ((i * 0.37) % 1);
+      const cx2 = P.x + P.w * (0.14 + 0.3 * ((i * 0.61) % 1));
+      const cy2 = P.y + P.h * u;
+      g.globalAlpha = 0.17 * gain * Math.sin(u * Math.PI);
+      g.fillStyle = '#eaf5ff';
+      g.fillRect(cx2, cy2, Math.max(1.2, P.w * 0.010), P.h * 0.05);
+    }
+  }
+  g.restore();
+}
+
+
+/* 화면 내용이 실제로 흐르는 스크롤 (사진 속 화면 픽셀을 그대로 옮김) */
+function drawScreenScroll(g, im, t) {
+  /* 화면 픽셀을 직접 옭기는 방식은 모니터 테두리와 어긋나 보여서 쓰지 않는다 */
+}
+
+/* ---- 창밖: 도시 불빛 반짝임 · 지나가는 항공기 불빛 (밤) ---- */
+const CITY_LIGHTS = (() => {
+  const out = []; let s = 987654321;
+  const rnd = () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; };
+  for (let i = 0; i < 54; i++) {
+    out.push({
+      x: 8 + rnd() * 622, y: 248 + rnd() * 212,
+      r: 3.4 + rnd() * 7,
+      f: (1 + Math.floor(rnd() * 4)) * F0,
+      ph: rnd() * TAU,
+      a: 0.05 + rnd() * 0.13,
+      warm: rnd() > 0.32
+    });
+  }
+  return out;
+})();
+function drawWindowLife(g, t, ph) {
+  if (!motionOn) return;
+  const night = ph.img === 'night';
+  g.save();
+  g.globalCompositeOperation = 'lighter';
+  if (night) {
+    for (let i = 0; i < CITY_LIGHTS.length; i++) {
+      const L = CITY_LIGHTS[i];
+      const k = 0.5 + 0.5 * Math.sin(t * TAU * L.f + L.ph);
+      const a = L.a * (0.25 + 0.75 * k) * (0.6 + 0.7 * k);
+      g.globalAlpha = a;
+      g.fillStyle = L.warm ? '#ffd9a0' : '#cfe4ff';
+      g.beginPath(); g.arc(L.x, L.y, L.r * (0.72 + 0.28 * k) * 0.34, 0, TAU); g.fill();
+    }
+    /* 멀리 지나가는 항공기 불빛 */
+    const ap = (t * F0 + 0.35) % 1;
+    const ax = -40 + ap * 760, ay = 118 + Math.sin(ap * Math.PI * 2) * 26;
+    const blink = ((t * F3) % 1) < 0.42 ? 1 : 0.18;
+    g.globalAlpha = 0.36 * blink;
+    g.fillStyle = '#ff7b6b';
+    g.beginPath(); g.arc(ax, ay, 2.0, 0, TAU); g.fill();
+    g.globalAlpha = 0.13 * blink;
+    g.beginPath(); g.arc(ax - 7, ay + 2, 3.4, 0, TAU); g.fill();
+  } else {
+    /* 낮: 창밖 위를 천천히 지나가는 은은한 빛 결 (형체 없는 그라디언트) */
+    const u = (t * F0) % 1;
+    const gx = -320 + u * 1080;
+    const grd = g.createLinearGradient(gx, 0, gx + 460, 0);
+    grd.addColorStop(0, 'rgba(255,246,226,0)');
+    grd.addColorStop(0.5, 'rgba(255,246,226,0.075)');
+    grd.addColorStop(1, 'rgba(255,246,226,0)');
+    g.globalAlpha = 1;
+    g.fillStyle = grd;
+    g.fillRect(0, 90, 700, 400);
+  }
+  g.restore();
+}
+
+/* ---- 공기 중 부유하는 먼지·빛 입자 ---- */
+const MOTES = (() => {
+  const out = []; let s = 24681357;
+  const rnd = () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; };
+  for (let i = 0; i < 34; i++) {
+    out.push({
+      x: 40 + rnd() * 1300, y: 90 + rnd() * 820,
+      r: 1.6 + rnd() * 3.2,
+      ax: 10 + rnd() * 34, ay: 8 + rnd() * 22,
+      f: (1 + Math.floor(rnd() * 3)) * F0,
+      ph: rnd() * TAU,
+      a: 0.05 + rnd() * 0.11
+    });
+  }
+  return out;
+})();
+function drawMotes(g, t, ph) {
+  if (!motionOn) return;
+  g.save();
+  g.globalCompositeOperation = 'lighter';
+  const k = ph.img === 'night' ? 0.55 : 1;
+  for (let i = 0; i < MOTES.length; i++) {
+    const M = MOTES[i];
+    const x = M.x + Math.sin(t * TAU * M.f + M.ph) * M.ax;
+    const y = M.y + Math.cos(t * TAU * M.f * 1 + M.ph * 1.7) * M.ay - ((t * F0 + M.ph / TAU) % 1) * 6;
+    const tw = 0.55 + 0.45 * Math.sin(t * TAU * M.f * 2 + M.ph * 2.3);
+    dot(g, x, y, M.r * 2.2, M.a * tw * k, '#fff0d8');
+  }
+  g.restore();
+}
+
 /* 야간 실내등 (따뜻한 조명) */
 const LAMPS = [
   [742, 18, 44, 0.9], [800, 18, 44, 0.9], [860, 18, 44, 0.9], [920, 18, 44, 0.9],
@@ -1361,13 +1846,17 @@ function frame(now) {
   const im = IMG[ph.img];
   if (im) {
     ctx.drawImage(im, 0, 0, W, H);
+    drawActors(ctx, im, t);
   } else {
     ctx.fillStyle = '#3a2c22'; ctx.fillRect(0, 0, W, H);
   }
   if (ph.tint !== 'rgba(255,255,255,0)') { ctx.fillStyle = ph.tint; ctx.fillRect(0, 0, W, H); }
 
+  drawWindowLife(ctx, t, ph);
   drawLamps(ctx, t, ph);
   drawScreenGlow(ctx, t);
+  drawScreenLife(ctx, t, ph, im);
+  drawMotes(ctx, t, ph);
 
   // 이름표는 화면 좌표로 (사진 위 오버레이 느낌)
   ctx.restore();
@@ -1402,7 +1891,7 @@ function updateHud() {
   }
 }
 
-function renderAll() { renderOffice(); renderTasks(); renderStaff(); renderLog(); }
+function renderAll() { renderOffice(); renderTasks(); renderStaff(); renderLog(); renderAdvisors(); renderTools(); }
 
 function renderOffice() {
   const d = data || {};
@@ -1414,16 +1903,25 @@ function renderOffice() {
   const doneTasks = ((d.tasks) || []).filter(x => x.state === 'done').slice(0, 3).map(x =>
     '<div class="task"><div class="ico" style="background:#12352b;color:#6ee7b7">✓</div>' +
     '<div style="min-width:0"><div class="tt">' + x.title + '</div><div class="tn">' + (x.note || '') + ' · ' + x.owner + '</div></div></div>').join('');
+  const advBlock = ADVISOR_KEYS.map(k => {
+    const m = ADVISOR_META[k], B = advisorBoard(k);
+    return '<div class="advrow" style="padding:6px 2px"><span class="ic">' + m.icon + '</span>' +
+      '<span class="bd"><span class="tx">' + m.name + '</span>' +
+      '<span class="nt">' + escapeHtml(B.headline || m.ask) + '</span></span></div>';
+  }).join('');
   el.innerHTML =
+    '<div class="toolchips">' + TOOLS.map((T, i) => '<button data-otool="' + i + '">' + T.i + ' ' + T.t + '</button>').join('') + '</div>' +
     '<div class="mini">' + ((d.office && d.office.greeting) || '오늘도 함께 일하고 있어요') + '</div>' +
     rows +
     '<div class="tick">● ' + ((d.board && d.board.ticker) || '') + '</div>' +
     deptSum() +
+    '<div class="mini">👔 전문 자문단 — 역할별 보드는 <b>자문단</b> 탭</div>' + advBlock +
     '<div class="mini">최근 완료</div>' + (doneTasks || '<div class="empty">완료된 업무가 없습니다</div>') +
     '<div class="mini">데이터 ' + (localMode ? '내장' : 'status.json') + ' · 갱신 ' + (lastSync || '-') + '</div>';
+  el.querySelectorAll('[data-otool]').forEach(b => b.addEventListener('click', () => runTool(+b.getAttribute('data-otool'))));
 }
 function deptSum() {
-  const order = ['지휘부', '특수·실무팀', '전산·PC 공병대'];
+  const order = ['지휘부', '전문 자문단', '특수·실무팀', '전산·PC 공병대'];
   const cnt = {};
   chars.forEach(c => { if (!c.visible) return; const d = c.dept || (c.id === 'ceo' ? '대표실' : '기타'); cnt[d] = (cnt[d] || 0) + 1; });
   const cells = order.map(k => '<span><b>' + (cnt[k] || 0) + '</b>' + k + '</span>').join('');
@@ -1453,7 +1951,7 @@ function renderTasks() {
 function renderStaff() {
   const el = document.getElementById('pane-staff');
   const list = chars.filter(c => c.visible).sort((a, b) => a.order - b.order);
-  const DC = { '대표실': '#f2b134', '지휘부': '#f5b866', '특수·실무팀': '#7dd3fc', '전산·PC 공병대': '#a78bfa' };
+  const DC = { '대표실': '#f2b134', '지휘부': '#f5b866', '전문 자문단': '#a78bfa', '특수·실무팀': '#7dd3fc', '전산·PC 공병대': '#a78bfa' };
   let out = '', last = null;
   list.forEach(ch => {
     const st = STATUS_META[ch.status] || STATUS_META.working;
@@ -1504,11 +2002,214 @@ function selectStaff(id, focus) {
 }
 function switchTab(name) {
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.getAttribute('data-tab') === name));
-  ['office', 'tasks', 'staff', 'log', 'voice'].forEach(k => {
+  ['office', 'tasks', 'staff', 'advisor', 'tools', 'log', 'voice'].forEach(k => {
     const p = document.getElementById('pane-' + k);
     if (p) p.hidden = k !== name;
   });
   if (name === 'voice') renderVoice();
+  if (name === 'advisor') renderAdvisors();
+  if (name === 'tools') renderTools();
+}
+
+/* =========================================================
+   9-C. 전문 자문단 3인 · 역할별 보드 · 빠른 도구 · 자동 스케줄
+   ========================================================= */
+const ADVISOR_KEYS = ['lawyer', 'accountant', 'creative'];
+const ADVISOR_META = {
+  lawyer: {
+    icon: '⚖️', tab: '⚖️ 변호사', name: 'AI 변호사', rank: '법무 고문', color: '#a78bfa',
+    scope: '약관 · 개인정보 · 표시광고 · 계약/해지',
+    ask: '공모전·이벤트 약관과 개인정보 조항, 쿠팡 파트너스 대가성 표시 문구를 법적 관점에서 검수해줘',
+    next: '다음 점검 — 새 공모전 접수할 때마다'
+  },
+  accountant: {
+    icon: '💼', tab: '💼 회계사', name: 'AI 회계사', rank: '세무·수익 고문', color: '#34d399',
+    scope: '포인트 · 캐시 · 수익 정산 · 환급금 · 세무',
+    ask: '이번 주 포인트·캐시 만료와 쿠팡 파트너스·블로그 수익, 숨은 환급금 현황을 정리해줘',
+    next: '다음 점검 — 매주 월요일 오전'
+  },
+  creative: {
+    icon: '🎨', tab: '🎨 CD', name: 'AI 크리에이티브 디렉터', rank: '콘텐츠 고문', color: '#f472b6',
+    scope: '스레드 훅 · 블로그 기획 · 비주얼/뮤비 디렉팅',
+    ask: '이번 주 스레드 훅 카피와 블로그 3편 주제, 비주얼(GIF·썸네일) 방향을 디렉팅해줘',
+    next: '다음 점검 — 매일 발행 전'
+  }
+};
+/* status.json 에 advisors 보드가 없을 때 쓰는 기본값 */
+const ADVISOR_DEFAULT = {
+  lawyer: {
+    headline: '공모전 약관·개인정보 조항 검수 중',
+    updated: '오늘 22:05',
+    rows: [
+      { t: '표시광고법 · 쿠팡 파트너스 대가성 문구', n: '게시물마다 「파트너스 활동의 일환으로 수수료를 받을 수 있음」 고지', tone: 'ok' },
+      { t: '공모전·이벤트 개인정보 수집·이용 동의', n: '필수/선택 구분, 제3자 제공 항목 확인', tone: 'ok' },
+      { t: 'KBS 수신료 자동납부 취소 근거', n: 'TV 수신료 분리 납부 신청(방송법 시행령) 근거 정리', tone: 'ok' },
+      { t: '블로그 리뷰 경제적 이해관계 고지', n: '리뷰 상단 1줄 고지 문구 통일 필요', tone: 'warn' },
+      { t: '이벤트 당첨자 개인정보 파기', n: '발표 후 7일 내 파기·기록 남기기', tone: 'todo' }
+    ]
+  },
+  accountant: {
+    headline: '이번 주 만료 예정 포인트·수익 정산 체크',
+    updated: '오늘 21:55',
+    rows: [
+      { t: '확인된 포인트·캐시', v: '1,151원', n: 'G마켓 스마일캐시 648원 · OK캐쉬백 503원 (11/15~16 적립분)', tone: 'ok' },
+      { t: '소멸 임박 포인트', v: '확인 필요', n: '사이트별 만료일은 출석 점검 때 함께 조회', tone: 'todo' },
+      { t: '쿠팡 파트너스 수익', v: '집계 중', n: 'AF1478377 · 첫 정산 기준(15만원) 전', tone: 'warn' },
+      { t: '블로그 수익', v: '준비 중', n: '애드포스트 승인 전 · 매일 3편 누적', tone: 'todo' },
+      { t: '숨은 환급금 · 휴면예금', v: '조회 필요', n: '정부24·휴면예금 조회 결과 정리', tone: 'todo' }
+    ]
+  },
+  creative: {
+    headline: '스레드 훅 카피 5종 디렉팅 중',
+    updated: '오늘 22:10',
+    rows: [
+      { t: '스레드 @ogenegun 파이프라인', n: '쿠팡 파트너스 3회/일 — 07:30 · 13:00 · 19:30', tone: 'ok' },
+      { t: '네이버 블로그 3편/일', n: '09:00 발행 · 애드포스트 승인 준비', tone: 'ok' },
+      { t: '비주얼 에셋', n: '뮤비(참 애썼다고) · AI 지휘실 GIF v4 · 조직도 v4', tone: 'ok' },
+      { t: '훅 카피 테스트', n: '후킹 문장 5종 중 반응 좋은 2종 정리 중', tone: 'warn' },
+      { t: '모션 디렉팅', n: '실사 오피스 살아 움직이는 모션 v4 적용', tone: 'ok' }
+    ]
+  }
+};
+let advKey = 'lawyer';
+
+function advisorBoard(k) {
+  const src = (data && data.advisors) || ADVISOR_DEFAULT;
+  const B = (src && src[k]) || ADVISOR_DEFAULT[k];
+  return B || { rows: [] };
+}
+function advisorPrompt(k) {
+  const m = ADVISOR_META[k];
+  const now = new Date();
+  const stamp = now.getFullYear() + '-' + pad2(now.getMonth() + 1) + '-' + pad2(now.getDate()) + ' ' + pad2(now.getHours()) + ':' + pad2(now.getMinutes());
+  return '🧠 AI 지휘실 · 전문 자문 요청 (' + stamp + ')\n' +
+    '담당: ' + m.name + ' · ' + m.rank + ' — ' + m.scope + '\n' +
+    '요청: ' + m.ask + '\n' +
+    '1) 결론 → 근거(법령·약관 조항·계산) → 남은 위험 순서로 3줄 이내 정리\n' +
+    '2) 지금 바로 할 일 1가지와 보류해도 되는 일 1가지\n' +
+    '3) 결과는 노션 「🧠 모든 AI 공용 기억 저장소」에 "자문 결과"로 남기고 링크 알려 주기';
+}
+
+function renderAdvisors() {
+  const el = document.getElementById('pane-advisor');
+  if (!el) return;
+  const m = ADVISOR_META[advKey];
+  const B = advisorBoard(advKey);
+  const ch = chars.find(c => c.id === advKey);
+  const st = (ch && STATUS_META[ch.status]) || STATUS_META.working;
+  const tabs = ADVISOR_KEYS.map(k => '<button data-adv="' + k + '"' + (k === advKey ? ' class="on"' : '') + '>' + ADVISOR_META[k].tab + '</button>').join('');
+  const rows = (B.rows || []).map(r => {
+    const ic = r.v ? '▪' : (r.tone === 'ok' ? '✅' : r.tone === 'warn' ? '⚠️' : '⬜');
+    return '<div class="advrow"><span class="ic">' + ic + '</span>' +
+      '<span class="bd"><span class="tx">' + escapeHtml(r.t) + '</span>' +
+      (r.n ? '<span class="nt">' + escapeHtml(r.n) + '</span>' : '') + '</span>' +
+      (r.v ? '<span class="vv">' + escapeHtml(r.v) + '</span>' : '') + '</div>';
+  }).join('');
+  el.innerHTML =
+    '<div class="advtabs">' + tabs + '</div>' +
+    '<div class="advcard">' +
+      '<div class="advtop"><span class="advico">' + m.icon + '</span>' +
+        '<div style="min-width:0"><b>' + m.name + '</b><small>' + m.rank + ' · ' + m.scope + '</small></div>' +
+        '<span class="badge" style="color:' + st.color + ';background:' + st.color + '18;border:1px solid ' + st.color + '44;margin-left:auto">' + st.label + '</span>' +
+      '</div>' +
+      (B.headline ? '<div class="advline">“' + escapeHtml(B.headline) + '”</div>' : '') +
+      rows +
+      '<div class="advacts">' +
+        '<button data-advact="voice">🎤 음성 지휘로 호출</button>' +
+        '<button class="ghost" data-advact="copy">📋 지시서 복사</button>' +
+        '<button class="ghost" data-advact="notion">🧠 노션</button>' +
+      '</div>' +
+      '<div class="mini" style="margin:9px 2px 0">최근 확인 ' + escapeHtml(B.updated || '-') + ' · ' + m.next + '</div>' +
+    '</div>' +
+    '<div class="mini">자문단은 판단을 대신하지 않아요 · 최종 결정은 대표님</div>';
+  el.querySelectorAll('[data-adv]').forEach(b => b.addEventListener('click', () => {
+    advKey = b.getAttribute('data-adv'); renderAdvisors();
+  }));
+  el.querySelectorAll('[data-advact]').forEach(b => b.addEventListener('click', () => {
+    const mode = b.getAttribute('data-advact');
+    if (mode === 'voice') { voiceState.text = m.ask; switchTab('voice'); analyzeVoice(); }
+    else if (mode === 'copy') copyText(advisorPrompt(advKey), '지시서를 복사했어요 — 원하는 AI 앱에 붙여넣으세요');
+    else window.open(HUB_URL, '_blank');
+  }));
+}
+
+/* ---- 빠른 도구 (담당자에게 바로 넘기는 지시 문장) ---- */
+const TOOLS = [
+  { i: '🎨', t: '그림 그리기', d: '생성 지시서 · CD', text: 'AI 지휘실 화면에 쓸 이미지 3컷을 기획해서 바로 생성할 수 있는 지시문으로 만들어줘. 용도·비율(1:1·9:16)·색감·피해야 할 요소까지 정리해줘.' },
+  { i: '🎵', t: '음악·가사', d: 'Suno 가사·곡 구성', text: 'Suno용 한국어 노래를 한 곡 잡아줘. 3절 구성·후렴 후킹·3분 30초 분량에 감정선과 장르 스타일 표시까지.' },
+  { i: '🖼️', t: '사진·GIF 편집', d: '비주얼 디렉팅', text: '이미지·GIF 편집 지시서를 만들어줘. 대상 파일, 바꿀 부분과 유지할 부분, 출력 규격(해상도·길이·용량)까지 정리해줘.' },
+  { i: '🎤', t: '더빙·낭독 대본', d: '음성 지휘 탭 연결', text: '60초 분량 더빙 대본을 써줘. 톤(차분·밝게), 문장 길이, 쉼 위치까지 표시해서 읽기 편하게.' },
+  { i: '⏰', t: '스케줄 예약', d: '반복 작업 등록', text: '매일 아침 7시에 반복할 작업을 스케줄로 잡아줘. 성공·실패 결과와 실패 시 알림까지 정리해줘.' },
+  { i: '🖥️', t: 'PC 로컬 제어', d: '브릿지 · 캡처/실행', text: 'PC 화면 캡처해서 보여줘' }
+];
+function copyText(txt, okMsg) {
+  const done = () => pushLog('해이', okMsg || '복사 완료', 'ok');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(done).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = txt; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta); done();
+    });
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = txt; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta); done();
+  }
+}
+function runTool(idx) {
+  const T = TOOLS[idx];
+  if (!T) return;
+  voiceState.text = T.text;
+  switchTab('voice');
+  analyzeVoice();
+}
+
+/* ---- 실제 가동 중인 스케줄 (스케줄 파일 기준) ---- */
+const SCHED = [
+  ['☀️', '아침 브리핑', '매일 06:40', 'ok'],
+  ['🛒', '출석체크·포인트', '07:00 · 10:00 · 11:05', 'ok'],
+  ['🛍️', '쿠팡 파트너스 게시', '07:30 · 13:00 · 19:30', 'ok'],
+  ['📝', '네이버 블로그 3편', '매일 09:00', 'ok'],
+  ['🎫', 'vooy 초대권 감시', '30분마다', 'ok'],
+  ['🏆', '당첨 결과 확인', '11/20·23·25·26·30 14:00', 'wait'],
+  ['💓', '상태 점검(heartbeat)', '6시간마다', 'ok'],
+  ['🧠', 'Explore 제안 점검', '매일 02:47', 'ok'],
+  ['☀️', '내일 아침 지휘실 전달', '11/17 06:45 (1회)', 'wait']
+];
+function renderTools() {
+  const el = document.getElementById('pane-tools');
+  if (!el) return;
+  const cfg = pcCfg();
+  const sRows = SCHED.map(s => {
+    const st = s[3] === 'ok' ? { t: '가동 중', c: '#6ee7b7', b: '#12352b' }
+      : s[3] === 'wait' ? { t: '대기', c: '#fbbf24', b: '#3a2a12' }
+      : { t: '중지', c: '#94a3b8', b: '#1e2430' };
+    return '<div class="sched"><span class="si">' + s[0] + '</span>' +
+      '<span style="min-width:0"><b>' + s[1] + '</b><small>' + s[2] + '</small></span>' +
+      '<span class="st" style="color:' + st.c + ';background:' + st.b + ';border:1px solid ' + st.c + '44">' + st.t + '</span></div>';
+  }).join('');
+  el.innerHTML =
+    '<div class="mini" style="margin-top:0">⚡ 빠른 도구 — 누르면 담당자 지시가 음성 지휘 입력창에 채워져요</div>' +
+    '<div class="toolgrid">' + TOOLS.map((T, i) =>
+      '<button class="tool" data-tool="' + i + '"><span class="ti">' + T.i + '</span>' +
+      '<span><b>' + T.t + '</b><small>' + T.d + '</small></span></button>').join('') + '</div>' +
+    '<div class="mini">자동 스케줄 현황 · ' + SCHED.filter(s => s[3] === 'ok').length + '개 가동 중</div>' +
+    sRows +
+    '<div class="mini">진화 루프 — 스스로 쌓고 점검하는 구조</div>' +
+    '<div class="loop">' +
+      '<div><b>①</b>작업 실행<br>스케줄·지휘</div>' +
+      '<div><b>②</b>노션 Memory Hub<br>기록 축적</div>' +
+      '<div><b>③</b>주간 점검<br>규칙 개선</div>' +
+    '</div>' +
+    '<div class="stat2">' +
+      '<span><b>' + (cfg ? '주소 저장됨' : '대기') + '</b>PC 브릿지</span>' +
+      '<span><b>연결됨</b>노션</span>' +
+      '<span><b>' + (speechSupported() ? '지원' : '미지원') + '</b>음성 인식</span>' +
+    '</div>' +
+    '<div class="mini" style="font-weight:600;line-height:1.5">※ 측정하지 않은 수치(온도·실시간 % 등)는 표시하지 않습니다. 브릿지가 붙어 있을 때만 실제 PC 상태를 읽어 옵니다.</div>';
+  el.querySelectorAll('[data-tool]').forEach(b => b.addEventListener('click', () => runTool(+b.getAttribute('data-tool'))));
 }
 
 /* =========================================================
@@ -1520,6 +2221,15 @@ const HUB_URL = 'https://app.notion.com/p/AI-41adcae81cc08104-863c-fe360f46b626'
 
 /* 지시 → 담당 부서/사원 자동 배정 규칙 (위에서부터 먼저 맞는 것) */
 const VOICE_ROUTES = [
+  { id: 'music', kw: ['suno', '가사', '작곡', '멜로디', '발라드'],
+    who: 'AI 크리에이티브 디렉터', rank: '콘텐츠 고문', dept: '전문 자문단', kind: 'prompt',
+    why: '노래·가사·곡 구성 기획은 전문 자문단 크리에이티브 디렉터가 디렉팅합니다.' },
+  { id: 'image', kw: ['이미지', '그림', '일러스트', '로고', '더빙', '낭독', '대본'],
+    who: 'AI 크리에이티브 디렉터', rank: '콘텐츠 고문', dept: '전문 자문단', kind: 'prompt',
+    why: '이미지·비주얼·낭독 대분 기획은 전문 자문단 CD가 지시서로 정리합니다.' },
+  { id: 'sched', kw: ['스케줄', '예약', '반복 작업', '매일 아침'],
+    who: '해이', rank: '사단장', dept: '지휘부', kind: 'prompt',
+    why: '반복 스케줄 등록과 점검은 총괄 지휘(해이)가 맡습니다.' },
   { id: 'capture', kw: ['캡처', '스크린샷', '스샷', '화면 찍', '화면찍', '화면 보여', '화면보여', '모니터 보여'],
     who: '루아', rank: '대리', dept: '전산·PC 공병대', kind: 'capture',
     why: 'PC 화면 캡처는 PC 브릿지(/api/capture)로 바로 실행합니다.' },
@@ -1535,6 +2245,15 @@ const VOICE_ROUTES = [
   { id: 'phone', kw: ['앱 전용', '앱에서', '폰으로', '휴대폰', '출석', '버디', '앱 설치', '앱 조작'],
     who: 'Buddy', rank: '팀장', dept: '특수·실무팀', kind: 'prompt',
     why: '폰 앱 화면 조작·앱 전용 출석은 Buddy(폰 화면 제어)가 맡습니다.' },
+  { id: 'law', kw: ['약관', '법률', '법적', '표시광고', '개인정보', '계약', '해지', '환불', '저작권', '변호사', '고지 문구'],
+    who: 'AI 변호사', rank: '법무 고문', dept: '전문 자문단', kind: 'prompt',
+    why: '약관·개인정보·표시광고 문구 검수는 전문 자문단 변호사가 맡습니다.' },
+  { id: 'acct', kw: ['세무', '정산', '수익', '회계', '환급', '휴면예금', '절세', '소멸', '만료'],
+    who: 'AI 회계사', rank: '세무·수익 고문', dept: '전문 자문단', kind: 'prompt',
+    why: '포인트·캐시 만료와 수익 정산, 환급금은 전문 자문단 회계사가 정리합니다.' },
+  { id: 'create', kw: ['카피', '후킹', '디자인', '비주얼', '썸네일', '무드', '컨셉', '디렉팅'],
+    who: 'AI 크리에이티브 디렉터', rank: '콘텐츠 고문', dept: '전문 자문단', kind: 'prompt',
+    why: '스레드 훅 카피·블로그 기획·비주얼 디렉팅은 전문 자문단 CD가 맡습니다.' },
   { id: 'event', kw: ['이벤트', '공모전', '설문', '응모', '접수', '당첨', '쿠폰', '포인트', '출석체크', '경품'],
     who: '해이', rank: '사단장', dept: '지휘부', kind: 'prompt',
     why: '이벤트·설문 접수와 본인인증은 한국 실무 총괄(해이)이 처리합니다.' },
@@ -1656,6 +2375,7 @@ function renderVoice() {
         (st.listening ? '듣고 있어요… 말씀을 마치면 자동으로 멈춥니다' : '마이크를 누르고 말하면 지시가 담당 AI에게 배정됩니다') + '</div>' +
       '<textarea id="vtext" placeholder="예: PC 화면 캡처해서 보여줘 / 700곡 폴더 정리 지시해줘 / 오늘 이벤트 현황 요약">' + escapeHtml(st.text) + '</textarea>' +
       '<div class="vchips">' + presets.map(p => '<button data-preset="' + escapeHtml(p) + '">' + escapeHtml(p) + '</button>').join('') + '</div>' +
+      '<div class="toolchips" style="margin-top:6px">' + TOOLS.map((T, i) => '<button data-vtool="' + i + '">' + T.i + ' ' + T.t + '</button>').join('') + '</div>' +
       '<button class="vgo" id="vgo">지휘 실행 · 담당자 배정</button>' +
       card +
       '<div class="mini">최근 지휘 <span style="float:right;color:#7b6a58;font-weight:700">' + (hist.length ? '<a href="#" id="vclear" style="color:#8a7660">기록 지우기</a>' : '') + '</span></div>' +
@@ -1680,6 +2400,7 @@ function renderVoice() {
     voiceState.text = b.getAttribute('data-preset');
     analyzeVoice();
   }));
+  el.querySelectorAll('[data-vtool]').forEach(b => b.addEventListener('click', () => runTool(+b.getAttribute('data-vtool'))));
   const go = vEl('vgo');
   if (go) go.addEventListener('click', () => { voiceState.text = (vEl('vtext') || {}).value || voiceState.text; analyzeVoice(); });
   el.querySelectorAll('[data-vact]').forEach(b => b.addEventListener('click', () => {
@@ -1978,7 +2699,7 @@ function startTab() {
   try {
     const q = new URLSearchParams(location.search);
     const tab = q.get('tab');
-    if (tab && ['office', 'tasks', 'staff', 'log', 'voice'].indexOf(tab) >= 0) switchTab(tab);
+    if (tab && ['office', 'tasks', 'staff', 'advisor', 'tools', 'log', 'voice'].indexOf(tab) >= 0) switchTab(tab);
   } catch (e) {}
 }
 
@@ -1997,6 +2718,14 @@ function boot() {
 window.AI_OFFICE = {
   setStatus: d => applyStatus(d),
   setDrift: on => { driftOn = !!on; },
+  setMotion: on => { motionOn = !!on; },
+  /* QA·공유용: 특정 지점을 지정 배율로 보기 */
+  view: (x, y, z) => {
+    userZoomed = true;
+    camT.zoom = clamp(+z || 1, fitZoom() * 0.9, 3.0);
+    camT.x = +x || W / 2; camT.y = +y || H / 2;
+    clampCam(camT); cam.x = camT.x; cam.y = camT.y; cam.zoom = camT.zoom;
+  },
   setPhase: ph => { phaseMode = ph; },
   setLoop: (sec) => {
     loopP = +sec || 0;
