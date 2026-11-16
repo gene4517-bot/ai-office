@@ -1,7 +1,7 @@
 {
-  "name": "AI 사무실",
-  "short_name": "AI 사무실",
-  "description": "실사 오피스에서 16명이 함께 일하는 AI 사무실 · 음성으로 지시하는 라이브 대시보드",
+  "name": "AI 지휘실",
+  "short_name": "AI 지휘실",
+  "description": "음성으로 지시하는 AI 지휘실 · 실사 오피스에서 16명이 함께 일하는 라이브 화면",
   "lang": "ko",
   "dir": "ltr",
   "start_url": "./index.html",
@@ -21,6 +21,18 @@
     "business"
   ],
   "icons": [
+    {
+      "src": "assets/favicon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "assets/icon-192.png",
       "sizes": "192x192",
