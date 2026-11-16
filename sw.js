@@ -2,15 +2,16 @@
    - 설치 요건 충족용 최소 구현
    - 네트워크 우선: 항상 최신 파일을 먼저 시도하고, 실패했을 때만 캐시로 대체
    - status.json 은 캐시에 저장하지 않아 화면이 항상 최신 상태를 읽습니다 */
-const CACHE = 'ai-office-v3';
+const CACHE = 'ai-office-v4';
 const PRECACHE = [
   './',
   './index.html',
   './manifest.json',
   './assets/icon-192.png',
   './assets/icon-512.png',
-  './assets/office-day.png',
-  './assets/office-night.png'
+  './assets/icon-180.png',
+  './assets/office-real-day.jpg',
+  './assets/office-real-night.jpg'
 ];
 
 self.addEventListener('install', (e) => {
