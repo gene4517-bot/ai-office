@@ -1,20 +1,32 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="m-deck">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5" />
 <meta name="theme-color" content="#0a0a0b" />
-<meta name="description" content="PC·태블릿 다크 컨트롤 대시보드 · 시스템 지표 · 화면 캡처 · 앱 실행" />
+<meta name="description" content="gene 덱 · 폰 터치용 스트림덱 — AI 지휘·PC 원격 제어·D-Day·집중 타이머·시계/날씨" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="PC 컨트롤" />
-<title>PC 컨트롤 대시보드</title>
+<meta name="apple-mobile-web-app-title" content="gene 덱" />
+<title>gene 덱 · PC 컨트롤</title>
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=3" />
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=3" />
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png?v=3" />
 <link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="deck.css?v=1" />
+<script>
+/* 첫 화면: 기본은 덱 모드 · ?mode=detail 이면 상세 화면 (깜빡임 없이 먼저 지정) */
+(function () {
+  try {
+    var m = 'deck';
+    var q = new URLSearchParams(location.search).get('mode');
+    if (q === 'detail' || q === 'deck') m = q;
+    document.documentElement.className = 'm-' + m;
+  } catch (e) {}
+})();
+</script>
 </head>
 <body>
 
@@ -22,17 +34,31 @@
   <div class="brand">
     <span class="logo" id="brandLogo" aria-hidden="true"></span>
     <div>
-      <b>PC 컨트롤</b>
+      <b id="brandName">gene 덱</b>
       <small id="barSub">오프라인 데모 모드</small>
     </div>
   </div>
   <div class="bar-actions">
     <span class="pill" id="connPill"><i></i><span id="connPillText">오프라인 데모</span></span>
+    <button class="iconbtn" id="btnMode" title="덱 ↔ 상세 화면" aria-label="덱 ↔ 상세 화면"></button>
     <button class="iconbtn" id="btnRefresh" title="전체 새로고침" aria-label="전체 새로고침"></button>
-    <button class="iconbtn" id="btnSettings" title="연결 설정" aria-label="연결 설정"></button>
+    <button class="iconbtn" id="btnSettings" title="PC 연결 설정" aria-label="PC 연결 설정"></button>
   </div>
 </header>
 
+<!-- ================= 🎛️ 덱 모드 (기본) ================= -->
+<div id="deckView">
+  <div id="deckShift">
+    <div id="deckGrid" aria-live="off"></div>
+  </div>
+  <div id="deckFoot">
+    <span>🎛️ gene 덱 · gene 대표님 기준 타일</span>
+    <span>PC 제어 타일은 브릿지 연결 시 실제 동작</span>
+  </div>
+</div>
+
+<!-- ================= 📋 상세 화면 (기존 PC 컨트롤) ================= -->
+<div id="detailView">
 <div id="wrap">
 
   <!-- 시스템 지표 -->
@@ -162,6 +188,7 @@
   <section class="g4" id="apps"></section>
 
 </div>
+</div>
 
 <div id="toast" role="status" aria-live="polite"></div>
 
@@ -215,6 +242,52 @@
   </div>
 </div>
 
+<!-- 📋 클립보드 전송 -->
+<div class="modal" id="modalClip" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="clipTitle">
+    <h2 id="clipTitle">📋 PC 클립보드로 보내기</h2>
+    <p class="lead">PC 브릿지가 연결돼 있으면 PC 클립보드에 바로 들어갑니다. 연결이 없으면 이 폰 클립보드에 복사합니다.</p>
+    <div class="field">
+      <label for="clipText">보낼 내용</label>
+      <textarea id="clipText" rows="6" spellcheck="false"></textarea>
+    </div>
+    <div class="row">
+      <button class="btn primary" id="clipSend">PC로 보내기</button>
+      <button class="btn" id="clipQuick">현재 상태 요약 넣기</button>
+      <button class="btn ghost" id="clipClose">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 🗂️ PC 앱 실행 -->
+<div class="modal" id="modalApps" hidden>
+  <div class="sheet wide" role="dialog" aria-modal="true" aria-labelledby="appsTitle">
+    <h2 id="appsTitle">🗂️ PC 앱 실행 · 700곡 폴더</h2>
+    <p class="lead">누르면 PC 브릿지가 실제로 그 앱을 실행합니다. 700곡 장르 분류는 <b>탐색기</b>로 오디오 폴더를 연 뒤 진행하세요.</p>
+    <div class="deckapps" id="deckApps"></div>
+    <div class="row"><button class="btn ghost" id="appsClose">닫기</button></div>
+  </div>
+</div>
+
+<!-- ⛺ D-Day 편집 -->
+<div class="modal" id="modalDd" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="ddTitle">
+    <h2 id="ddTitle">⛺ D-Day</h2>
+    <p class="lead">기본으로 들어 있는 항목은 <b>고삼저수지 차박(11/20)</b>·<b>올해 마지막 날(12/31)</b>입니다. 내 D-Day를 추가하면 이 폰에만 저장됩니다.</p>
+    <div class="ddlist" id="ddList"></div>
+    <div class="ddadd">
+      <div class="field"><label for="ddIcon">아이콘</label><input id="ddIcon" type="text" maxlength="2" placeholder="🎯" /></div>
+      <div class="field"><label for="ddLabel">이름</label><input id="ddLabel" type="text" maxlength="24" placeholder="예: 고삼저수지 차박" /></div>
+      <div class="field"><label for="ddDate">날짜</label><input id="ddDate" type="date" /></div>
+    </div>
+    <div class="row">
+      <button class="btn primary" id="ddAdd">추가하기</button>
+      <button class="btn ghost" id="ddClose">닫기</button>
+    </div>
+    <div class="note" id="ddMsg" style="margin-top:12px;font-size:11.5px;color:#8b8b8f;"></div>
+  </div>
+</div>
+
 <script>
 // 크롬 정식 앱(WebAPK) 설치 요건: 이 범위(./)에 fetch 핸들러가 있는 서비스 워커 등록
 if ('serviceWorker' in navigator) {
@@ -224,5 +297,6 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 <script src="app.js"></script>
+<script src="deck.js?v=1"></script>
 </body>
 </html>
