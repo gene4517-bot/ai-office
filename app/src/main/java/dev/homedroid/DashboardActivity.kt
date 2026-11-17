@@ -45,20 +45,20 @@ class DashboardActivity : MobileActivity() {
             }
             insets
         }
-        root.addView(design.button("‹  Back to Homedroid") { finish() }.apply {
+        root.addView(design.button("‹  홈드로이드로 돌아가기") { finish() }.apply {
             layoutParams = LinearLayout.LayoutParams(-1, -2).apply { setMargins(design.dp(12), design.dp(6), design.dp(12), design.dp(6)) }
         })
-        message = design.text("Connecting to your phone…", 15f, design.muted).apply { setPadding(design.dp(24), design.dp(24), design.dp(24), design.dp(12)) }
+        message = design.text("휴대폰에 연결하는 중…", 15f, design.muted).apply { setPadding(design.dp(24), design.dp(24), design.dp(24), design.dp(12)) }
         root.addView(message)
-        retry = design.button("Start server & connect", true) {
+        retry = design.button("서버 시작 후 연결", true) {
             if (!ServerService.active) ServerService.start(this)
             connect()
         }.apply { layoutParams = LinearLayout.LayoutParams(-1, -2).apply { setMargins(design.dp(24), 0, design.dp(24), design.dp(12)) } }
         root.addView(retry)
-        val browser = design.button("Open in browser") {
+        val browser = design.button("브라우저에서 열기") {
             if (!ServerService.active) ServerService.start(this)
             runCatching { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("$base/#${intent.getStringExtra("page").takeIf { it in pages } ?: "overview"}"))) }
-                .onFailure { Toast.makeText(this, "Install a browser to open the dashboard", Toast.LENGTH_LONG).show() }
+                .onFailure { Toast.makeText(this, "대시보드를 열려면 브라우저를 설치하세요", Toast.LENGTH_LONG).show() }
         }.apply {
             visibility = View.GONE
             layoutParams = LinearLayout.LayoutParams(-1, -2).apply { setMargins(design.dp(24), 0, design.dp(24), design.dp(12)) }
@@ -82,7 +82,7 @@ class DashboardActivity : MobileActivity() {
                     return true
                 }
                 override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
-                    if (request.isForMainFrame) showError("The control panel is unavailable. Start the server or retry the connection.")
+                    if (request.isForMainFrame) showError("제어판을 열 수 없습니다. 서버를 시작하거나 연결을 다시 시도하세요.")
                 }
             }
             webChromeClient = object : WebChromeClient() {
@@ -108,9 +108,9 @@ class DashboardActivity : MobileActivity() {
                             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
                         getSystemService(DownloadManager::class.java).enqueue(download)
-                        Toast.makeText(this@DashboardActivity, "Saving to Downloads", Toast.LENGTH_SHORT).show()
-                    } catch (e: Exception) { Toast.makeText(this@DashboardActivity, "Download failed: ${e.message}", Toast.LENGTH_LONG).show() }
-                } else Toast.makeText(this@DashboardActivity, "Use the browser dashboard to save this generated file", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@DashboardActivity, "다운로드 폴더에 저장합니다", Toast.LENGTH_SHORT).show()
+                    } catch (e: Exception) { Toast.makeText(this@DashboardActivity, "다운로드 실패: ${e.message}", Toast.LENGTH_LONG).show() }
+                } else Toast.makeText(this@DashboardActivity, "이렇게 만들어진 파일은 브라우저 대시보드에서 저장하세요", Toast.LENGTH_LONG).show()
             }
         }
         root.addView(web, LinearLayout.LayoutParams(-1, 0, 1f))
@@ -120,21 +120,21 @@ class DashboardActivity : MobileActivity() {
         }
         val engineVersion = WebView.getCurrentWebViewPackage()?.versionName?.substringBefore('.')?.toIntOrNull()
         if (engineVersion != null && engineVersion < 86) {
-            showError("Update Android System WebView to use the control panel inside Homedroid. You can also use a current browser. Use Back to Homedroid for native settings and app controls.")
+            showError("홈드로이드 안에서 제어판을 쓰려면 Android System WebView를 업데이트하세요. 최신 브라우저를 써도 됩니다. 앱 자체 설정과 제어는 ‘홈드로이드로 돌아가기’를 쓰세요.")
             browser.visibility = View.VISIBLE
-            retry.text = "Update System WebView"
+            retry.text = "System WebView 업데이트"
             retry.setOnClickListener {
                 runCatching { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.webview"))) }
-                    .onFailure { Toast.makeText(this, "Update your WebView provider through your phone's app store", Toast.LENGTH_LONG).show() }
+                    .onFailure { Toast.makeText(this, "휴대폰 앱스토어에서 WebView 제공자를 업데이트하세요", Toast.LENGTH_LONG).show() }
             }
         } else if (ServerService.active) connect()
-        else showError("Start your server to use the control panel on this phone.")
+        else showError("이 휴대폰에서 제어판을 쓰려면 서버를 시작하세요.")
     }
 
     private fun connect() {
         if (starting) return
         starting = true; retry.isEnabled = false; web.visibility = View.GONE
-        message.text = "Connecting to your phone…"
+        message.text = "휴대폰에 연결하는 중…"
         message.visibility = View.VISIBLE
         worker.execute {
             val result = runCatching {
@@ -145,7 +145,7 @@ class DashboardActivity : MobileActivity() {
                     if (cookie != null) break
                     Thread.sleep(250)
                 }
-                checkNotNull(cookie) { "The local dashboard could not start. Check service logs, then retry." }
+                checkNotNull(cookie) { "로컬 대시보드를 시작하지 못했습니다. 서비스 로그를 확인한 뒤 다시 시도하세요." }
             }
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
@@ -158,13 +158,13 @@ class DashboardActivity : MobileActivity() {
                             web.loadUrl("$base/#$page")
                         }
                     }
-                }.onFailure { showError(it.message ?: "Could not connect to your phone. Try again.") }
+                }.onFailure { showError(it.message ?: "휴대폰에 연결하지 못했습니다. 다시 시도하세요.") }
             }
         }
     }
     private fun showError(value: String) {
         message.text = value; message.visibility = View.VISIBLE
-        retry.text = if (ServerService.active) "Retry connection" else "Start server & connect"
+        retry.text = if (ServerService.active) "연결 다시 시도" else "서버 시작 후 연결"
         retry.visibility = View.VISIBLE; web.visibility = View.GONE
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

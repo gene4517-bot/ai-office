@@ -111,8 +111,8 @@ class StatusWidget : AppWidgetProvider() {
                 val (p, s) = WidgetModel.fit(phones, services, maxOf(2, (heightDp - 70) / 22))
                 val v = RemoteViews(ctx.packageName, R.layout.widget_status)
                 v.setTextViewText(R.id.widget_summary, when {
-                    !running -> "server stopped"
-                    else -> "${phones.size} phone${if (phones.size == 1) "" else "s"} · ${services.count { it.color == WidgetModel.OK }}/${services.size} running"
+                    !running -> "서버 중지됨"
+                    else -> "휴대폰 ${phones.size}대 · ${services.size}개 중 ${services.count { it.color == WidgetModel.OK }}개 실행 중"
                 })
                 v.removeAllViews(R.id.widget_phones)
                 p.forEach { v.addView(R.id.widget_phones, row(ctx, it)) }
@@ -123,7 +123,7 @@ class StatusWidget : AppWidgetProvider() {
                 // A single phone needs no "Phones" heading.
                 v.setViewVisibility(R.id.widget_phones_label, if (phones.size > 1) View.VISIBLE else View.GONE)
                 v.setViewVisibility(R.id.widget_message, if (noServices) View.VISIBLE else View.GONE)
-                v.setTextViewText(R.id.widget_message, if (!running) "Tap to open Homedroid and start the server." else "Nothing is running. Turn on a module in the dashboard.")
+                v.setTextViewText(R.id.widget_message, if (!running) "눌러서 홈드로이드를 열고 서버를 시작하세요." else "실행 중인 것이 없습니다. 대시보드에서 모듈을 켜세요.")
                 val app = PendingIntent.getActivity(ctx, 0, Intent(ctx, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), PendingIntent.FLAG_IMMUTABLE)
                 val open = if (running && url != null) PendingIntent.getActivity(ctx, 1, Intent(Intent.ACTION_VIEW, Uri.parse(url)), PendingIntent.FLAG_IMMUTABLE) else app
                 v.setOnClickPendingIntent(R.id.widget_root, open)

@@ -35,7 +35,7 @@ class AppsActivity : MobileActivity() {
 
     companion object {
         private const val CLEAR_TEXT =
-            "Its settings, accounts and database are deleted and it starts like a fresh install."
+            "설정·계정·데이터베이스를 지우고 새로 설치한 상태로 시작합니다."
         private val ERROR = Regex("error|exception|fatal|failed|insufficient|denied", RegexOption.IGNORE_CASE)
     }
 
@@ -54,9 +54,9 @@ class AppsActivity : MobileActivity() {
         apps = Apps(this, Paths(this))
         cfg = Config(this)
 
-        val list = design.page("Apps")
-        list.addView(design.row("Modules & connections", "Manage SSH, web hosting, tunnels, camera and AI") { DashboardActivity.open(this, "modules") })
-        list.addView(design.label("APP LIBRARY"))
+        val list = design.page("앱")
+        list.addView(design.row("모듈·연결", "SSH, 웹 호스팅, 터널, 카메라, AI를 관리합니다") { DashboardActivity.open(this, "modules") })
+        list.addView(design.label("앱 목록"))
         for (app in apps.catalog) list.addView(card(app))
         jobLog = text("", 10f).apply {
             typeface = Typeface.MONOSPACE
@@ -64,7 +64,7 @@ class AppsActivity : MobileActivity() {
             setPadding(dp(16), dp(16), dp(16), dp(16))
             background = design.shape(design.surface, 12)
         }
-        list.addView(design.button("Installation activity") {
+        list.addView(design.button("설치 진행 상황") {
             jobLog.visibility = if (jobLog.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         })
         jobLog.visibility = View.GONE
@@ -90,21 +90,21 @@ class AppsActivity : MobileActivity() {
         val box = design.card()
         box.addView(design.text(app.name, 21f, design.ink, true))
         box.addView(text(app.description.substringBefore(". ").let { if (it.endsWith('.')) it else "$it." }, 14f))
-        box.addView(design.text("Port ${app.port} · ${app.size}", 12f, design.muted).apply { setPadding(0, dp(8), 0, 0) })
+        box.addView(design.text("${app.port}번 포트 · ${app.size}", 12f, design.muted).apply { setPadding(0, dp(8), 0, 0) })
         val status = design.text("", 13f, design.accent, true).apply { setPadding(0, dp(8), 0, dp(4)) }
         box.addView(status)
         val storage = app.storagePath?.let { text("", 12f).also(box::addView) }
 
         val buttons = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        val action = design.button("Install") {}
-        val open = design.button("Open", true) {
+        val action = design.button("설치") {}
+        val open = design.button("열기", true) {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://127.0.0.1:${app.port}")))
         }
-        val toggle = design.button("Turn off") {
+        val toggle = design.button("끄기") {
             cfg.setDisabled(app.id, !cfg.isDisabled(app.id))
             if (ServerService.running) ServerService.restart(this@AppsActivity)
         }
-        val clear = design.button("Clear data") { confirmClear(app) }
+        val clear = design.button("데이터 지우기") { confirmClear(app) }
         fun addButton(row: LinearLayout, button: Button) {
             row.addView(button, LinearLayout.LayoutParams(0, -2, 1f).apply {
                 setMargins(dp(3), dp(12), dp(3), 0)
@@ -118,7 +118,7 @@ class AppsActivity : MobileActivity() {
         box.addView(buttons)
         box.addView(more)
         if (app.storagePath != null) {
-            addButton(more, design.button("Storage location") { chooseStorage(app) })
+            addButton(more, design.button("저장 위치") { chooseStorage(app) })
         }
         rows += Row(app, status, storage, action, open, toggle, clear)
         return box
@@ -134,42 +134,42 @@ class AppsActivity : MobileActivity() {
                 ?.takeIf { row.app.serviceNames.all { n -> running.containsKey(n) } }
             row.status.setTextIfChanged(when {
                 busy && Jobs.title?.endsWith(row.app.name) == true -> "${Jobs.title}…"
-                !installed -> "Not installed"
-                cfg.isDisabled(row.app.id) -> "Installed · turned off"
-                d == null -> "Installed · server stopped"
-                else -> "Installed · ${d.state.name.lowercase()}" +
-                    (if (d.restarts > 0) " (${d.restarts} restarts)" else "") +
+                !installed -> "설치 안 됨"
+                cfg.isDisabled(row.app.id) -> "설치됨 · 꺼짐"
+                d == null -> "설치됨 · 서버 중지"
+                else -> "설치됨 · " + when (d.state) { Supervisor.State.RUNNING -> "실행 중"; Supervisor.State.STARTING -> "시작 중"; Supervisor.State.STOPPED -> "중지됨"; Supervisor.State.BACKOFF -> "확인 필요" } +
+                    (if (d.restarts > 0) " (${d.restarts}회 재시작)" else "") +
                     // A crash loop is useless without its reason.
                     (if (d.state == Supervisor.State.BACKOFF) "\n" + lastError(d) else "") +
                     notice(row.app, d)
             })
             row.storage?.setTextIfChanged(
-                "${row.app.storageLabel}: " + (cfg.storageDir(row.app) ?: "inside the app (default)")
+                "${row.app.storageLabel}: " + (cfg.storageDir(row.app) ?: "앱 내부 (기본)")
             )
             row.open.setVisibleIfChanged(installed && !cfg.isDisabled(row.app.id) && d?.state == Supervisor.State.RUNNING)
             row.toggle.setVisibleIfChanged(installed)
             row.clear.setVisibleIfChanged(installed)
             if (row.clear.isEnabled == busy) row.clear.isEnabled = !busy
             row.toggle.isEnabled = !busy
-            row.toggle.setTextIfChanged(if (cfg.isDisabled(row.app.id)) "Turn on" else "Turn off")
+            row.toggle.setTextIfChanged(if (cfg.isDisabled(row.app.id)) "켜기" else "끄기")
             if (row.action.isEnabled == busy) row.action.isEnabled = !busy
-            row.action.setTextIfChanged(if (installed) "Remove" else "Install")
+            row.action.setTextIfChanged(if (installed) "삭제" else "설치")
             row.action.setOnClickListener {
                 if (installed) confirmRemove(row.app) else ServerService.install(this, row.app)
             }
         }
-        jobLog.setTextIfChanged(Jobs.log.tail(40).joinToString("\n").ifEmpty { "No installation activity yet." })
+        jobLog.setTextIfChanged(Jobs.log.tail(40).joinToString("\n").ifEmpty { "아직 설치 활동이 없습니다." })
     }
 
     private fun chooseStorage(app: AppDef) {
         val volumes = Storage.volumes(this)
-        val labels = listOf("Inside the app (default, no permission needed)") +
+        val labels = listOf("앱 내부 (기본, 권한 필요 없음)") +
             volumes.map {
-                "${it.label} · ${formatSize(it.free)} free" +
-                    if (it.appDirOnly) " (deleted if Homedroid is uninstalled)" else ""
+                "${it.label} · ${formatSize(it.free)} 남음" +
+                    if (it.appDirOnly) " (홈드로이드를 삭제하면 함께 지워짐)" else ""
             }
         AlertDialog.Builder(this)
-            .setTitle("Where should ${app.name} keep its ${app.storageLabel?.lowercase()}?")
+            .setTitle("${app.name}의 ${app.storageLabel?.lowercase()}을 어디에 둘까요?")
             .setItems(labels.toTypedArray()) { _, i ->
                 if (i == 0) {
                     setStorage(app, null)
@@ -181,7 +181,7 @@ class AppsActivity : MobileActivity() {
                     setStorage(app, dir)
                 } else {
                     pending = app to dir
-                    Toast.makeText(this, "Allow file access so ${app.name} can use $dir", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "${app.name}이 $dir을 쓰려면 파일 접근을 허용해 주세요", Toast.LENGTH_LONG).show()
                     Storage.requestAccess(this)
                 }
             }
@@ -197,7 +197,7 @@ class AppsActivity : MobileActivity() {
 
     private fun setStorage(app: AppDef, dir: File?) {
         if (dir != null && !dir.isDirectory && !dir.mkdirs()) {
-            Toast.makeText(this, "Couldn't create $dir", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "$dir 폴더를 만들지 못했습니다", Toast.LENGTH_LONG).show()
             return
         }
         cfg.setStorageDir(app, dir?.path)
@@ -205,19 +205,19 @@ class AppsActivity : MobileActivity() {
         val sharing = apps.catalog.filter { it.storageKey == app.storageKey && it != app }.joinToString { it.name }
         Toast.makeText(
             this,
-            "${app.name}${if (sharing.isEmpty()) "" else " and $sharing"} now use ${dir ?: "app storage"}. " +
-                "Existing files were not moved.",
+            "${app.name}${if (sharing.isEmpty()) "" else " 및 $sharing"}이 이제 ${dir ?: "앱 저장 공간"}을 씁니다. " +
+                "기존 파일은 옮기지 않았습니다.",
             Toast.LENGTH_LONG,
         ).show()
     }
 
     private fun confirmRemove(app: AppDef) {
-        val options = listOf("Also delete its settings and database") + listOfNotNull(libraryOption(app))
+        val options = listOf("설정과 데이터베이스도 함께 삭제") + listOfNotNull(libraryOption(app))
         val checked = BooleanArray(options.size)
         AlertDialog.Builder(this)
-            .setTitle("Remove ${app.name}?")
+            .setTitle("${app.name}을 삭제할까요?")
             .setMultiChoiceItems(options.toTypedArray(), checked) { _, i, on -> checked[i] = on }
-            .setPositiveButton("Remove") { _, _ ->
+            .setPositiveButton("삭제") { _, _ ->
                 val library = checked.getOrElse(1) { false }
                 ServerService.uninstall(this, app, deleteData = checked[0] || library, deleteLibrary = library)
             }
@@ -230,13 +230,13 @@ class AppsActivity : MobileActivity() {
         val option = libraryOption(app)
         val checked = BooleanArray(1)
         AlertDialog.Builder(this)
-            .setTitle("Clear ${app.name}'s data?")
+            .setTitle("${app.name}의 데이터를 지울까요?")
             .apply {
                 // A dialog can't show both a message and a checkbox list.
                 if (option == null) setMessage(CLEAR_TEXT)
                 else setMultiChoiceItems(arrayOf(option), checked) { _, _, on -> checked[0] = on }
             }
-            .setPositiveButton("Clear data") { _, _ -> ServerService.clearData(this, app, checked[0]) }
+            .setPositiveButton("데이터 지우기") { _, _ -> ServerService.clearData(this, app, checked[0]) }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
@@ -245,7 +245,7 @@ class AppsActivity : MobileActivity() {
     private fun libraryOption(app: AppDef): String? {
         val label = app.storageLabel?.lowercase() ?: return null
         val sharing = apps.sharing(app).joinToString { it.name }
-        return "Also delete everything in the $label" + if (sharing.isEmpty()) "" else " (also used by $sharing)"
+        return "$label 안의 파일도 함께 삭제" + if (sharing.isEmpty()) "" else " ($sharing도 함께 사용)"
     }
 
     private fun Supervisor.State.severity() = when (this) {

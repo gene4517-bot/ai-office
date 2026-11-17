@@ -50,7 +50,7 @@ test('IPCam navigation follows module enablement', async () => {
 });
 test('unarmed IPCam explains phone setup and disables capture, microphone and announce', async () => {
   const t = setup(); t.state({armed: false}); await t.run('renderCamera()');
-  assert.match(t.element('#cameraStatus').textContent, /phone/);
+  assert.match(t.element('#cameraStatus').textContent, /휴대폰/);
   assert.match(t.element('#cameraControls').innerHTML, /data-action="photo" disabled/);
   for (const id of ['listenMic', 'recordMic', 'announceButton']) assert.equal(t.element('#' + id).disabled, true);
 });
@@ -59,7 +59,7 @@ test('recording locks other cameras and offers stop on the selected camera', asy
   const markup = t.element('#cameraControls').innerHTML;
   assert.equal((markup.match(/data-action="photo" disabled/g) || []).length, 2);
   assert.equal((markup.match(/data-action="stop"/g) || []).length, 1);
-  assert.match(markup, /unavailable/);
+  assert.match(markup, /사용 불가/);
 });
 test('saved capture names and camera labels are escaped', async () => {
   const t = setup(); t.state({cameras: [{id: '0', name: '<img onerror=alert(1)>', flash: false}], files: [{name: '<bad>.jpg', bytes: 1024}]});
@@ -85,7 +85,7 @@ test('failed capture restores its button so the user can retry', async () => {
 test('settings rejects mismatched passwords without making a request', async () => {
   const t = setup(); t.element('#newPassword').value = 'a-long-new-password'; t.element('#confirmPassword').value = 'different';
   await t.element('#settingsForm').onsubmit({preventDefault() {}});
-  assert.match(t.element('#settingsMessage').textContent, /do not match/);
+  assert.match(t.element('#settingsMessage').textContent, /서로 다릅니다/);
   assert.equal(t.requests.length, 0);
 });
 test('settings submits startup preference and password then clears sensitive fields', async () => {
@@ -98,7 +98,7 @@ test('settings submits startup preference and password then clears sensitive fie
   assert.deepEqual(JSON.parse(request.options.body), {autostart: false, password: 'a-long-new-password', currentPassword: 'old-password'});
   assert.equal(t.element('#currentPassword').value, '');
   assert.equal(t.element('#newPassword').value, '');
-  assert.match(t.element('#settingsMessage').textContent, /phone now shows/);
+  assert.match(t.element('#settingsMessage').textContent, /휴대폰 앱에 새 비밀번호/);
 });
 test('settings polling preserves an in-progress edit', async () => {
   const t = setup(); await t.run('renderSettings()');
@@ -119,14 +119,14 @@ test('a capture taken from the page is offered for preview', async () => {
   const t = setup(); await t.run('renderCamera()');
   await t.element('#cameraControls').onclick({target: {closest: () => ({dataset: {camera: '0', action: 'photo'}, disabled: false})}});
   t.state({files: [{name: '1790000000002-ef.jpg', bytes: 10}]}); await t.run('renderCamera()');
-  assert.match(t.element('#captureNotice').innerHTML, /Photo saved/);
+  assert.match(t.element('#captureNotice').innerHTML, /사진 저장/);
   assert.match(t.element('#captureNotice').innerHTML, /data-name="1790000000002-ef.jpg"/);
 });
 test('each camera offers a live view', async () => {
   const t = setup(); await t.run('renderCamera()');
   assert.equal((t.element('#cameraControls').innerHTML.match(/data-action="live"/g) || []).length, 2);
   t.state({live: '0'}); await t.run('renderCamera()');
-  assert.match(t.element('#cameraControls').innerHTML, /Close live view/);
+  assert.match(t.element('#cameraControls').innerHTML, /실시간 화면 닫기/);
 });
 test('API mutations include the browser request protection header', async () => {
   const t = setup(); await t.run("api('camera/monitor/stop', {method: 'POST'})");
@@ -155,7 +155,7 @@ test('camera settings and storage drafts survive polling', async () => {
 test('monitoring blocks manual capture and offers a stop without closing the browser view', async () => {
   const t = setup(); t.state({monitor: {id: '0', recording: true, width: 640, height: 480, fpsMin: 5, fpsMax: 15}});
   await t.run('renderCamera()');
-  assert.match(t.element('#cameraStatus').textContent, /Motion detected/);
+  assert.match(t.element('#cameraStatus').textContent, /움직임 감지/);
   assert.equal((t.element('#cameraControls').innerHTML.match(/data-action="photo" disabled/g) || []).length, 2);
   assert.match(t.element('#cameraControls').innerHTML, /data-action="monitor\/stop"/);
 });
@@ -170,7 +170,7 @@ test('settings save targets only the selected camera and sends numeric options',
   const request = t.requests.find(x => x.path === '/api/camera/settings');
   assert.deepEqual(JSON.parse(request.options.body), {id: '1', resolution: 720, fps: 15, rotation: 270, mode: 'watch', sensitivity: 5, quietSeconds: 10, clipSeconds: 120});
   assert.equal(button.disabled, false);
-  assert.match(message.textContent, /saved on the phone/);
+  assert.match(message.textContent, /휴대폰에 설정을 저장/);
 });
 
 test('saved rotation combines with sensor orientation', async () => {

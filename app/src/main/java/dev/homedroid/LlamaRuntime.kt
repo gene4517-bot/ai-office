@@ -232,7 +232,7 @@ class LlamaRuntime(context: Context) {
     }
 
     companion object {
-        private const val REPO = "sudiptacmd/homedroid"
+        private const val REPO = "gene4517-bot/homedroid-kr"
         // Indented lines under "Available devices:", e.g. "  Vulkan0: Samsung Xclipse 940 (11010 MiB, 9000 MiB free)"
         // or "  GPUOpenCL: QUALCOMM Adreno(TM) 750 (…)"; log lines like "load_backend: …" aren't indented.
         /** Devices from `llama-server --list-devices` output, as (id, name). */

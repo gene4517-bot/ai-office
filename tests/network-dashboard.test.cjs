@@ -47,7 +47,7 @@ test('quiet devices say not found and untrusted discovery names are escaped', as
   const t = setup();
   t.state({discovery: {running: true, devices: [{ip: '192.168.1.10', name: '<script>bad</script>', sources: ['SSDP'], ports: [80], lastSeen: 123, found: false}]}});
   await t.run('renderNetwork()');
-  assert.match(t.$('#netDevices').innerHTML, /not found in this scan/);
+  assert.match(t.$('#netDevices').innerHTML, /이번 검색에서 없음/);
   assert.match(t.$('#netDevices').innerHTML, /&lt;script&gt;/);
   assert.doesNotMatch(t.$('#netDevices').innerHTML, /offline|<script>/);
   assert.equal(t.$('#netDiscover').disabled, true);

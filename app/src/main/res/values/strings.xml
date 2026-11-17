@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Homedroid</string>
-    <string name="start">Start server</string>
-    <string name="stop">Stop server</string>
-    <string name="apps">Apps (Jellyfin, Home Assistant…)</string>
-    <string name="ssh">SSH server (port 8022)</string>
-    <string name="web">Web server – Caddy (port 8080)</string>
-    <string name="autostart">Start on boot</string>
-    <string name="token">Cloudflare tunnel token</string>
-    <string name="keys">SSH authorized_keys (one public key per line)</string>
-    <string name="save">Save &amp; apply</string>
-    <string name="battery">Allow running in background</string>
-    <string name="logs">Logs</string>
-    <string name="phantom_tip">Android 12+ kills apps with many child processes. Run once from a PC:\n\nAndroid 14+: Developer options → Disable child process restrictions\n\nAndroid 12–13:\nadb shell device_config set_sync_disabled_for_tests persistent\nadb shell device_config put activity_manager max_phantom_processes 2147483647</string>
-    <string name="ipcam_start">Enable IPCam camera and microphone access</string>
-    <string name="ipcam_stop">Stop IPCam access</string>
-    <string name="widget_description">Your phones and the services running on them</string>
-    <string name="widget_phones">Phones</string>
-    <string name="widget_services">Services</string>
+    <string name="app_name">홈드로이드 KR</string>
+    <string name="start">서버 시작</string>
+    <string name="stop">서버 중지</string>
+    <string name="apps">앱 (Jellyfin, Home Assistant…)</string>
+    <string name="ssh">SSH 서버 (8022번 포트)</string>
+    <string name="web">웹 서버 – Caddy (8080번 포트)</string>
+    <string name="autostart">부팅할 때 자동 시작</string>
+    <string name="token">Cloudflare 터널 토큰</string>
+    <string name="keys">SSH authorized_keys (공개 키를 한 줄에 하나씩)</string>
+    <string name="save">저장하고 적용</string>
+    <string name="battery">백그라운드에서 계속 실행 허용</string>
+    <string name="logs">로그</string>
+    <string name="phantom_tip">Android 12 이상은 자식 프로세스가 많은 앱을 정리합니다. PC에서 한 번 실행하세요:\n\nAndroid 14 이상: 개발자 옵션 → 자식 프로세스 제한 사용 안 함\n\nAndroid 12–13:\nadb shell device_config set_sync_disabled_for_tests persistent\nadb shell device_config put activity_manager max_phantom_processes 2147483647</string>
+    <string name="ipcam_start">IPCam 카메라·마이크 접근 허용</string>
+    <string name="ipcam_stop">IPCam 접근 중지</string>
+    <string name="widget_description">내 휴대폰과 그 위에서 실행 중인 서비스</string>
+    <string name="widget_phones">휴대폰</string>
+    <string name="widget_services">서비스</string>
 </resources>

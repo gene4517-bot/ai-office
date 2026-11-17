@@ -25,6 +25,7 @@ val releaseKey: Map<String, String>? = run {
             mapOf(
                 "storeFile" to path,
                 "storePassword" to System.getenv("HOMEDROID_KEYSTORE_PASSWORD").orEmpty(),
+                "storeType" to System.getenv("HOMEDROID_KEYSTORE_TYPE").orEmpty(),
                 "keyAlias" to System.getenv("HOMEDROID_KEY_ALIAS").orEmpty(),
                 "keyPassword" to System.getenv("HOMEDROID_KEY_PASSWORD").orEmpty(),
             )
@@ -38,11 +39,13 @@ android {
 
     defaultConfig {
         // Hardware checks can run beside the release install without replacing its data.
-        applicationId = if (providers.gradleProperty("cameraTest").orNull == "true") "dev.homedroid.cameratest" else "dev.homedroid"
+        // The Korean build has its own id, so it installs beside the English Homedroid and
+        // both keep their data; the upstream package stays untouched.
+        applicationId = if (providers.gradleProperty("cameraTest").orNull == "true") "dev.homedroid.cameratest" else "dev.homedroid.kr"
         minSdk = 29
         targetSdk = 36
-        versionCode = 904
-        versionName = "0.9.4-beta"
+        versionCode = 9041
+        versionName = "0.9.4-kr.1"
         testInstrumentationRunner = "dev.homedroid.CameraHardwareTest"
     }
 
@@ -50,6 +53,7 @@ android {
         releaseKey?.let { key ->
             create("release") {
                 storeFile = file(key.getValue("storeFile"))
+                key["storeType"]?.takeIf { it.isNotBlank() }?.let { storeType = it }
                 storePassword = key.getValue("storePassword")
                 keyAlias = key.getValue("keyAlias")
                 keyPassword = key.getValue("keyPassword")
@@ -66,12 +70,14 @@ android {
         }
     }
 
-    // One APK per ABI keeps downloads small; the universal APK is for convenience.
+    // The Korean build targets the phones this server runs on: arm64-v8a (Galaxy Note10,
+    // S25 Ultra and most Android 10+ phones). The universal APK is the same binaries for
+    // anyone who prefers one download.
     splits {
         abi {
             isEnable = true
             reset()
-            include("arm64-v8a", "armeabi-v7a", "x86_64")
+            include("arm64-v8a")
             isUniversalApk = true
         }
     }

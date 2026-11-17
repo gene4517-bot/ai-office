@@ -56,13 +56,13 @@
         <activity
             android:name=".AppsActivity"
             android:exported="false"
-            android:label="Apps"
+            android:label="앱"
             android:parentActivityName=".MainActivity" />
 
         <activity android:name=".SettingsActivity" android:exported="false"
-            android:label="Settings" android:parentActivityName=".MainActivity" />
+            android:label="설정" android:parentActivityName=".MainActivity" />
         <activity android:name=".DashboardActivity" android:exported="false"
-            android:label="Control panel" android:windowSoftInputMode="adjustResize"
+            android:label="제어판" android:windowSoftInputMode="adjustResize"
             android:enableOnBackInvokedCallback="true"
             android:parentActivityName=".MainActivity" />
 
@@ -90,7 +90,7 @@
         <receiver android:name=".Updater$UpdateReceiver" android:exported="false" />
         <receiver android:name=".ClusterReceiver" android:exported="false" />
 
-        <receiver android:name=".StatusWidget" android:exported="true" android:label="Homedroid status">
+        <receiver android:name=".StatusWidget" android:exported="true" android:label="홈드로이드 상태">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

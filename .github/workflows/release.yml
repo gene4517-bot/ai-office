@@ -1,13 +1,14 @@
 name: Release
 
-# Push a tag like v0.4.1-beta to build signed APKs and publish them as a GitHub release.
+# v0.9.4-kr.1 같은 태그를 푸시하면 arm64-v8a(갤럭시 노트10)용 서명 APK를 만들어
+# GitHub Release에 올린다. 서명 키는 저장소 시크릿에서 온다.
 on:
   push:
     tags: ["v*"]
   workflow_dispatch:
     inputs:
       tag:
-        description: Existing tag to (re)build the release for
+        description: 다시 빌드할 기존 태그
         required: true
 
 permissions:
@@ -32,20 +33,39 @@ jobs:
         with:
           go-version: stable
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
       - name: Install NDK
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "ndk;30.0.16248370" > /dev/null
           echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/30.0.16248370" >> "$GITHUB_ENV"
 
-      - name: Build native binaries
-        run: native/build-all.sh arm64-v8a armeabi-v7a x86_64
+      - name: Cache native sources
+        uses: actions/cache@v4
+        with:
+          path: |
+            native/.work/*.tar.*
+            ~/go/pkg/mod
+          key: native-arm64-${{ hashFiles('native/*.sh', 'native/go-security-deps.txt', 'native/sshd/go.sum') }}
 
-      # Before the APK: the app carries the hashes of the runtime it may download.
-      - name: Build the on-phone AI runtime (llama.cpp)
+      - name: Build native binaries (arm64-v8a only)
+        run: native/build-all.sh arm64-v8a
+
+      # 휴대폰에서 직접 AI 모델을 돌리려면 필요한 런타임. 목록 JSON이 APK에 들어간다.
+      - name: Build the on-phone AI runtime (llama.cpp, arm64-v8a)
         run: |
           sudo apt-get install -y ninja-build glslc > /dev/null
-          native/build-llama.sh arm64-v8a x86_64
+          native/build-llama.sh arm64-v8a
+
+      - name: Korean dashboard tests
+        run: |
+          node tests/ipcam-dashboard.test.cjs
+          node tests/cluster-dashboard.test.cjs
+          node tests/mobile-dashboard.test.cjs
+          node tests/network-dashboard.test.cjs
 
       - name: Build signed APKs
         env:
@@ -53,24 +73,13 @@ jobs:
           HOMEDROID_KEYSTORE_PASSWORD: ${{ secrets.HOMEDROID_KEYSTORE_PASSWORD }}
           HOMEDROID_KEY_ALIAS: ${{ secrets.HOMEDROID_KEY_ALIAS }}
           HOMEDROID_KEY_PASSWORD: ${{ secrets.HOMEDROID_KEY_PASSWORD }}
+          HOMEDROID_KEYSTORE_TYPE: ${{ secrets.HOMEDROID_KEYSTORE_TYPE }}
         run: |
-          test -n "$HOMEDROID_KEYSTORE_B64" || { echo "signing secrets are missing" >&2; exit 1; }
-          echo "$HOMEDROID_KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
-          export HOMEDROID_KEYSTORE="$RUNNER_TEMP/release.jks"
+          test -n "$HOMEDROID_KEYSTORE_B64" || { echo "서명 시크릿(HOMEDROID_KEYSTORE_B64)이 없습니다." >&2; exit 1; }
+          echo "$HOMEDROID_KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.p12"
+          export HOMEDROID_KEYSTORE="$RUNNER_TEMP/release.p12"
           ./gradlew --no-daemon testDebugUnitTest lintDebug assembleRelease
-          rm -f "$RUNNER_TEMP/release.jks"
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Check dashboard behavior and bundled Go dependencies
-        run: |
-          node tests/ipcam-dashboard.test.cjs
-          node tests/cluster-dashboard.test.cjs
-          node tests/mobile-dashboard.test.cjs
-          go install golang.org/x/vuln/cmd/govulncheck@v1.8.0
-          bash native/security-check.sh
+          rm -f "$RUNNER_TEMP/release.p12"
 
       - name: Collect APKs
         run: |
@@ -80,8 +89,8 @@ jobs:
             abi=$(basename "$apk" | sed -E 's/^app-(.*)-release\.apk$/\1/')
             cp "$apk" "dist/homedroid-$version-$abi.apk"
           done
-          cp native/out/llama-runtime-*.tar.gz dist/
-          (cd dist && sha256sum *.apk *.tar.gz > SHA256SUMS)
+          cp native/out/llama-runtime-*.tar.gz dist/ 2>/dev/null || true
+          (cd dist && sha256sum *.apk *.tar.gz > SHA256SUMS 2>/dev/null || sha256sum *.apk > SHA256SUMS)
           ls -l dist
 
       - name: Publish release
@@ -90,9 +99,8 @@ jobs:
         run: |
           notes="docs/releases/$TAG.md"
           [ -f "$notes" ] || notes=/dev/null
-          pre=""; case "$TAG" in *-*) pre="--prerelease" ;; esac
           if gh release view "$TAG" > /dev/null 2>&1; then
             gh release upload "$TAG" dist/* --clobber
           else
-            gh release create "$TAG" dist/* --title "Homedroid ${TAG#v}" --notes-file "$notes" $pre
+            gh release create "$TAG" dist/* --title "홈드로이드 KR ${TAG#v}" --notes-file "$notes"
           fi

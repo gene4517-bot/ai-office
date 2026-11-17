@@ -2,7 +2,7 @@
   {
     "id": "jellyfin",
     "name": "Jellyfin",
-    "description": "Stream your movies, shows and music to any device. Uses the phone's hardware video encoder.",
+    "description": "영화·드라마·음악을 어느 기기에서든 재생합니다. 휴대폰의 하드웨어 영상 인코더를 사용합니다.",
     "port": 8096,
     "size": "≈ 420 MB",
     "install": "apk add --no-cache jellyfin jellyfin-web\n# Hardware encoding: Jellyfin's V4L2 option is routed to Android's MediaCodec by the\n# ffmpeg shim. Only on first install, so a user's own choice is kept.\nmkdir -p /var/lib/jellyfin/config\n[ -e /var/lib/jellyfin/config/encoding.xml ] || cat > /var/lib/jellyfin/config/encoding.xml <<'XML'\n<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<EncodingOptions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <HardwareAccelerationType>v4l2m2m</HardwareAccelerationType>\n  <EnableHardwareEncoding>true</EnableHardwareEncoding>\n</EncodingOptions>\nXML\n# Torrent downloads show up in Jellyfin: a \"Downloads\" library (mixed movies and shows,\n# watched for new files) once both apps are installed. Only once, so a user who\n# removes the library in Jellyfin keeps it removed.\nif [ -x /usr/bin/jellyfin ] && [ -x /usr/bin/qbittorrent-nox ] && [ ! -e /var/lib/jellyfin/.downloads-library ]; then\n  mkdir -p /media/Downloads /var/lib/jellyfin/root/default/Downloads\n  cd /var/lib/jellyfin/root/default/Downloads\n  printf /media/Downloads > Downloads.mblink\n  cat > options.xml <<'XML'\n<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<LibraryOptions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <Enabled>true</Enabled>\n  <EnablePhotos>true</EnablePhotos>\n  <EnableRealtimeMonitor>true</EnableRealtimeMonitor>\n  <EnableLUFSScan>false</EnableLUFSScan>\n  <EnableChapterImageExtraction>false</EnableChapterImageExtraction>\n  <ExtractChapterImagesDuringLibraryScan>false</ExtractChapterImagesDuringLibraryScan>\n  <EnableTrickplayImageExtraction>false</EnableTrickplayImageExtraction>\n  <ExtractTrickplayImagesDuringLibraryScan>false</ExtractTrickplayImagesDuringLibraryScan>\n  <PathInfos>\n    <MediaPathInfo>\n      <Path>/media/Downloads</Path>\n    </MediaPathInfo>\n  </PathInfos>\n  <SaveLocalMetadata>false</SaveLocalMetadata>\n  <EnableAutomaticSeriesGrouping>true</EnableAutomaticSeriesGrouping>\n  <EnableEmbeddedTitles>false</EnableEmbeddedTitles>\n  <EnableEmbeddedExtrasTitles>false</EnableEmbeddedExtrasTitles>\n  <EnableEmbeddedEpisodeInfos>false</EnableEmbeddedEpisodeInfos>\n  <AutomaticRefreshIntervalDays>0</AutomaticRefreshIntervalDays>\n  <SeasonZeroDisplayName>Specials</SeasonZeroDisplayName>\n  <DisabledLocalMetadataReaders />\n  <DisabledSubtitleFetchers />\n  <SubtitleFetcherOrder />\n  <DisabledMediaSegmentProviders />\n  <MediaSegmentProviderOrder />\n  <SkipSubtitlesIfEmbeddedSubtitlesPresent>false</SkipSubtitlesIfEmbeddedSubtitlesPresent>\n  <SkipSubtitlesIfAudioTrackMatches>true</SkipSubtitlesIfAudioTrackMatches>\n  <RequirePerfectSubtitleMatch>true</RequirePerfectSubtitleMatch>\n  <SaveSubtitlesWithMedia>true</SaveSubtitlesWithMedia>\n  <DisabledLyricFetchers />\n  <LyricFetcherOrder />\n  <CustomTagDelimiters>\n    <string>/</string>\n    <string>|</string>\n    <string>;</string>\n    <string>\\</string>\n  </CustomTagDelimiters>\n  <DelimiterWhitelist />\n  <AutomaticallyAddToCollection>false</AutomaticallyAddToCollection>\n  <AllowEmbeddedSubtitles>AllowAll</AllowEmbeddedSubtitles>\n  <TypeOptions />\n</LibraryOptions>\nXML\n  touch /var/lib/jellyfin/.downloads-library\nfi",
@@ -28,14 +28,14 @@
     },
     "storage": {
       "path": "/media",
-      "label": "Media library",
+      "label": "미디어 보관함",
       "shared": "Media"
     }
   },
   {
     "id": "qbittorrent",
     "name": "qBittorrent",
-    "description": "Torrent client. Downloads go to the media library's Downloads folder, in order (stream while downloading), and keep seeding. Add from SSH: torrent 'magnet:?…'",
+    "description": "토렌트 클라이언트입니다. 내려받은 파일은 미디어 보관함의 Downloads 폴더로 순서대로 저장되어(받는 중 재생 가능) 계속 시드합니다. SSH에서 추가: torrent 'magnet:?…'",
     "port": 8081,
     "size": "≈ 60 MB",
     "install": "apk add --no-cache qbittorrent-nox curl jq\nmkdir -p /media/Downloads /var/lib/qbittorrent/qBittorrent/config\n# Only on first install, so the user's own settings are kept.\n[ -e /var/lib/qbittorrent/qBittorrent/config/qBittorrent.conf ] || cat > /var/lib/qbittorrent/qBittorrent/config/qBittorrent.conf <<'CONF'\n[LegalNotice]\nAccepted=true\n\n[BitTorrent]\nSession\\DefaultSavePath=/media/Downloads\nSession\\TempPathEnabled=false\nSession\\GlobalMaxRatio=-1\nSession\\GlobalMaxSeedingMinutes=-1\nSession\\QueueingSystemEnabled=false\n\n[Preferences]\nWebUI\\Port=8081\nWebUI\\LocalHostAuth=false\nCONF\ncat > /usr/local/bin/torrent <<'SH'\n#!/bin/sh\n# torrent <magnet or .torrent URL>...   add, downloading pieces in order\n# torrent list                          show progress\napi=http://127.0.0.1:8081/api/v2\nif ! curl -fsS -o /dev/null \"$api/app/version\" 2>/dev/null; then\n  echo 'qBittorrent is not running: start the server in the Homedroid app.' >&2; exit 1\nfi\ncase $1 in\n''|-h|--help) sed -n '2,3s/^# //p' \"$0\"; exit 2 ;;\nlist) curl -fsS \"$api/torrents/info\" | jq -r '.[] | \"\\(.progress * 100 | floor)%\\t\\(.state)\\t\\(.name)\"'; exit ;;\nesac\nfor link do\n  curl -fsS -F \"urls=$link\" -F sequentialDownload=true -F firstLastPiecePrio=true \"$api/torrents/add\" >/dev/null &&\n    echo \"Added: $link\"\ndone\nSH\nchmod +x /usr/local/bin/torrent\n# Torrent downloads show up in Jellyfin: a \"Downloads\" library (mixed movies and shows,\n# watched for new files) once both apps are installed. Only once, so a user who\n# removes the library in Jellyfin keeps it removed.\nif [ -x /usr/bin/jellyfin ] && [ -x /usr/bin/qbittorrent-nox ] && [ ! -e /var/lib/jellyfin/.downloads-library ]; then\n  mkdir -p /media/Downloads /var/lib/jellyfin/root/default/Downloads\n  cd /var/lib/jellyfin/root/default/Downloads\n  printf /media/Downloads > Downloads.mblink\n  cat > options.xml <<'XML'\n<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<LibraryOptions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <Enabled>true</Enabled>\n  <EnablePhotos>true</EnablePhotos>\n  <EnableRealtimeMonitor>true</EnableRealtimeMonitor>\n  <EnableLUFSScan>false</EnableLUFSScan>\n  <EnableChapterImageExtraction>false</EnableChapterImageExtraction>\n  <ExtractChapterImagesDuringLibraryScan>false</ExtractChapterImagesDuringLibraryScan>\n  <EnableTrickplayImageExtraction>false</EnableTrickplayImageExtraction>\n  <ExtractTrickplayImagesDuringLibraryScan>false</ExtractTrickplayImagesDuringLibraryScan>\n  <PathInfos>\n    <MediaPathInfo>\n      <Path>/media/Downloads</Path>\n    </MediaPathInfo>\n  </PathInfos>\n  <SaveLocalMetadata>false</SaveLocalMetadata>\n  <EnableAutomaticSeriesGrouping>true</EnableAutomaticSeriesGrouping>\n  <EnableEmbeddedTitles>false</EnableEmbeddedTitles>\n  <EnableEmbeddedExtrasTitles>false</EnableEmbeddedExtrasTitles>\n  <EnableEmbeddedEpisodeInfos>false</EnableEmbeddedEpisodeInfos>\n  <AutomaticRefreshIntervalDays>0</AutomaticRefreshIntervalDays>\n  <SeasonZeroDisplayName>Specials</SeasonZeroDisplayName>\n  <DisabledLocalMetadataReaders />\n  <DisabledSubtitleFetchers />\n  <SubtitleFetcherOrder />\n  <DisabledMediaSegmentProviders />\n  <MediaSegmentProviderOrder />\n  <SkipSubtitlesIfEmbeddedSubtitlesPresent>false</SkipSubtitlesIfEmbeddedSubtitlesPresent>\n  <SkipSubtitlesIfAudioTrackMatches>true</SkipSubtitlesIfAudioTrackMatches>\n  <RequirePerfectSubtitleMatch>true</RequirePerfectSubtitleMatch>\n  <SaveSubtitlesWithMedia>true</SaveSubtitlesWithMedia>\n  <DisabledLyricFetchers />\n  <LyricFetcherOrder />\n  <CustomTagDelimiters>\n    <string>/</string>\n    <string>|</string>\n    <string>;</string>\n    <string>\\</string>\n  </CustomTagDelimiters>\n  <DelimiterWhitelist />\n  <AutomaticallyAddToCollection>false</AutomaticallyAddToCollection>\n  <AllowEmbeddedSubtitles>AllowAll</AllowEmbeddedSubtitles>\n  <TypeOptions />\n</LibraryOptions>\nXML\n  touch /var/lib/jellyfin/.downloads-library\nfi",
@@ -51,18 +51,18 @@
     "env": {},
     "storage": {
       "path": "/media",
-      "label": "Media library",
+      "label": "미디어 보관함",
       "shared": "Media"
     },
     "notice": {
       "pattern": "temporary password is provided for this session: (\\S+)",
-      "text": "Web UI login: admin / $1 (temporary; set your own under Tools → Options → Web UI)"
+      "text": "웹 UI 로그인: admin / $1 (임시 비밀번호 · Tools → Options → Web UI에서 직접 변경하세요)"
     }
   },
   {
     "id": "homeassistant",
     "name": "Home Assistant",
-    "description": "Home automation hub. Network and cloud integrations work; USB radios and Bluetooth need root.",
+    "description": "스마트홈 허브입니다. 네트워크·클라우드 연동은 되지만 USB 라디오와 블루투스는 루트 권한이 필요합니다.",
     "port": 8123,
     "size": "≈ 900 MB",
     "install": "apk add --no-cache python3 uv ffmpeg libjpeg-turbo libstdc++ tzdata ca-certificates\n# proot fakes hard links, which uv's cache linking can't cope with; copy instead.\nexport UV_LINK_MODE=copy\nrm -rf /opt/homeassistant /root/.cache/uv\nuv venv --python /usr/bin/python3 /opt/homeassistant\nuv pip install --python /opt/homeassistant/bin/python --index-strategy unsafe-best-match --extra-index-url https://wheels.home-assistant.io/musllinux-index/ homeassistant\nmkdir -p /var/lib/homeassistant",
@@ -84,7 +84,7 @@
   {
     "id": "immich",
     "name": "Immich",
-    "description": "Photo and video backup with the Immich phone apps. Face and object recognition are off: too heavy for phones.",
+    "description": "Immich 휴대폰 앱으로 사진과 영상을 백업합니다. 얼굴·사물 인식은 꺼져 있습니다. 휴대폰에는 너무 무겁기 때문입니다.",
     "port": 2283,
     "size": "≈ 1.6 GB",
     "arches": [
@@ -165,13 +165,13 @@
     ],
     "storage": {
       "path": "/data",
-      "label": "Photo library"
+      "label": "사진 보관함"
     }
   },
   {
     "id": "adguard",
     "name": "AdGuard Home",
-    "description": "Network-wide ad and tracker blocking. DNS on port 1053; devices on your tailnet can use the phone as their DNS server directly. Blocklists, statistics and a query log in its web UI.",
+    "description": "네트워크 전체의 광고·추적 차단입니다. DNS는 1053번 포트를 쓰며, tailnet 기기는 이 휴대폰을 DNS 서버로 바로 쓸 수 있습니다. 차단 목록·통계·조회 기록은 웹 UI에서 봅니다.",
     "port": 3000,
     "size": "≈ 40 MB",
     "install": "apk add --no-cache adguardhome apache2-utils\nmkdir -p /var/lib/adguardhome\n# Only on first install, so the user's own settings are kept. An app can't listen below\n# port 1024: plain DNS is on 1053 (Tailscale devices reach it on 53, see Tailscale.kt) and\n# encrypted DNS, once set up, on 8443 (DoH) and 8853 (DoT). All clients may arrive from one\n# address (the router or the Tailscale relay), so there is no per-client rate limit.\nif [ ! -e /var/lib/adguardhome/AdGuardHome.yaml ]; then\n  pw=$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 16)\n  printf '%s' \"$pw\" > /var/lib/adguardhome/.initial-password\n  hash=$(htpasswd -nbB -C 10 admin \"$pw\" | cut -d: -f2-)\n  cat > /var/lib/adguardhome/AdGuardHome.yaml <<YAML\nhttp:\n  address: 0.0.0.0:3000\n  session_ttl: 720h\nusers:\n  - name: admin\n    password: '$hash'\nauth_attempts: 5\nblock_auth_min: 15\ndns:\n  bind_hosts:\n    - 0.0.0.0\n  port: 1053\n  upstream_dns:\n    - https://dns.quad9.net/dns-query\n    - https://cloudflare-dns.com/dns-query\n  bootstrap_dns:\n    - 9.9.9.9\n    - 1.1.1.1\n  ratelimit: 0\ntls:\n  enabled: false\n  port_https: 8443\n  port_dns_over_tls: 8853\n  port_dns_over_quic: 8853\nfilters:\n  - enabled: true\n    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_1.txt\n    name: AdGuard DNS filter\n    id: 1\n  - enabled: true\n    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_2.txt\n    name: AdAway Default Blocklist\n    id: 2\ndhcp:\n  enabled: false\nschema_version: 29\nYAML\nfi",
@@ -187,7 +187,7 @@
     "env": {},
     "notice": {
       "pattern": "AdGuard Home login: admin / (\\S+)",
-      "text": "Web UI login: admin / $1 · DNS on port 1053; open the setup guide to point your devices at it"
+      "text": "웹 UI 로그인: admin / $1 · DNS는 1053번 포트 · 설정 안내에서 기기를 이쪽으로 돌리는 방법을 보세요"
     }
   }
 ]

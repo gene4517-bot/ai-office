@@ -1,5 +1,7 @@
 name: Build
 
+# 한글판 빌드 확인: 갤럭시 노트10과 같은 arm64-v8a만 네이티브로 빌드해 시간을 줄이고,
+# 유닛 테스트와 린트, 릴리스 APK 조립까지 확인한다. 서명은 release 워크플로가 맡는다.
 on:
   push:
     branches: [main]
@@ -33,15 +35,22 @@ jobs:
           path: |
             native/.work/*.tar.*
             ~/go/pkg/mod
-          key: native-${{ hashFiles('native/*.sh', 'native/go-security-deps.txt', 'native/sshd/go.sum') }}
+          key: native-arm64-${{ hashFiles('native/*.sh', 'native/go-security-deps.txt', 'native/sshd/go.sum') }}
 
-      - name: Build native binaries
-        run: native/build-all.sh arm64-v8a armeabi-v7a
+      - name: Build native binaries (arm64-v8a only)
+        run: native/build-all.sh arm64-v8a
 
-      - name: Build APKs
+      - name: Unit tests, lint and release APK
         run: ./gradlew --no-daemon testDebugUnitTest lintDebug assembleRelease
+
+      - name: Check the Korean dashboard
+        run: |
+          node tests/ipcam-dashboard.test.cjs
+          node tests/cluster-dashboard.test.cjs
+          node tests/mobile-dashboard.test.cjs
+          node tests/network-dashboard.test.cjs
 
       - uses: actions/upload-artifact@v4
         with:
-          name: homedroid-apks
+          name: homedroid-kr-apks
           path: app/build/outputs/apk/release/*.apk

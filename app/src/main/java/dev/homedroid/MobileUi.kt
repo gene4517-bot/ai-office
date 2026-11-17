@@ -112,11 +112,11 @@ class MobileUi(val activity: Activity) {
             insets
         }
         val content = column().apply { setPadding(dp(20), dp(20), dp(20), dp(24)) }
-        content.addView(text("H O M E D R O I D", 11f, accent, true).apply { setPadding(0, 0, 0, dp(16)) })
+        content.addView(text("GENE 홈서버", 11f, accent, true).apply { setPadding(0, 0, 0, dp(16)) })
         shell.addView(ScrollView(activity).apply { isFillViewport = true; addView(content) }, LinearLayout.LayoutParams(-1, 0, 1f))
         if (selected != null) {
             val nav = LinearLayout(activity).apply { setBackgroundColor(surface); setPadding(dp(8), dp(6), dp(8), dp(6)) }
-            listOf("Overview" to MainActivity::class.java, "Apps" to AppsActivity::class.java, "Settings" to SettingsActivity::class.java).forEachIndexed { index, (name, target) ->
+            listOf("개요" to MainActivity::class.java, "앱" to AppsActivity::class.java, "설정" to SettingsActivity::class.java).forEachIndexed { index, (name, target) ->
                 val item = column().apply {
                     gravity = Gravity.CENTER; setPadding(dp(4), dp(8), dp(4), dp(8))
                     background = touch(if (name == selected) tint else surface, 14)

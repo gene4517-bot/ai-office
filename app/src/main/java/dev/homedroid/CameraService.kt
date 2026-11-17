@@ -121,7 +121,7 @@ class CameraService : Service() {
                 setSound(null, null)
                 enableVibration(false)
             })
-            val notification = notification("Camera ready for remote controls")
+            val notification = notification("원격 제어를 기다리는 카메라")
             if (Build.VERSION.SDK_INT >= 30) startForeground(2, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA or ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE)
             else startForeground(2, notification)
             wakeLock = getSystemService(PowerManager::class.java)
@@ -130,9 +130,9 @@ class CameraService : Service() {
             instance = this
             speech = TextToSpeech(this) { speechReady = it == TextToSpeech.SUCCESS }
             monitorWanted = preferences.monitorId?.takeIf { it in manager.cameraIdList }
-            handler.post { runCatching { resumeLive() }.onFailure { fail(it.message ?: "Monitoring could not start") } }
+            handler.post { runCatching { resumeLive() }.onFailure { fail(it.message ?: "감시를 시작하지 못했습니다") } }
         } catch (e: Exception) {
-            Jobs.line("Camera could not start: ${e.message}")
+            Jobs.line("카메라를 시작하지 못했습니다: ${e.message}")
             stopSelf()
         }
     }
@@ -146,20 +146,20 @@ class CameraService : Service() {
         val open = PendingIntent.getActivity(this, 0, Intent(this, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE)
         val stop = PendingIntent.getService(this, 0, Intent(this, CameraService::class.java).setAction(STOP), PendingIntent.FLAG_IMMUTABLE)
         return Notification.Builder(this, CHANNEL).setSmallIcon(R.drawable.ic_stat)
-            .setContentTitle("Homedroid IPCam").setContentText(text).setContentIntent(open)
+            .setContentTitle("홈드로이드 IPCam").setContentText(text).setContentIntent(open)
             .setOngoing(true).setOnlyAlertOnce(true)
-            .addAction(Notification.Action.Builder(null, "Stop IPCam", stop).build()).build()
+            .addAction(Notification.Action.Builder(null, "IPCam 중지", stop).build()).build()
     }
 
     private fun notifyState(text: String) = getSystemService(NotificationManager::class.java).notify(2, notification(text))
 
     /** Short commands are serialized; asynchronous camera callbacks report completion via status. */
     fun request(action: String, body: JSONObject = JSONObject()): Response {
-        if (closing) return Response.error(409, "Camera access is stopping")
+        if (closing) return Response.error(409, "카메라 접근을 종료하는 중입니다")
         val result = CompletableFuture<Response>()
         handler.post {
             if (closing || !Config(this).cameraEnabled) {
-                result.complete(Response.error(409, "Camera module is disabled"))
+                result.complete(Response.error(409, "카메라 모듈이 꺼져 있습니다"))
                 return@post
             }
             try {
@@ -204,9 +204,9 @@ class CameraService : Service() {
                     }
                     "microphone/start" -> {
                         microphone.start(body.optBoolean("record"))
-                        notifyState("IPCam microphone active")
+                        notifyState("IPCam 마이크 사용 중")
                     }
-                    "microphone/stop" -> { microphone.stop(); notifyState(if (recording) "Recording video" else "IPCam ready") }
+                    "microphone/stop" -> { microphone.stop(); notifyState(if (recording) "영상 녹화 중" else "IPCam 준비됨") }
                     "stop" -> { finishRecording(); cleanup() }
                     "live/start" -> {
                         val id = body.getString("id")
@@ -240,7 +240,7 @@ class CameraService : Service() {
                                 manager.setTorchMode(id, true)
                                 torchId = id
                             }
-                            notifyState(if (torchId == null) "Camera ready for remote controls" else "Camera $id torch on")
+                            notifyState(if (torchId == null) "원격 제어를 기다리는 카메라" else "카메라 $id 플래시 켜짐")
                         }
                     }
                     else -> throw IllegalArgumentException("Unknown camera action")
@@ -351,7 +351,7 @@ class CameraService : Service() {
                 surfaces += previewReader!!.surface
             }
             surfaces += surface
-            notifyState(if (video) "Starting video on camera $id" else "Taking photo on camera $id")
+            notifyState(if (video) "카메라 $id 영상 시작" else "카메라 $id 사진 촬영")
             manager.openCamera(id, object : CameraDevice.StateCallback() {
                 override fun onOpened(camera: CameraDevice) {
                     if (generation != token || closing) { camera.close(); return }
@@ -377,7 +377,7 @@ class CameraService : Service() {
                                         recorder!!.start()
                                         recording = true
                                         busy = false
-                                        notifyState("Recording video on camera $id")
+                                        notifyState("카메라 $id 영상 녹화 중")
                                         checkRecordingSpace(token)
                                     } else {
                                         var captured = false
@@ -493,7 +493,7 @@ class CameraService : Service() {
         recording = false
         busy = false
         liveActive = false
-        if (!closing) notifyState(if (microphone.running) "IPCam microphone active" else "Camera ready for remote controls")
+        if (!closing) notifyState(if (microphone.running) "IPCam 마이크 사용 중" else "원격 제어를 기다리는 카메라")
         // A photo or video interrupted the live view: bring it back once the camera is free.
         if (!closing && (liveWanted != null || monitorWanted != null)) handler.post {
             runCatching { resumeLive() }.onFailure { fail(it.message ?: "Camera could not resume") }
@@ -561,7 +561,7 @@ class CameraService : Service() {
                 ((characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION) ?: 0) + options.rotation) % 360) { fail(it) }
         }
         val surfaces = listOfNotNull(reader.surface, motionRecorder?.surface)
-        notifyState(if (monitorWanted == id) "Continuous monitoring on camera $id" else "Live view on camera $id")
+        notifyState(if (monitorWanted == id) "카메라 $id 연속 감시 중" else "카메라 $id 실시간 화면")
         manager.openCamera(id, object : CameraDevice.StateCallback() {
             override fun onOpened(camera: CameraDevice) {
                 if (generation != token || closing) { camera.close(); return }

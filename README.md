@@ -1,3 +1,19 @@
+# 홈드로이드 KR (gene 홈서버) — 안드로이드 휴대폰을 홈서버로
+
+> **한국어판 안내**
+> 이 저장소는 [sudiptacmd/homedroid](https://github.com/sudiptacmd/homedroid) (GPL-3.0)를 한글화해
+> `gene 홈서버`용으로 다듬은 수정판입니다. 앱 이름은 **홈드로이드 KR**, 패키지 이름은
+> `dev.homedroid.kr`이라 영문판과 함께 설치됩니다.
+>
+> - 내려받기: [Releases](https://github.com/gene4517-bot/homedroid-kr/releases) 에서
+>   `homedroid-<버전>-arm64-v8a.apk` (갤럭시 노트10·S25 울트라 등 arm64, 안드로이드 10 이상)
+> - 빠른 설치 안내: [docs/releases/v0.9.4-kr.1.md](docs/releases/v0.9.4-kr.1.md)
+> - 바뀐 점: 웹 대시보드·앱 화면·알림 한국어화, `gene 홈서버` 브랜딩, 개요 화면의 "노트10 24시간
+>   서버 팁" 카드, 모듈 설명 한국어화, arm64-v8a 전용 빌드, 업데이트 확인을 이 저장소로 변경
+> - 원작 문서(영문)는 아래에 그대로 남겨 두었습니다.
+
+---
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/logo/homedroid-logo-dark.svg">
