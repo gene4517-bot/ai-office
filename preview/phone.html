@@ -29,7 +29,7 @@
   setTimeout(function () { try { f.contentWindow.scrollTo(0, y); } catch (e) {} }, 900);
 
   if (q.get('check') === '1') {
-    (async function () {
+    setTimeout(async function () {
       var out = [];
       for (var name of ['app.js', 'deck.js']) {
         try {
@@ -49,7 +49,7 @@
                  ' / 식별자 칩 ' + d.querySelectorAll('.s25id').length + '개');
       } catch (e) { out.push('iframe read failed — ' + e.message); }
       document.getElementById('chk').textContent = out.join('\n');
-    })();
+    }, 2600);
   }
 </script>
 </body>
