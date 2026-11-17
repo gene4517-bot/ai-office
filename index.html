@@ -2993,8 +2993,8 @@ function chatAsk(text) {
         chatSetTyping('');
         list.push({ w: who, t: txt, at: Date.now() });
         chatSave(list);
-        renderChat();
         if (i === seq.length - 1) chatBusy = false;
+        renderChat();
       }, 700 + Math.random() * 500);
     }, delay);
     delay += 1250 + Math.random() * 400;
