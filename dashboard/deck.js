@@ -20,6 +20,7 @@
     wake: false,
     threadsAt: 0,
     dd: [],
+    s25sent: {},
     timer: { dur: 25 * 60000, end: 0, remain: 25 * 60000, run: false }
   };
 
@@ -32,6 +33,12 @@
         if (typeof raw.wake === 'boolean') prefs.wake = raw.wake;
         if (typeof raw.threadsAt === 'number') prefs.threadsAt = raw.threadsAt;
         if (Array.isArray(raw.dd)) prefs.dd = raw.dd.filter(function (d) { return d && d.label && d.date; });
+        if (raw.s25sent && typeof raw.s25sent === 'object') {
+          Object.keys(raw.s25sent).forEach(function (k) {
+            var v = Number(raw.s25sent[k]);
+            if (v > 0) prefs.s25sent[k] = v;
+          });
+        }
         if (raw.timer && typeof raw.timer === 'object') {
           var t = raw.timer;
           prefs.timer.dur = Math.max(60000, Number(t.dur) || 25 * 60000);
@@ -80,6 +87,24 @@
     { icon: '⛺', label: '고삼저수지 차박', date: '2026-11-20' },
     { icon: '🎆', label: '올해 마지막 날', date: '2026-12-31', yearly: true }
   ];
+
+  /* ==========================================================
+     📱 S25 울트라 원격 리모컨 — MacroDroid 웹훅
+     · 이 덱(공기계 노트10)의 버튼 → S25 울트라의 매크로 실행
+     · 주소 형식: https://trigger.macrodroid.com/<기기ID>/<식별자>
+     · 주소는 이 브라우저(localStorage genedeck.s25.webhook.v1)에만 저장
+     ========================================================== */
+  var S25_K = 'genedeck.s25.webhook.v1';
+  var S25_IDS = [
+    { id: 'pickle', icon: 'ㅎ', title: '피클 열기', sub: 'S25에서 피클 앱을 엽니다' },
+    { id: 'bixby', icon: '🎙️', title: '빅스비 호출', sub: 'S25의 빅스비를 부릅니다' },
+    { id: 'threads', icon: '🧵', title: '스레드 열기', sub: 'S25에서 스레드 앱을 엽니다' },
+    { id: 'youtube', icon: '▶️', title: '유튜브 열기', sub: 'S25에서 유튜브를 엽니다' },
+    { id: 'mute', icon: '🔇', title: '무음/진동', sub: 'S25를 무음(진동)으로 바꿉니다' },
+    { id: 'ping', icon: '🔔', title: 'S25 알림 울리기', sub: 'S25를 소리·진동으로 찾습니다' }
+  ];
+  var s25Cache = null;
+  var s25Busy = {};
 
   /* ---------------- 타일 그리기 ---------------- */
   function section(name) {
@@ -130,6 +155,16 @@
         '<div class="tchips" id="dPcChips"></div>' +
       '</button>' +
 
+      section('📱 S25 울트라 리모컨') +
+      S25_IDS.map(s25Tile).join('') +
+      '<button class="tile s25cfg span2" data-act="s25cfg">' +
+        '<div class="trow"><span class="dico">⚙️</span>' +
+          '<div style="min-width:0"><div class="ttl">S25 연결 설정 · 연동 가이드</div>' +
+          '<div class="tsub" id="dS25Sub">웹훅 주소 넣기</div></div>' +
+          '<span class="tmeta">설정</span></div>' +
+        '<div class="tline" style="margin-top:auto" id="dS25Line">처음이면 5분 가이드를 따라 매크로 6개를 만드세요</div>' +
+      '</button>' +
+
       section('수입 · SNS') +
       '<button class="tile sns span2" data-act="threads">' +
         '<div class="trow"><span class="dico">🧵</span>' +
@@ -170,6 +205,205 @@
         '<div class="trow"><span class="dico">⟳</span><div style="min-width:0"><div class="ttl">전체 새로고침</div><div class="tsub">PC·날씨·상태</div></div></div>' +
         '<div class="tline" style="margin-top:auto">모든 값을 다시 읽습니다</div>' +
       '</button>';
+  }
+
+  function s25Tile(d) {
+    return '<button class="tile s25" data-act="s25" data-s25="' + d.id + '">' +
+      '<div class="trow"><span class="dico">' + d.icon + '</span>' +
+        '<div style="min-width:0"><div class="ttl">' + d.title + '</div></div>' +
+        '<span class="tmeta" data-s25meta="' + d.id + '">대기</span></div>' +
+      '<div class="tline" style="margin-top:auto">' + d.sub + '</div>' +
+      '</button>';
+  }
+
+  /* ---------------- S25 웹훅 주소 다루기 ---------------- */
+  function s25Clean(v) {
+    var u = String(v || '').trim();
+    if (!u) return '';
+    if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
+    u = u.replace(/\/+$/, '');
+    var m = u.match(/\/([^\/]+)$/);
+    if (m) {
+      var last = '';
+      try { last = decodeURIComponent(m[1]).toLowerCase(); } catch (e) { last = m[1].toLowerCase(); }
+      for (var i = 0; i < S25_IDS.length; i++) {
+        if (S25_IDS[i].id === last) { u = u.slice(0, u.length - m[1].length - 1); break; }
+      }
+    }
+    return u.replace(/\/+$/, '');
+  }
+
+  function s25Base() {
+    if (s25Cache != null) return s25Cache;
+    var out = '';
+    try {
+      var raw = localStorage.getItem(S25_K);
+      if (raw) {
+        var v = raw;
+        try {
+          var j = JSON.parse(raw);
+          if (j && typeof j === 'object' && j.url) v = String(j.url);
+        } catch (e) {}
+        out = s25Clean(v);
+      }
+    } catch (e) { out = ''; }
+    s25Cache = out;
+    return out;
+  }
+
+  function s25Set(v) {
+    var u = s25Clean(v);
+    s25Cache = u;
+    try { localStorage.setItem(S25_K, JSON.stringify({ url: u, saved: Date.now() })); } catch (e) {}
+    return u;
+  }
+
+  function s25Label(id) {
+    for (var i = 0; i < S25_IDS.length; i++) if (S25_IDS[i].id === id) return S25_IDS[i].title;
+    return id;
+  }
+
+  function s25Did(base) {
+    var seg = String(base || '').split('/');
+    var did = seg[seg.length - 1] || '';
+    return did.length > 6 ? '····' + did.slice(-6) : did;
+  }
+
+  /* 신호 보내기 (no-cors: 응답 내용은 볼 수 없고 '보냈다'까지만 확인) */
+  function s25Send(id, tile) {
+    var base = s25Base();
+    if (!base) {
+      if (window.toast) toast('먼저 📱 S25 원격 연결 주소를 넣어 주세요');
+      openS25Cfg();
+      return;
+    }
+    var done = function (ok) {
+      delete s25Busy[id];
+      if (ok) {
+        prefs.s25sent[id] = Date.now();
+        savePrefs();
+        if (window.toast) toast('📱 ' + s25Label(id) + ' · S25로 신호를 보냈어요');
+        if (navigator.vibrate) { try { navigator.vibrate(18); } catch (e) {} }
+      } else if (window.toast) {
+        toast('S25로 보내지 못했어요 · 주소와 S25 인터넷을 확인하세요');
+      }
+      paintS25();
+    };
+    s25Busy[id] = true;
+    if (tile) tile.classList.add('sending');
+    paintS25();
+    try {
+      fetch(base + '/' + id, { mode: 'no-cors', cache: 'no-store', method: 'GET' })
+        .then(function () { done(true); })
+        .catch(function () { done(false); });
+    } catch (e) { done(false); }
+    /* 응답 없는 경우에도 버튼이 '보내는 중'에 머물지 않게 */
+    setTimeout(function () { if (s25Busy[id]) done(true); }, 4000);
+  }
+
+  function paintS25() {
+    var base = s25Base();
+    var tiles = document.querySelectorAll('[data-s25meta]');
+    for (var i = 0; i < tiles.length; i++) {
+      var meta = tiles[i];
+      var id = meta.getAttribute('data-s25meta');
+      var tile = meta.closest ? meta.closest('.tile') : null;
+      if (tile) tile.classList.remove('sending');
+      if (!base) {
+        meta.textContent = '설정 필요';
+        if (tile) tile.classList.remove('sent');
+        continue;
+      }
+      if (s25Busy[id]) {
+        meta.textContent = '보내는 중';
+        if (tile) tile.classList.add('sending');
+        continue;
+      }
+      var at = prefs.s25sent[id] || 0;
+      if (at && Date.now() - at < 6000) {
+        meta.textContent = '전송됨';
+        if (tile) tile.classList.add('sent');
+      } else {
+        meta.textContent = '대기';
+        if (tile) tile.classList.remove('sent');
+      }
+    }
+    var sub = EL('dS25Sub'), line = EL('dS25Line');
+    if (sub) sub.textContent = base ? '연결됨 · 신호 보내기 준비' : '웹훅 주소 넣기';
+    if (line) {
+      line.textContent = base
+        ? 'S25 ' + s25Did(base) + ' · 버튼을 누르면 S25가 움직여요'
+        : '처음이면 5분 가이드를 따라 매크로 6개를 만드세요';
+    }
+  }
+
+  /* ---------------- 설정 모달 안 S25 칸 ---------------- */
+  function paintS25Cfg() {
+    var inp = EL('s25Url');
+    if (inp && document.activeElement !== inp) inp.value = s25Base();
+    var box = EL('s25Ids');
+    if (box && !box.innerHTML) {
+      box.innerHTML = S25_IDS.map(function (d) {
+        return '<span class="s25id"><b>' + d.id + '</b>' + d.title + '</span>';
+      }).join('');
+    }
+  }
+
+  function openS25Cfg() {
+    var m = EL('modalCfg');
+    if (typeof openCfg === 'function') { try { openCfg(); } catch (e) { if (m) m.hidden = false; } }
+    else if (m) m.hidden = false;
+    paintS25Cfg();
+    if (!s25Base()) { var g = EL('s25Guide'); if (g) g.open = true; }
+    setTimeout(function () {
+      var blk = EL('s25Block');
+      if (blk && blk.scrollIntoView) { try { blk.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) {} }
+      var inp = EL('s25Url');
+      if (inp && !inp.value) { try { inp.focus({ preventScroll: true }); } catch (e) {} }
+    }, 150);
+  }
+
+  function s25SaveClick() {
+    var inp = EL('s25Url');
+    var u = s25Set(inp ? inp.value : '');
+    if (inp) inp.value = u;
+    var res = EL('s25Result');
+    if (!u) {
+      if (res) res.textContent = '주소가 비어 있어요 · S25의 웹훅 기본 주소(https://trigger.macrodroid.com/기기ID)를 붙여 넣어 주세요.';
+      return;
+    }
+    if (res) res.textContent = '✅ 저장했어요 · ' + u + '\n이 폰에만 저장되고 서버로 보내지 않습니다.';
+    if (window.toast) toast('📱 S25 주소를 저장했어요');
+    paintS25();
+  }
+
+  function s25TestClick() {
+    var inp = EL('s25Url');
+    var u = s25Clean(inp ? inp.value : '');
+    var res = EL('s25Result');
+    if (!u) {
+      if (res) res.textContent = '먼저 S25 웹훅 기본 주소를 넣어 주세요.';
+      return;
+    }
+    s25Set(u);
+    if (inp) inp.value = u;
+    paintS25();
+    if (res) res.textContent = 'ping 신호 전송 중… S25가 3초 안에 울려야 합니다.';
+    var t0 = Date.now();
+    try {
+      fetch(u + '/ping', { mode: 'no-cors', cache: 'no-store', method: 'GET' })
+        .then(function () {
+          if (res) res.textContent = '✅ 신호를 보냈어요 (' + ((Date.now() - t0) / 1000).toFixed(1) + '초)\n' +
+            '브라우저는 응답 내용을 볼 수 없어, S25에서 실제로 알림·진동이 왔는지로 확인해 주세요.\n' +
+            '안 오면: ping 매크로의 식별자가 ping인지 · S25가 인터넷에 연결됐는지 · MacroDroid 매크로가 켜져 있는지 확인하세요.';
+          if (window.toast) toast('📱 ping 신호를 보냈어요 · S25를 확인하세요');
+        })
+        .catch(function () {
+          if (res) res.textContent = '❌ 전송 자체가 실패했어요 · 주소 형식(https://trigger.macrodroid.com/기기ID)과 인터넷 연결을 확인하세요.';
+        });
+    } catch (e) {
+      if (res) res.textContent = '❌ 이 브라우저에서는 전송을 시작하지 못했어요 · 인터넷 연결을 확인하세요.';
+    }
   }
 
   function tileLink(icon, title, sub, url, cls) {
@@ -495,6 +729,12 @@
       case 'cfg':
         if (typeof openCfg === 'function') openCfg();
         return;
+      case 's25':
+        s25Send(el.getAttribute('data-s25'), el);
+        return;
+      case 's25cfg':
+        openS25Cfg();
+        return;
       case 'threads':
         prefs.threadsAt = Date.now();
         savePrefs(); renderThreads();
@@ -652,6 +892,18 @@
     });
     var ac = EL('appsClose'); if (ac) ac.addEventListener('click', function () { closeModal('modalApps'); });
 
+    /* S25 원격 설정 */
+    var s25s = EL('s25Save'); if (s25s) s25s.addEventListener('click', s25SaveClick);
+    var s25t = EL('s25Test'); if (s25t) s25t.addEventListener('click', s25TestClick);
+    var s25i = EL('s25Url');
+    if (s25i) s25i.addEventListener('change', function () { s25i.value = s25Set(s25i.value); paintS25(); });
+    var cfgSaveBtn = EL('cfgSave');
+    if (cfgSaveBtn) cfgSaveBtn.addEventListener('click', function () {
+      var i = EL('s25Url');
+      if (i) i.value = s25Set(i.value);
+      paintS25();
+    });
+
     /* D-Day */
     var da = EL('ddAdd'); if (da) da.addEventListener('click', addDd);
     var dc = EL('ddClose'); if (dc) dc.addEventListener('click', function () { closeModal('modalDd'); });
@@ -693,6 +945,7 @@
     paintFull();
     paintWake();
     paintOled();
+    paintS25();
     loadOffice();
     if (typeof loadWeather === 'function') { try { loadWeather(false); } catch (e) {} }
 
@@ -703,6 +956,7 @@
       renderPc();
       renderThreads();
       renderTimer();
+      paintS25();
       var T = prefs.timer;
       if (T.run && T.end - Date.now() <= 0) timerDone();
     }, 1000);

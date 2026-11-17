@@ -193,6 +193,40 @@ button.tile { width: 100%; }
 .tile.util .dico { background: #26231a; border-color: #4a4227; }
 .tile.live .tmeta { color: #8de6ae; border-color: #245b3a; background: #0e2117; }
 
+/* ---------- 📱 S25 울트라 리모컨 ---------- */
+.tile.s25 .dico { background: #17233a; border-color: #2c4066; }
+.tile.s25 .tmeta { min-width: 44px; text-align: center; }
+.tile.s25.sent { border-color: #2f6f9c; }
+.tile.s25.sent .tmeta { color: #a9dcff; border-color: #2b5f85; background: #0d1e2b; }
+.tile.s25.sending .tmeta { color: #ffd58a; border-color: #6b5220; background: #211a06; }
+.tile.s25cfg { border-style: dashed; }
+.tile.s25cfg .dico { background: #1d2430; border-color: #35414f; }
+
+/* ---------- S25 설정 칸 (연결 설정 모달) ---------- */
+.s25block { margin-top: 18px; padding-top: 16px; border-top: 1px solid #2a2a2e; }
+.s25hd { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.s25hd .s25ico {
+  width: 34px; height: 34px; flex: 0 0 auto;
+  display: grid; place-items: center; border-radius: 11px;
+  background: #17233a; border: 1px solid #2c4066; font-size: 17px;
+}
+.s25hd b { display: block; font-size: 13.5px; font-weight: 800; letter-spacing: -0.3px; }
+.s25hd small { display: block; font-size: 10.5px; font-weight: 600; color: #8b8b93; margin-top: 2px; line-height: 1.4; }
+.s25guide { margin: 0 0 12px; padding: 10px 12px; border-radius: 12px; background: #141416; border: 1px solid #2a2a2e; }
+.s25guide summary { font-size: 12px; font-weight: 800; color: #cfd6df; cursor: pointer; }
+.s25guide ol { margin: 10px 0 0 16px; padding: 0; font-size: 11.5px; line-height: 1.8; color: #b6b6be; }
+.s25guide ol b { color: #e9e9ee; }
+.s25guide .hint { margin: 10px 0 0; font-size: 10.5px; color: #7f7f88; line-height: 1.6; }
+.s25ids { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 6px; }
+.s25id {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 8px; border-radius: 9px;
+  background: #14161a; border: 1px solid #2c2c31;
+  font-size: 10.5px; font-weight: 700; color: #9a9aa2;
+}
+.s25id b { color: #a9dcff; font-size: 10.5px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.s25res { margin-top: 12px; font-size: 11.5px; color: #8b8b8f; line-height: 1.7; white-space: pre-line; }
+
 /* ---------- 모달 안쪽 (덱 전용) ---------- */
 #clipText {
   width: 100%;
