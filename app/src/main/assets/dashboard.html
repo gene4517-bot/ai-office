@@ -2114,7 +2114,7 @@ async function renderAi() {
   if (setHTML($('#aiModel'), picker)) { const want = stored('aiModel'); $('#aiModel').value = s.models.some(m => m.id === want) ? want : s.models[0]?.id || ''; }
   aiWhere();
 
-  const st = {ready: ['running', '준비됨'], loading: ['starting', '모델 불러오는 중…'], starting: ['starting', 'Starting…'], benchmarking: ['starting', '벤치마크 중…'], backoff: ['backoff', '계속 종료됨: 로그를 확인하세요'], stopped: ['', '실행 중 아님'], none: ['', '모델 선택 안 됨']}[s.localState] || ['', s.localState];
+  const st = {ready: ['running', '준비됨'], loading: ['starting', '모델 불러오는 중…'], starting: ['starting', '시작 중…'], benchmarking: ['starting', '벤치마크 중…'], backoff: ['backoff', '계속 종료됨: 로그를 확인하세요'], stopped: ['', '실행 중 아님'], none: ['', '모델 선택 안 됨']}[s.localState] || ['', s.localState];
   const bm = s.benchmark, speed = x => x ? `${x.tg.toFixed(1)} 단어/초 (읽기 ${Math.round(x.pp)}/s)` : '측정 안 됨';
   const failed = (bm?.failed || []).map(x => x.device), gpus = s.devices.filter(d => !failed.includes(d.id));
   // A GPU that crashed in the benchmark is never used; the server falls back to the CPU.
