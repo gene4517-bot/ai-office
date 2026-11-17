@@ -229,6 +229,98 @@
     .stask{max-width:250px}
   }
   @media (max-height:640px){ .phead{padding:6px 10px 6px} .stat b{font-size:13.5px} .stats{margin-top:5px} }
+
+  /* ---------- 📺 세계 무료 TV · 원터치 간편모드 ---------- */
+  .tvbtn{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;font:800 10.5px/1 inherit;color:#20150a;
+    background:linear-gradient(150deg,#ffe0a8,#f0a24c);border:1px solid #ffd79b;padding:7px 9px;border-radius:999px;
+    cursor:pointer;white-space:nowrap;box-shadow:0 2px 10px rgba(240,162,76,.3)}
+  .tvbtn:active{transform:scale(.96)}
+  .tvbtn b{font-weight:900}
+  @media (max-width:470px){ .tvbtn .tvtx{display:none} }
+  #tvModal{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;background:#0a0807}
+  #tvModal[hidden]{display:none}
+  .tvHead{flex:0 0 auto;display:flex;align-items:center;gap:8px;
+    padding:calc(8px + env(safe-area-inset-top)) 11px 8px;background:linear-gradient(180deg,#1b1510,#120e0a);
+    border-bottom:1px solid var(--line)}
+  .tvHead .tvtt{min-width:0}
+  .tvHead .tvtt b{display:block;font-size:13px;letter-spacing:-.3px;white-space:nowrap}
+  .tvHead .tvtt small{display:block;font-size:9.5px;color:var(--dim2);margin-top:2px}
+  .tvHead .tvsp{flex:1 1 auto}
+  .tvHead button{flex:0 0 auto;font:800 10.5px/1 inherit;padding:8px 10px;border-radius:9px;background:#241c14;
+    border:1px solid #3a2d20;color:#f6efe4;cursor:pointer;white-space:nowrap}
+  .tvHead button.pri{background:linear-gradient(150deg,#ffe0a8,#f0a24c);color:#20150a;border-color:#ffd79b}
+  .tvChips{flex:0 0 auto;display:flex;gap:5px;overflow-x:auto;padding:7px 9px;background:#120e0a;
+    border-bottom:1px solid var(--line);scrollbar-width:none}
+  .tvChips::-webkit-scrollbar{display:none}
+  .tvChips button{flex:0 0 auto;font:700 10.5px/1 inherit;color:#d8c7ae;background:#1a140f;border:1px solid #33281d;
+    padding:7px 9px;border-radius:999px;cursor:pointer;white-space:nowrap}
+  .tvChips button b{font:800 9px/1 inherit;color:#8a7660;margin-left:2px}
+  .tvChips button.on{color:#2a1a08;background:linear-gradient(160deg,#ffd79b,#f0b064);border-color:#ffd79b}
+  .tvChips button.on b{color:#6b4a1c}
+  .tvFrame{position:relative;flex:1 1 auto;min-height:0;background:#000}
+  .tvFrame iframe{width:100%;height:100%;border:0;display:block;background:#000}
+  .tvFall{position:absolute;left:10px;right:10px;bottom:calc(12px + env(safe-area-inset-bottom));
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:rgba(22,16,11,.95);
+    border:1px solid #4a3a22;border-radius:12px;padding:10px 11px;font:600 11px/1.55 inherit;color:#e6d3b8;
+    box-shadow:0 10px 30px rgba(0,0,0,.5)}
+  .tvFall[hidden]{display:none}
+  .tvFall span{flex:1 1 160px;min-width:0}
+  .tvFall button{flex:0 0 auto;font:800 11px/1 inherit;padding:9px 12px;border-radius:9px;cursor:pointer;
+    background:linear-gradient(150deg,#ffe0a8,#f0a24c);border:0;color:#20150a}
+  .tvFall button.ghost{background:#241c14;border:1px solid #3a2d20;color:#e6d3b8}
+
+  /* 오피스 탭 상단 TV 카드 */
+  .tvc{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:11px;margin-bottom:8px;
+    background:linear-gradient(120deg,#2a1d10,#1b1510);border:1px solid #4a3a22}
+  .tvc .tvci{font-size:17px;flex:0 0 auto}
+  .tvc .tvt{min-width:0}
+  .tvc .tvt b{display:block;font-size:11.5px;font-weight:900;line-height:1.25}
+  .tvc .tvt span{display:block;font-size:9.5px;color:var(--dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tvc button{margin-left:auto;flex:0 0 auto;font:800 10.5px/1 inherit;padding:8px 10px;border-radius:9px;
+    background:linear-gradient(150deg,#ffe0a8,#f0a24c);border:0;color:#20150a;cursor:pointer}
+
+  /* ---------- 💬 AI 직원 단톡방 ---------- */
+  #panel.chatmode{max-height:66vh}
+  #pane-chat{display:flex;flex-direction:column;overflow:hidden;padding:0;min-height:0;background:var(--card)}
+  #pane-chat[hidden]{display:none}
+  .cchat{display:flex;flex-direction:column;flex:1 1 auto;min-height:0}
+  .cquick{flex:0 0 auto;display:flex;gap:5px;overflow-x:auto;padding:8px 9px 7px;scrollbar-width:none;
+    border-bottom:1px solid rgba(245,184,102,.1)}
+  .cquick::-webkit-scrollbar{display:none}
+  .cquick button{flex:0 0 auto;font:700 10.5px/1 inherit;color:#e6d3b8;background:#1a140f;border:1px solid #3a2d20;
+    padding:7px 9px;border-radius:999px;cursor:pointer;white-space:nowrap}
+  .cquick button:active{background:#2a2117}
+  .cquick button.clab{color:#ffd79b;border-color:#5a4526;background:#241a10}
+  .cquick .csep{flex:0 0 auto;width:1px;background:#33281d;margin:0 2px}
+  .clog{flex:1 1 auto;min-height:140px;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:9px 9px 6px}
+  .cempty{font-size:11px;line-height:1.7;color:var(--dim2);background:#1a140f;border:1px dashed #33281d;
+    border-radius:10px;padding:11px;text-align:center}
+  .cmsg{display:flex;gap:7px;align-items:flex-start;margin-bottom:8px}
+  .cmsg.me{flex-direction:row-reverse}
+  .cav{width:26px;height:26px;border-radius:9px;display:grid;place-items:center;font:800 11px/1 inherit;
+    flex:0 0 auto;border:1px solid #33281d;background:#1d1711}
+  .cmsg .cb{max-width:calc(100% - 40px);background:var(--card2);border:1px solid var(--line);border-radius:12px;
+    padding:7px 9px 6px;box-shadow:0 1px 0 rgba(255,255,255,.02)}
+  .cmsg.me .cb{background:linear-gradient(160deg,#3c2b16,#2a1f12);border-color:#5a4526}
+  .cname{font:800 10px/1.2 inherit;margin-bottom:3px;display:flex;align-items:center;gap:5px}
+  .cname .ctag{font:700 8.5px/1 inherit;color:var(--dim2);background:#120e0a;border:1px solid #2a2118;
+    padding:2px 4px;border-radius:999px;white-space:nowrap}
+  .ctext{font-size:11.5px;line-height:1.58;color:#f2e8da;white-space:pre-wrap;word-break:break-word}
+  .ctime{font-size:8.5px;color:var(--dim2);margin-top:4px;text-align:right}
+  .ctyp{display:flex;align-items:center;gap:3px;height:15px}
+  .ctyp i{width:4px;height:4px;border-radius:50%;background:#bda98f;animation:ctype 1s infinite}
+  .ctyp i:nth-child(2){animation-delay:.15s}
+  .ctyp i:nth-child(3){animation-delay:.3s}
+  .ctyp span{font-size:9px;color:var(--dim2);margin-left:4px}
+  @keyframes ctype{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-2px)}}
+  .cbar{flex:0 0 auto;display:flex;gap:6px;align-items:flex-end;padding:7px 9px calc(9px + env(safe-area-inset-bottom));
+    border-top:1px solid var(--line);background:#17120d}
+  .cbar textarea{flex:1 1 auto;min-height:36px;max-height:88px;resize:none;background:#0f0c09;border:1px solid #33281d;
+    border-radius:10px;color:var(--ink);font:500 12px/1.45 inherit;padding:9px 10px}
+  .cbar textarea:focus{outline:none;border-color:#f5b866;box-shadow:0 0 0 2px rgba(245,184,102,.12)}
+  .cbar .csend{flex:0 0 auto;width:38px;height:38px;border-radius:11px;cursor:pointer;
+    background:linear-gradient(160deg,#ffd79b,#f0b064);border:1px solid #ffd79b;color:#2a1a08;font:900 15px/1 inherit}
+  .cbar .csend:disabled{opacity:.45}
 </style>
 </head>
 <body>
@@ -242,6 +334,7 @@
       </div>
     </div>
     <div id="phases"></div>
+    <button id="tvBtn" class="tvbtn" aria-label="세계 무료 TV 열기"><span>📺</span> <span class="tvtx">세계 무료 TV</span></button>
   </header>
 
   <div id="body">
@@ -275,6 +368,7 @@
 
       <div class="tabs" id="tabs">
         <button data-tab="office" class="on">오피스</button>
+        <button data-tab="chat">💬 단톡방</button>
         <button data-tab="tasks">AI 업무</button>
         <button data-tab="staff">직원 현황</button>
         <button data-tab="advisor">👔 자문단</button>
@@ -284,6 +378,7 @@
       </div>
 
       <div class="pane" id="pane-office"></div>
+      <div class="pane" id="pane-chat" hidden></div>
       <div class="pane" id="pane-tasks" hidden></div>
       <div class="pane" id="pane-staff" hidden></div>
       <div class="pane" id="pane-advisor" hidden></div>
@@ -291,6 +386,29 @@
       <div class="pane" id="pane-log" hidden></div>
       <div class="pane" id="pane-voice" hidden></div>
     </section>
+  </div>
+</div>
+
+<!-- 📺 세계 무료 TV · 원터치 간편모드 -->
+<div id="tvModal" hidden>
+  <div class="tvHead">
+    <div class="tvtt">
+      <b>📺 세계 무료 TV</b>
+      <small>Famelack · 회원가입·광고 없이 세계 방송 바로 보기</small>
+    </div>
+    <div class="tvsp"></div>
+    <button class="pri" id="tvNewWin" aria-label="새 창으로 열기">새 창 ↗</button>
+    <button id="tvClose" aria-label="닫기">✕</button>
+  </div>
+  <div class="tvChips" id="tvChips"></div>
+  <div class="tvFrame">
+    <iframe id="tvFrame" title="세계 무료 TV · Famelack" referrerpolicy="no-referrer"
+      allow="autoplay; fullscreen; encrypted-media; picture-in-picture"></iframe>
+    <div class="tvFall" id="tvFall" hidden>
+      <span>화면이 비어 있으면 이 사이트가 앱 안 표시를 막은 경우예요. 새 창으로 열면 바로 재생됩니다.</span>
+      <button id="tvFallOpen">새 창으로 열기</button>
+      <button class="ghost" id="tvFallClose">앱 안에서 계속</button>
+    </div>
   </div>
 </div>
 
@@ -1937,6 +2055,9 @@ function renderOffice() {
       '<span class="nt">' + escapeHtml(B.headline || m.ask) + '</span></span></div>';
   }).join('');
   el.innerHTML =
+    '<div class="tvc"><span class="tvci">📺</span>' +
+      '<div class="tvt"><b>세계 무료 TV · 원터치</b><span>Famelack · 한국 72채널부터 세계 방송까지</span></div>' +
+      '<button data-tv-open="tv/kr">바로 보기</button></div>' +
     '<div class="toolchips">' + TOOLS.map((T, i) => '<button data-otool="' + i + '">' + T.i + ' ' + T.t + '</button>').join('') + '</div>' +
     '<div class="mini">' + ((d.office && d.office.greeting) || '오늘도 함께 일하고 있어요') + '</div>' +
     rows +
@@ -1946,6 +2067,7 @@ function renderOffice() {
     '<div class="mini">최근 완료</div>' + (doneTasks || '<div class="empty">완료된 업무가 없습니다</div>') +
     '<div class="mini">데이터 ' + (localMode ? '내장' : 'status.json') + ' · 갱신 ' + (lastSync || '-') + '</div>';
   el.querySelectorAll('[data-otool]').forEach(b => b.addEventListener('click', () => runTool(+b.getAttribute('data-otool'))));
+  el.querySelectorAll('[data-tv-open]').forEach(b => b.addEventListener('click', () => openTV(b.getAttribute('data-tv-open'))));
 }
 function deptSum() {
   const order = ['지휘부', '전문 자문단', '특수·실무팀', '전산·PC 공병대'];
@@ -2029,10 +2151,13 @@ function selectStaff(id, focus) {
 }
 function switchTab(name) {
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.getAttribute('data-tab') === name));
-  ['office', 'tasks', 'staff', 'advisor', 'tools', 'log', 'voice'].forEach(k => {
+  ['office', 'chat', 'tasks', 'staff', 'advisor', 'tools', 'log', 'voice'].forEach(k => {
     const p = document.getElementById('pane-' + k);
     if (p) p.hidden = k !== name;
   });
+  const panelEl = document.getElementById('panel');
+  if (panelEl) panelEl.classList.toggle('chatmode', name === 'chat');
+  if (name === 'chat') { chatGreet(); renderChat(); }
   if (name === 'voice') renderVoice();
   if (name === 'advisor') renderAdvisors();
   if (name === 'tools') renderTools();
@@ -2586,6 +2711,323 @@ function stopMic() {
 }
 
 /* =========================================================
+   9-D. 📺 세계 무료 TV (famelack.com) · 원터치 간편모드
+   ========================================================= */
+const TV_KEY = 'aihq.tv.v1';
+const TV_SPOTS = [
+  { path: 'tv/kr', flag: '🇰🇷', name: '한국', n: 72 },
+  { path: 'tv/us', flag: '🇺🇸', name: '미국', n: 1366 },
+  { path: 'tv/jp', flag: '🇯🇵', name: '일본', n: 35 },
+  { path: 'tv/uk', flag: '🇬🇧', name: '영국', n: 224 },
+  { path: 'tv/fr', flag: '🇫🇷', name: '프랑스', n: 139 },
+  { path: 'tv/de', flag: '🇩🇪', name: '독일', n: 167 },
+  { path: 'tv/it', flag: '🇮🇹', name: '이탈리아', n: 192 },
+  { path: 'tv/es', flag: '🇪🇸', name: '스페인', n: 148 },
+  { path: 'tv/tr', flag: '🇹🇷', name: '튀르키예', n: 170 },
+  { path: 'tv/in', flag: '🇮🇳', name: '인도', n: 662 },
+  { path: 'tv/tw', flag: '🇹🇼', name: '대만', n: 38 },
+  { path: 'tv/th', flag: '🇹🇭', name: '태국', n: 53 },
+  { path: 'tv/vn', flag: '🇻🇳', name: '베트남', n: 56 },
+  { path: 'tv', flag: '🌍', name: '전체 채널', n: 0 },
+  { path: 'radio/kr', flag: '📻', name: '라디오', n: 0 },
+  { path: 'webcams', flag: '🎥', name: '웹캠', n: 0 }
+];
+let tvNow = 'tv/kr', tvTimer = null;
+
+function tvUrl(path) { return 'https://famelack.com/' + (path || 'tv/kr'); }
+function tvSaved() {
+  try { const v = localStorage.getItem(TV_KEY); if (v) return v; } catch (e) {}
+  return 'tv/kr';
+}
+function renderTvChips() {
+  const box = document.getElementById('tvChips');
+  if (!box) return;
+  box.innerHTML = TV_SPOTS.map(s =>
+    '<button data-tv="' + s.path + '"' + (s.path === tvNow ? ' class="on"' : '') + '>' +
+      s.flag + ' ' + s.name + (s.n ? ' <b>' + s.n + '</b>' : '') + '</button>'
+  ).join('');
+}
+function openTV(path) {
+  const m = document.getElementById('tvModal');
+  if (!m) return;
+  if (path) { tvNow = path; try { localStorage.setItem(TV_KEY, path); } catch (e) {} }
+  else tvNow = tvSaved();
+  const f = document.getElementById('tvFrame');
+  const fall = document.getElementById('tvFall');
+  m.hidden = false;
+  renderTvChips();
+  if (fall) fall.hidden = true;
+  if (f) f.src = tvUrl(tvNow);
+  clearTimeout(tvTimer);
+  /* 6초가 지나도 영상이 안 나오면 새 창 버튼을 띄웁니다 (사이트가 iframe을 막는 경우) */
+  tvTimer = setTimeout(() => {
+    const el = document.getElementById('tvFall');
+    if (el && !m.hidden) el.hidden = false;
+  }, 6000);
+}
+function closeTV() {
+  const m = document.getElementById('tvModal');
+  clearTimeout(tvTimer);
+  if (!m) return;
+  m.hidden = true;
+  const f = document.getElementById('tvFrame');
+  if (f) f.src = 'about:blank';
+}
+function tvNewWindow() {
+  window.open(tvUrl(tvNow), '_blank', 'noopener');
+}
+
+/* =========================================================
+   9-E. 💬 AI 직원 단톡방 (회의실)
+   ========================================================= */
+const CHAT_KEY = 'aihq.chat.v1';
+const CHAT_MAX = 80;
+const CHAT_WHO = {
+  ceo:    { name: 'gene · 대표',            tag: '대표 (CEO)',            av: '👑', color: '#f5b866', side: 'me' },
+  haei:   { name: '해이 · 사단장',          tag: '총괄 지휘',             av: 'ㅎ', color: '#7dd3fc' },
+  muse:   { name: 'Muse · 리서치·문서',     tag: '팀장 · 리서치·문서',    av: '🎨', color: '#c084fc' },
+  buddy:  { name: 'Buddy · 폰 실행',        tag: '팀장 · 폰 실행',        av: '📱', color: '#a3e635' },
+  gena:   { name: 'GenA · 요약·아이디어',   tag: '사원 · 요약·아이디어',  av: '💡', color: '#22d3ee' },
+  claude: { name: 'Claude · 실장',          tag: '실장 · 구조·코드',      av: '🧩', color: '#a78bfa' }
+};
+const CHAT_TOPICS = [
+  { label: '오늘 할 일 정리', kw: ['할 일', '할일', '오늘', '일정', '계획', '스케줄', 'todo'],
+    intro: '오늘 순서부터 고정하겠습니다.',
+    turns: [
+      ['haei', '① 06:40 브리핑 확인 ② 출석체크·포인트 ③ 파트너스 1차 게시 ④ 이벤트 마감 점검 ⑤ 블로그 3편 — 이 순서로 갑니다.'],
+      ['muse', '남은 숙제는 이벤트 접수 확인 2건과 블로그 초안 2편이에요. 소재 3개는 제가 미리 뽑아 뒀습니다.'],
+      ['buddy', '앱에서만 되는 출석(동원몰·CJ더마켓)은 제가 폰으로 돌려 볼게요. 막히면 화면 캡처해서 올립니다.'],
+      ['gena', '정리하면 마감 있는 일 2개, 반복 업무 3개예요. 반복은 제가 순서대로 체크해서 알려드릴게요.'],
+      ['haei', '그럼 마감 2개를 맨 위에 고정하고, 30분마다 제가 다시 확인해서 여기에 올리겠습니다.']
+    ] },
+  { label: '수입 파이프라인 회의', kw: ['수입', '파트너스', '쿠팡', '블로그', '스레드', '애드포스트', '수익', '돈'],
+    intro: '수입 세 갈래 진도부터 보겠습니다.',
+    turns: [
+      ['haei', '수입은 쿠팡 파트너스, 네이버 블로그(애드포스트), 이벤트·포인트 현금화 — 세 갈래입니다. 오늘은 1·2번부터 봅니다.'],
+      ['muse', '파트너스는 07:30·13:00·19:30 하루 3회가 자리 잡았어요. 스레드는 짧은 일상 + 링크 1개 구성이 읽히기 좋습니다.'],
+      ['claude', '블로그는 같은 상품 링크만 반복하면 저품질 위험이 있어요. 리뷰 대 정보 글 비중을 7:3으로 두는 게 안전합니다.'],
+      ['buddy', '발행은 제가 폰에서 도울 수 있지만, 마지막 게시 버튼은 대표님이 누르시는 편이 계정에 안전합니다.'],
+      ['gena', '이번 주 목표는 파트너스 21회, 블로그 21편, 애드포스트 승인 조건 채우기 — 세 줄로 요약됩니다.'],
+      ['haei', '오늘 블로그는 리뷰 2 + 정보 1로 가고, 제가 발행과 링크 확인까지 챙기겠습니다.']
+    ] },
+  { label: '주말 차박 준비', kw: ['차박', '주말', '캠핑', '저수지', '고삼', '차'],
+    intro: '고삼저수지 차박 준비부터 훑겠습니다.',
+    turns: [
+      ['haei', '11/20(금) 고삼저수지 차박 — 이틀 남았습니다. 준비물부터 확인합니다.'],
+      ['buddy', '창문 가림막 4종은 쿠팡 장바구니에 담겨 있어요. 결제는 대표님 승인 받고 진행하겠습니다.'],
+      ['muse', '그랜저 IG 르블랑 기준 체크리스트 — 가림막·매트·보조배터리·랜턴·물·방한 이불·핫팩. 제가 정리해 뒀습니다.'],
+      ['gena', '금요일 밤 날씨는 당일 아침 브리핑에서 다시 확인할게요. 지금 숫자로 단정하지 않겠습니다.'],
+      ['haei', '당일 오전에 제가 날씨·기온 다시 보고, 출발 전 최종 점검 리스트를 여기에 올리겠습니다.']
+    ] },
+  { label: '이벤트 마감 점검', kw: ['이벤트', '공모전', '응모', '접수', '설문', '당첨'],
+    intro: '접수해 둔 이벤트 마감일부터 보겠습니다.',
+    turns: [
+      ['haei', '오늘 마감은 없고, 이번 주 안에 두 건이 있어요. 마감 임박 순으로 다시 줄 세워 두겠습니다.'],
+      ['muse', '설문형은 3분이면 끝나고, 공모전형은 작품·문구가 필요해서 시간이 더 걸립니다. 목록 정리해서 올릴게요.'],
+      ['buddy', '본인인증이 필요한 건 제가 폰에서 인증 요청까지만 준비하고, 승인은 대표님이 눌러 주세요.'],
+      ['gena', '정리 — 오늘 확인만 / 이번 주 접수 2건 / 다음 주 발표 확인 1건.'],
+      ['haei', '이번 주 2건은 제가 미리 채워 두고, 인증이 필요한 지점만 여기서 알려드리겠습니다.']
+    ] },
+  { label: '출석체크·포인트', kw: ['출석', '포인트', '쿠폰', '캐시', '적립', '만료'],
+    intro: '출석체크와 포인트 만료부터 정리하겠습니다.',
+    turns: [
+      ['haei', '7시 이후 순서대로 돌겠습니다. 포인트 만료가 붙은 곳부터 봅니다.'],
+      ['buddy', '앱 전용은 제가 폰에서, 웹은 브라우저로 처리합니다. 실패한 곳만 이름 적어 올릴게요.'],
+      ['gena', '오늘 목표는 8곳 완료, 그중 앱 전용 2곳이 관건이에요.'],
+      ['haei', '끝나면 적립 합계와 실패 목록을 한 줄로 정리해 올리겠습니다.']
+    ] },
+  { label: '블로그·스레드 콘텐츠', kw: ['글', '소설', '뮤비', '콘텐츠', '영상', '카피', '후킹', '썸네일', '작성'],
+    intro: '콘텐츠는 쓸 것과 올릴 것을 나눠서 가겠습니다.',
+    turns: [
+      ['muse', '블로그는 리뷰·정보·일상 세 축으로 돌리고, 스레드는 첫 문장 후킹이 절반입니다. 훅 3안 준비했어요.'],
+      ['claude', '제목과 미리보기 이미지가 본문보다 클릭을 좌우합니다. 같은 글이라도 제목 2안으로 비교해 보세요.'],
+      ['gena', '이번 주 콘텐츠는 블로그 21편 · 스레드 21회 · 영상 1편이면 애드포스트 조건에 가까워집니다.'],
+      ['haei', '훅 3안 중 하나만 골라 주시면, 나머지는 제가 이어서 쓰겠습니다.']
+    ] },
+  { label: '앱·자동화 회의', kw: ['앱', '배포', '코드', '웹', '자동화', '덱', '깃허브', '업데이트', '만들'],
+    intro: '앱·자동화 구조부터 짚겠습니다.',
+    turns: [
+      ['claude', '지금은 정적 웹앱(PWA) 3종에 상태 JSON을 물린 구조입니다. 기능은 한 파일씩 나눠 배포하는 게 안전합니다.'],
+      ['haei', '이번 업데이트는 TV 간편모드와 단톡방 두 가지로 잡겠습니다. 캐시 버전도 같이 올립니다.'],
+      ['buddy', '폰 홈 화면 앱으로 쓰고 계시니, 갱신 후 아이콘·이름이 그대로인지 제가 확인하겠습니다.'],
+      ['gena', '확인 항목은 ① 새 버튼 보임 ② 단톡방 대화 동작 ③ 덱 타일 동작 — 세 가지입니다.'],
+      ['haei', '확인 결과는 스크린샷으로 남겨서 여기에 올리겠습니다.']
+    ] }
+];
+const CHAT_FALLBACK = [
+  ['haei', '안건 접수했습니다. 확인할 것 / 바로 실행할 것 / 대표님이 결정하실 것 — 세 갈래로 나눠 보겠습니다.'],
+  ['muse', '자료는 제가 찾아서 3줄로 정리해 올릴게요. 출처도 같이 붙입니다.'],
+  ['buddy', '폰에서 눌러야 하는 일은 제가 맡아도 됩니다. 화면 캡처로 결과 확인해 드릴게요.'],
+  ['gena', '요약하면 ① 확인 ② 실행 ③ 결정 — 오늘 안에 ①②는 끝낼 수 있어요.'],
+  ['haei', '진행 상황은 이 방에 계속 올리고, 대표님 결정이 필요한 건 따로 표시하겠습니다.']
+];
+let chatBusy = false;
+
+function chatLog() {
+  try {
+    const a = JSON.parse(localStorage.getItem(CHAT_KEY) || '[]');
+    return Array.isArray(a) ? a : [];
+  } catch (e) { return []; }
+}
+function chatSave(list) {
+  try { localStorage.setItem(CHAT_KEY, JSON.stringify(list.slice(-CHAT_MAX))); } catch (e) {}
+}
+function chatClock(ts) {
+  const d = new Date(ts || Date.now());
+  return pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+}
+function chatEsc(s) { return escapeHtml(String(s == null ? '' : s)); }
+function chatTypingWho() {
+  try { return localStorage.getItem('aihq.chat.typing') || ''; } catch (e) { return ''; }
+}
+function chatSetTyping(who) {
+  try { if (who) localStorage.setItem('aihq.chat.typing', who); else localStorage.removeItem('aihq.chat.typing'); } catch (e) {}
+}
+function chatBubbleHTML(m, typing) {
+  const who = CHAT_WHO[m.w] || CHAT_WHO.gena;
+  const me = who.side === 'me';
+  const av = '<span class="cav" style="color:' + who.color + ';border-color:' + who.color + '55;background:' + who.color + '18">' + who.av + '</span>';
+  const body = typing
+    ? '<div class="ctyp"><i></i><i></i><i></i><span>입력 중…</span></div>'
+    : '<div class="ctext">' + chatEsc(m.t) + '</div>' + (m.at ? '<div class="ctime">' + chatClock(m.at) + '</div>' : '');
+  return '<div class="cmsg' + (me ? ' me' : '') + '" data-who="' + m.w + '">' + av +
+    '<div class="cb"><div class="cname" style="color:' + who.color + '">' + who.name +
+    '<span class="ctag">' + who.tag + '</span></div>' + body + '</div></div>';
+}
+function renderChat() {
+  const el = document.getElementById('pane-chat');
+  if (!el || el.hidden) return;
+  const log = chatLog();
+  const typ = chatTypingWho();
+  const quick = CHAT_TOPICS.map(t => '<button data-ctopic="' + t.label + '">' + t.label + '</button>').join('');
+  const msgs = log.length
+    ? log.map(m => chatBubbleHTML(m, false)).join('')
+    : '<div class="cempty">아직 대화가 없습니다.<br>아래에 안건을 적거나 빠른 주제를 눌러 보세요.<br>해이·Muse·Buddy·GenA·Claude가 돌아가며 답합니다.</div>';
+  const typing = typ ? chatBubbleHTML({ w: typ }, true) : '';
+  el.innerHTML =
+    '<div class="cchat">' +
+      '<div class="cquick">' +
+        '<button class="clab" data-cact="minutes">📋 회의록 복사</button>' +
+        '<button class="clab" data-cact="clear">🧹 지우기</button>' +
+        '<span class="csep"></span>' + quick +
+      '</div>' +
+      '<div class="clog" id="chatLog">' + msgs + typing + '</div>' +
+      '<div class="cbar">' +
+        '<textarea id="chatInput" rows="1" placeholder="' + (chatBusy ? '직원들이 답하는 중…' : '대표님, 안건을 적어 보내세요 (예: 다음 주 계획 짜줘)') + '"></textarea>' +
+        '<button class="csend" id="chatSend" aria-label="보내기"' + (chatBusy ? ' disabled' : '') + '>↑</button>' +
+      '</div>' +
+    '</div>';
+  bindChatPane();
+  chatScroll();
+}
+function bindChatPane() {
+  const el = document.getElementById('pane-chat');
+  if (!el) return;
+  const ta = document.getElementById('chatInput');
+  const send = document.getElementById('chatSend');
+  if (send) send.addEventListener('click', chatSubmit);
+  if (ta) {
+    ta.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); chatSubmit(); }
+    });
+    ta.addEventListener('input', () => {
+      ta.style.height = 'auto';
+      ta.style.height = Math.min(88, ta.scrollHeight) + 'px';
+    });
+  }
+  el.querySelectorAll('[data-ctopic]').forEach(b => b.addEventListener('click', () => {
+    chatAsk(b.getAttribute('data-ctopic'));
+  }));
+  el.querySelectorAll('[data-cact]').forEach(b => b.addEventListener('click', () => {
+    const a = b.getAttribute('data-cact');
+    if (a === 'clear') { chatSave([]); chatSetTyping(''); renderChat(); }
+    if (a === 'minutes') chatCopyMinutes();
+  }));
+}
+function chatScroll() {
+  const box = document.getElementById('chatLog');
+  if (box) box.scrollTop = box.scrollHeight;
+}
+function chatPush(list, w, t) {
+  list.push({ w: w, t: t, at: Date.now() });
+  chatSave(list);
+  renderChat();
+}
+function chatSubmit() {
+  const ta = document.getElementById('chatInput');
+  if (!ta) return;
+  const v = ta.value.trim();
+  if (!v) return;
+  ta.value = '';
+  ta.style.height = 'auto';
+  chatAsk(v);
+}
+function chatPickTopic(text) {
+  const low = String(text || '').toLowerCase();
+  let best = null, bestScore = 0;
+  for (const t of CHAT_TOPICS) {
+    let score = 0;
+    for (const k of t.kw) if (low.indexOf(String(k).toLowerCase()) >= 0) score += k.length;
+    if (score > bestScore) { bestScore = score; best = t; }
+  }
+  return best;
+}
+function chatAsk(text) {
+  if (chatBusy) return;
+  const log = chatLog();
+  chatPush(log, 'ceo', text);
+  const topic = chatPickTopic(text);
+  const turns = topic ? topic.turns : CHAT_FALLBACK;
+  const intro = topic ? topic.intro : ('「' + text + '」 안건으로 접수했습니다.');
+  chatBusy = true;
+  let delay = 650;
+  const seq = [['haei', intro]].concat(turns);
+  seq.forEach((pair, i) => {
+    const who = pair[0], txt = pair[1];
+    setTimeout(() => {
+      chatSetTyping(who);
+      renderChat();
+      setTimeout(() => {
+        const list = chatLog();
+        chatSetTyping('');
+        list.push({ w: who, t: txt, at: Date.now() });
+        chatSave(list);
+        renderChat();
+        if (i === seq.length - 1) chatBusy = false;
+      }, 700 + Math.random() * 500);
+    }, delay);
+    delay += 1250 + Math.random() * 400;
+  });
+}
+function chatCopyMinutes() {
+  const log = chatLog();
+  if (!log.length) return;
+  const head = '💬 AI 직원 단톡방 회의록 · ' + chatClock(Date.now()) + '\n';
+  const body = log.map(m => {
+    const w = CHAT_WHO[m.w] || CHAT_WHO.gena;
+    return '[' + chatClock(m.at) + '] ' + w.name + ': ' + m.t;
+  }).join('\n');
+  const txt = head + body;
+  const done = () => { const b = document.querySelector('#pane-chat [data-cact="minutes"]'); if (b) { b.textContent = '✅ 복사됨'; setTimeout(() => { b.textContent = '📋 회의록 복사'; }, 1600); } };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(done).catch(() => window.prompt('복사해서 쓰세요', txt));
+  } else {
+    window.prompt('복사해서 쓰세요', txt);
+  }
+}
+
+function chatGreet() {
+  const log = chatLog();
+  if (log.length) return;
+  const t = Date.now();
+  chatSave([
+    { w: 'haei', t: '단톡방 열렸습니다, 대표님. 안건 하나 던져 주시면 저와 Muse·Buddy·GenA·Claude가 돌아가며 의견 올립니다.', at: t },
+    { w: 'gena', t: '급하시면 아래 빠른 주제 버튼을 눌러 주세요. 회의록은 📋 버튼으로 복사해 노션에 붙이면 됩니다.', at: t }
+  ]);
+  renderChat();
+}
+
+/* =========================================================
    10. UI 바인딩
    ========================================================= */
 const phasesEl = document.getElementById('phases');
@@ -2600,6 +3042,31 @@ document.getElementById('tabs').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   switchTab(b.getAttribute('data-tab'));
 });
+/* 📺 세계 무료 TV 간편모드 */
+const tvBtnEl = document.getElementById('tvBtn');
+if (tvBtnEl) tvBtnEl.addEventListener('click', () => openTV());
+const tvChipsEl = document.getElementById('tvChips');
+if (tvChipsEl) tvChipsEl.addEventListener('click', e => {
+  const b = e.target.closest('[data-tv]');
+  if (b) openTV(b.getAttribute('data-tv'));
+});
+const tvCloseEl = document.getElementById('tvClose');
+if (tvCloseEl) tvCloseEl.addEventListener('click', closeTV);
+const tvNewEl = document.getElementById('tvNewWin');
+if (tvNewEl) tvNewEl.addEventListener('click', tvNewWindow);
+const tvFallOpenEl = document.getElementById('tvFallOpen');
+if (tvFallOpenEl) tvFallOpenEl.addEventListener('click', tvNewWindow);
+const tvFallCloseEl = document.getElementById('tvFallClose');
+if (tvFallCloseEl) tvFallCloseEl.addEventListener('click', () => {
+  const el = document.getElementById('tvFall');
+  if (el) el.hidden = true;
+});
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  const m = document.getElementById('tvModal');
+  if (m && !m.hidden) closeTV();
+});
+
 document.getElementById('zin').addEventListener('click', () => zoomAt(1.3, vw / 2, vh / 2));
 document.getElementById('zout').addEventListener('click', () => zoomAt(1 / 1.3, vw / 2, vh / 2));
 document.getElementById('zfit').addEventListener('click', fitAll);
@@ -2725,8 +3192,10 @@ async function poll() {
 function startTab() {
   try {
     const q = new URLSearchParams(location.search);
+    const tvq = q.get('tv');
+    if (tvq !== null && tvq !== '') openTV(tvq === '1' ? null : tvq);
     const tab = q.get('tab');
-    if (tab && ['office', 'tasks', 'staff', 'advisor', 'tools', 'log', 'voice'].indexOf(tab) >= 0) switchTab(tab);
+    if (tab && ['office', 'chat', 'tasks', 'staff', 'advisor', 'tools', 'log', 'voice'].indexOf(tab) >= 0) switchTab(tab);
   } catch (e) {}
 }
 
@@ -2761,6 +3230,8 @@ window.AI_OFFICE = {
   },
   chars: () => chars.map(c => ({ id: c.id, name: c.name, status: c.status, x: Math.round(c.lx), y: Math.round(c.ly), pose: 'seated', moving: false })),
   voice: { run: analyzeVoice, route: routeVoice, prompt: buildPrompt, text: t => { voiceState.text = t; return voiceState.text; } },
+  tv: { open: openTV, close: closeTV, spots: TV_SPOTS.map(s => s.path) },
+  chat: { ask: chatAsk, log: chatLog, clear: () => { chatSave([]); renderChat(); }, topics: CHAT_TOPICS.map(t => t.label) },
   boxes: () => chars.filter(c => c.visible && c.box).map(c => ({ id: c.id, x: Math.round(c.box.x), y: Math.round(c.box.y), w: c.box.w, h: c.box.h })),
   phase: () => phaseKey,
   zoom: () => cam.zoom

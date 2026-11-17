@@ -130,6 +130,15 @@
         '<div class="tchips" id="dHaeiChips"></div>' +
       '</button>' +
 
+      /* 📺 세계 무료 TV — 원터치 간편모드 */
+      '<button class="tile tv span2" data-act="tv">' +
+        '<div class="trow"><span class="dico">📺</span>' +
+          '<div style="min-width:0"><div class="ttl">세계 무료 TV</div>' +
+          '<div class="tsub" id="dTvSub">한국 72채널 · 원터치로 바로</div></div>' +
+          '<span class="tmeta">LIVE</span></div>' +
+        '<div class="tline" style="margin-top:auto">누르면 세계 방송 간편 뷰가 열립니다 · 새 창 버튼도 한 번에</div>' +
+      '</button>' +
+
       section('AI 지휘') +
       tileLink('🎤', '음성 지휘', '「해이, 출석체크 해줘」처럼 말로', '../index.html?tab=voice', 'ai') +
       tileLink('👔', '전문 자문단', '변호사 · 회계사 · CD 역할별 보드', '../index.html?tab=advisor', 'ai') +
@@ -410,6 +419,65 @@
         '<span class="tmeta">↗</span></div>' +
       '<div class="tline" style="margin-top:auto">' + sub + '</div>' +
       '</button>';
+  }
+
+
+  /* ---------------- 📺 세계 무료 TV · 원터치 간편모드 ---------------- */
+  var TV_KEY = 'genedeck.tv.v1';
+  var TV_SPOTS = [
+    { path: 'tv/kr', flag: '🇰🇷', name: '한국', n: 72 },
+    { path: 'tv/us', flag: '🇺🇸', name: '미국', n: 1366 },
+    { path: 'tv/jp', flag: '🇯🇵', name: '일본', n: 35 },
+    { path: 'tv/uk', flag: '🇬🇧', name: '영국', n: 224 },
+    { path: 'tv/fr', flag: '🇫🇷', name: '프랑스', n: 139 },
+    { path: 'tv/de', flag: '🇩🇪', name: '독일', n: 167 },
+    { path: 'tv/es', flag: '🇪🇸', name: '스페인', n: 148 },
+    { path: 'tv', flag: '🌍', name: '전체', n: 0 },
+    { path: 'radio/kr', flag: '📻', name: '라디오', n: 0 },
+    { path: 'webcams', flag: '🎥', name: '웹캠', n: 0 }
+  ];
+  var tvNow = 'tv/kr', tvTimer = null;
+
+  function tvUrl(path) { return 'https://famelack.com/' + (path || 'tv/kr'); }
+  function tvSaved() {
+    try { var v = localStorage.getItem(TV_KEY); if (v) return v; } catch (e) {}
+    return 'tv/kr';
+  }
+  function tvChips() {
+    var row = EL('tvRow');
+    if (!row) return;
+    row.innerHTML = TV_SPOTS.map(function (s) {
+      return '<button data-tv="' + s.path + '"' + (s.path === tvNow ? ' class="on"' : '') + '>' +
+        s.flag + ' ' + s.name + (s.n ? ' ' + s.n : '') + '</button>';
+    }).join('');
+  }
+  function openTv(path) {
+    var v = EL('tvView');
+    if (!v) return;
+    if (path) { tvNow = path; try { localStorage.setItem(TV_KEY, path); } catch (e) {} }
+    else tvNow = tvSaved();
+    v.hidden = false;
+    tvChips();
+    var hint = EL('tvHint');
+    if (hint) hint.hidden = true;
+    var f = EL('tvIframe');
+    if (f) f.src = tvUrl(tvNow);
+    clearTimeout(tvTimer);
+    tvTimer = setTimeout(function () {
+      var h = EL('tvHint');
+      if (h && !v.hidden) h.hidden = false;
+    }, 6000);
+  }
+  function closeTv() {
+    var v = EL('tvView');
+    clearTimeout(tvTimer);
+    if (!v) return;
+    v.hidden = true;
+    var f = EL('tvIframe');
+    if (f) f.src = 'about:blank';
+  }
+  function tvNewWin() {
+    window.open(tvUrl(tvNow), '_blank', 'noopener');
   }
 
   /* ---------------- D-Day 렌더 ---------------- */
@@ -711,6 +779,9 @@
         if (u) window.open(u, '_blank', 'noopener');
         return;
       }
+      case 'tv':
+        openTv();
+        return;
       case 'staff':
         window.open('../index.html?tab=staff', '_blank', 'noopener');
         return;
@@ -873,6 +944,16 @@
     });
     var cc = EL('clipClose'); if (cc) cc.addEventListener('click', function () { closeModal('modalClip'); });
 
+    /* 📺 세계 무료 TV */
+    var tvNew = EL('tvNew'); if (tvNew) tvNew.addEventListener('click', tvNewWin);
+    var tvCl = EL('tvClose'); if (tvCl) tvCl.addEventListener('click', closeTv);
+    var tvRow = EL('tvRow');
+    if (tvRow) tvRow.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-tv]');
+      if (b) openTv(b.getAttribute('data-tv'));
+    });
+    var tvHintOpen = EL('tvHintOpen'); if (tvHintOpen) tvHintOpen.addEventListener('click', tvNewWin);
+
     /* 앱 실행 */
     var box = EL('deckApps');
     if (box) box.addEventListener('click', function (e) {
@@ -945,6 +1026,12 @@
     paintS25();
     loadOffice();
     if (typeof loadWeather === 'function') { try { loadWeather(false); } catch (e) {} }
+
+    /* 📺 ?tv=1 또는 ?tv=tv/kr 로 열면 TV 간편 뷰를 바로 띄웁니다 */
+    try {
+      var tvq = new URLSearchParams(location.search).get('tv');
+      if (tvq) openTv(tvq === '1' ? null : tvq);
+    } catch (e) {}
 
     /* 1초 갱신: 시계·타이머·PC 상태 등 */
     setInterval(function () {

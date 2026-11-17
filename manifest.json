@@ -82,6 +82,30 @@
           "type": "image/png"
         }
       ]
+    },
+    {
+      "name": "💬 AI 직원 단톡방",
+      "short_name": "단톡방",
+      "url": "./index.html?tab=chat",
+      "icons": [
+        {
+          "src": "assets/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "📺 세계 무료 TV",
+      "short_name": "무료 TV",
+      "url": "./index.html?tv=tv/kr",
+      "icons": [
+        {
+          "src": "assets/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }

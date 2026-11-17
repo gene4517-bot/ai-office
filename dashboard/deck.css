@@ -315,3 +315,56 @@ html.m-deck.oled #deckView .tile { box-shadow: none; }
 @media (prefers-reduced-motion: reduce) {
   #deckShift { transition: none !important; }
 }
+
+/* ---------- 📺 세계 무료 TV · 원터치 간편모드 ---------- */
+.tile.tv {
+  background: linear-gradient(150deg, #2a1a2e 0%, #16121a 60%, #141416 100%);
+  border-color: #4a2a4a;
+}
+.tile.tv .dico { background: #3a1630; border-color: #6b2a55; font-size: 16px; }
+.tile.tv .ttl { font-size: 15px; letter-spacing: -0.4px; }
+.tile.tv .tmeta { color: #ffd0e0; border-color: #6b2a55; background: #2a0f22; }
+.tile.tv:active { border-color: #8a3a70; }
+.tile.tv .tvlive { color: #ff9ac0; font-weight: 800; }
+
+#tvView { position: fixed; inset: 0; z-index: 90; display: flex; flex-direction: column; background: #08090c; }
+#tvView[hidden] { display: none; }
+.tvbar {
+  flex: 0 0 auto; display: flex; align-items: center; gap: 8px;
+  padding: calc(8px + env(safe-area-inset-top, 0px)) 10px 8px;
+  background: #101116; border-bottom: 1px solid #22232a;
+}
+.tvbar .tvtt { min-width: 0; }
+.tvbar b { display: block; font-size: 13px; font-weight: 800; letter-spacing: -0.3px; white-space: nowrap; }
+.tvbar small { display: block; font-size: 9.5px; color: #7d7f8b; margin-top: 1px; white-space: nowrap; }
+.tvbar .sp { flex: 1 1 auto; }
+.tvbar button {
+  flex: 0 0 auto; font: 800 11px/1 inherit; padding: 9px 11px; border-radius: 10px;
+  background: #1c1d24; border: 1px solid #2b2c35; color: #f0f0f2; cursor: pointer;
+}
+.tvbar button.pri { background: linear-gradient(150deg, #ffd79b, #f0a24c); border-color: #ffd79b; color: #20150a; }
+.tvc-row {
+  flex: 0 0 auto; display: flex; gap: 6px; overflow-x: auto; padding: 8px 10px;
+  background: #0d0e12; border-bottom: 1px solid #22232a;
+  scrollbar-width: none;
+}
+.tvc-row::-webkit-scrollbar { display: none; }
+.tvc-row button {
+  flex: 0 0 auto; font: 800 11px/1 inherit; padding: 8px 10px; border-radius: 999px;
+  background: #171820; border: 1px solid #2a2b34; color: #c9cbd4; white-space: nowrap; cursor: pointer;
+}
+.tvc-row button.on { background: linear-gradient(160deg, #ffd79b, #f0b064); border-color: #ffd79b; color: #20150a; }
+.tvmain { position: relative; flex: 1 1 auto; min-height: 0; background: #000; }
+.tvmain iframe { width: 100%; height: 100%; border: 0; display: block; background: #000; }
+.tvhint {
+  position: absolute; left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  background: rgba(14, 15, 20, 0.95); border: 1px solid #3a3b46; border-radius: 12px;
+  padding: 10px; font: 600 11px/1.5 inherit; color: #c9cbd4;
+}
+.tvhint[hidden] { display: none; }
+.tvhint span { flex: 1 1 150px; min-width: 0; }
+.tvhint button {
+  flex: 0 0 auto; font: 800 11px/1 inherit; padding: 9px 11px; border-radius: 9px; cursor: pointer;
+  background: linear-gradient(150deg, #ffd79b, #f0a24c); border: 0; color: #20150a;
+}
