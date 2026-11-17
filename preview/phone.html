@@ -38,7 +38,10 @@
   setTimeout(function () {
     try {
       var w = document.getElementById('f1').contentWindow;
-      if (w && w.AI_OFFICE && w.AI_OFFICE.chat) w.AI_OFFICE.chat.ask('수입 파이프라인 회의');
+      if (w && w.AI_OFFICE && w.AI_OFFICE.chat) {
+        w.AI_OFFICE.chat.clear();
+        w.AI_OFFICE.chat.ask('수입 파이프라인 회의');
+      }
     } catch (e) {}
   }, 2500);
   /* 회의가 끝나면 대표님 첫 안건이 맨 위에 오도록 스크롤 */
