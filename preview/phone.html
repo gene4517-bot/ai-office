@@ -4,16 +4,19 @@
 <meta charset="utf-8" />
 <title>phone preview</title>
 <style>
-  html, body { margin: 0; background: #06070a; }
+  html, body { margin: 0; background: #06070a; color: #dfe3ea; font: 13px/1.6 monospace; }
   .frame {
     width: 390px; margin: 12px; border: 1px solid #2a2a2e; border-radius: 26px;
     overflow: hidden; background: #0a0a0b;
   }
   iframe { width: 390px; border: 0; display: block; }
+  #chk { position: fixed; right: 12px; top: 12px; width: 560px; padding: 12px; background: #10131a;
+         border: 1px solid #2a3444; border-radius: 10px; white-space: pre-wrap; }
 </style>
 </head>
 <body>
 <div class="frame"><iframe id="f" src="../dashboard/"></iframe></div>
+<pre id="chk">checking…</pre>
 <script>
   var q = new URLSearchParams(location.search);
   var f = document.getElementById('f');
@@ -24,6 +27,30 @@
     try { f.contentWindow.scrollTo(0, y); } catch (e) {}
   });
   setTimeout(function () { try { f.contentWindow.scrollTo(0, y); } catch (e) {} }, 900);
+
+  if (q.get('check') === '1') {
+    (async function () {
+      var out = [];
+      for (var name of ['app.js', 'deck.js']) {
+        try {
+          var src = await (await fetch('../dashboard/' + name + '?v=3', { cache: 'no-store' })).text();
+          try { new Function(src); out.push(name + ': syntax OK (' + src.length + ' bytes)'); }
+          catch (e) { out.push(name + ': SYNTAX ERROR — ' + e.message); }
+        } catch (e) { out.push(name + ': fetch failed — ' + e.message); }
+      }
+      try {
+        var d = f.contentDocument;
+        out.push('타일 수: ' + d.querySelectorAll('#deckGrid .tile').length);
+        out.push('S25 타일: ' + d.querySelectorAll('#deckGrid .tile.s25').length);
+        out.push('시계: ' + d.getElementById('dClock').textContent);
+        out.push('D-Day: ' + d.querySelectorAll('.tile.dd').length);
+        out.push('상태 점: ' + d.querySelectorAll('[data-s25dot]').length);
+        out.push('모달 S25 칸: ' + (d.getElementById('s25Url') ? '있음' : '없음') +
+                 ' / 식별자 칩 ' + d.querySelectorAll('.s25id').length + '개');
+      } catch (e) { out.push('iframe read failed — ' + e.message); }
+      document.getElementById('chk').textContent = out.join('\n');
+    })();
+  }
 </script>
 </body>
 </html>
