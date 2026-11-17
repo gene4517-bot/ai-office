@@ -34,25 +34,36 @@
     <iframe id="f4" src="../dashboard/?tv=tv/kr" title="덱 TV 미리보기"></iframe>
   </div>
 <script>
-  /* 미리보기용: 단톡방에서 회의 한 건을 돌려 대화 버블이 보이게 함 */
-  setTimeout(function () {
+  /* 미리보기용: 단톡방에서 회의 한 건을 돌리고, 답변이 끝나면 첫 안건을 맨 위에 오게 스크롤 */
+  function seedChat() {
     try {
       var w = document.getElementById('f1').contentWindow;
       if (w && w.AI_OFFICE && w.AI_OFFICE.chat) {
         w.AI_OFFICE.chat.clear();
         w.AI_OFFICE.chat.ask('수입 파이프라인 회의');
+        return true;
       }
     } catch (e) {}
-  }, 2500);
-  /* 회의가 끝나면 대표님 첫 안건이 맨 위에 오도록 스크롤 */
-  setTimeout(function () {
+    return false;
+  }
+  var seedTry = 0;
+  var seedTimer = setInterval(function () {
+    if (seedChat() || ++seedTry > 30) clearInterval(seedTimer);
+  }, 300);
+
+  var waitTry = 0;
+  setInterval(function () {
+    if (++waitTry > 120) return;
     try {
-      var d = document.getElementById('f1').contentWindow.document;
-      var me = d.querySelector('#chatLog .cmsg.me');
+      var w = document.getElementById('f1').contentWindow;
+      var d = w.document;
+      var send = d.getElementById('chatSend');
       var box = d.getElementById('chatLog');
-      if (me && box) box.scrollTop += (me.getBoundingClientRect().top - box.getBoundingClientRect().top) - 8;
+      var me = d.querySelector('#chatLog .cmsg.me');
+      if (!send || send.disabled || !box || !me) return;
+      box.scrollTop += (me.getBoundingClientRect().top - box.getBoundingClientRect().top) - 8;
     } catch (e) {}
-  }, 13000);
+  }, 500);
 </script>
 </body>
 </html>
