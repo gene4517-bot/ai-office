@@ -194,11 +194,23 @@ button.tile { width: 100%; }
 .tile.live .tmeta { color: #8de6ae; border-color: #245b3a; background: #0e2117; }
 
 /* ---------- 📱 S25 울트라 리모컨 ---------- */
+.tile.s25 { gap: 5px; }
 .tile.s25 .dico { background: #17233a; border-color: #2c4066; }
-.tile.s25 .tmeta { min-width: 44px; text-align: center; }
+.tile.s25 .trow { justify-content: space-between; }
+.tile.s25 .s25ttl {
+  font-size: 13.5px; font-weight: 800; letter-spacing: -0.4px; line-height: 1.2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tile.s25 .tline { font-size: 10.5px; }
+.s25dot {
+  width: 9px; height: 9px; flex: 0 0 auto; border-radius: 50%;
+  background: #34343b; box-shadow: 0 0 0 1px #45454d inset;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.tile.s25.nocfg .s25dot { background: #6b5220; box-shadow: 0 0 0 1px #9c7a30 inset; }
+.tile.s25.sending .s25dot { background: #ffd58a; box-shadow: 0 0 0 1px #d9a94a inset; }
+.tile.s25.sent .s25dot { background: #6ee7a8; box-shadow: 0 0 0 1px #2f9e6a inset; }
 .tile.s25.sent { border-color: #2f6f9c; }
-.tile.s25.sent .tmeta { color: #a9dcff; border-color: #2b5f85; background: #0d1e2b; }
-.tile.s25.sending .tmeta { color: #ffd58a; border-color: #6b5220; background: #211a06; }
 .tile.s25cfg { border-style: dashed; }
 .tile.s25cfg .dico { background: #1d2430; border-color: #35414f; }
 

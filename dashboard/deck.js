@@ -210,9 +210,9 @@
   function s25Tile(d) {
     return '<button class="tile s25" data-act="s25" data-s25="' + d.id + '">' +
       '<div class="trow"><span class="dico">' + d.icon + '</span>' +
-        '<div style="min-width:0"><div class="ttl">' + d.title + '</div></div>' +
-        '<span class="tmeta" data-s25meta="' + d.id + '">대기</span></div>' +
-      '<div class="tline" style="margin-top:auto">' + d.sub + '</div>' +
+        '<span class="s25dot" data-s25dot="' + d.id + '" title="대기" aria-hidden="true"></span></div>' +
+      '<div class="s25ttl">' + d.title + '</div>' +
+      '<div class="tline" style="margin-top:auto" data-s25sub="' + d.id + '">' + d.sub + '</div>' +
       '</button>';
   }
 
@@ -303,33 +303,30 @@
 
   function paintS25() {
     var base = s25Base();
-    var tiles = document.querySelectorAll('[data-s25meta]');
-    for (var i = 0; i < tiles.length; i++) {
-      var meta = tiles[i];
-      var id = meta.getAttribute('data-s25meta');
-      var tile = meta.closest ? meta.closest('.tile') : null;
-      if (tile) tile.classList.remove('sending');
-      if (!base) {
-        meta.textContent = '설정 필요';
-        if (tile) tile.classList.remove('sent');
-        continue;
+    var dots = document.querySelectorAll('[data-s25dot]');
+    for (var i = 0; i < dots.length; i++) {
+      var dot = dots[i];
+      var id = dot.getAttribute('data-s25dot');
+      var tile = dot.closest ? dot.closest('.tile') : null;
+      var st = !base ? 'none'
+        : s25Busy[id] ? 'sending'
+        : (prefs.s25sent[id] && Date.now() - prefs.s25sent[id] < 6000) ? 'sent'
+        : 'idle';
+      if (tile) {
+        tile.classList.toggle('sent', st === 'sent');
+        tile.classList.toggle('sending', st === 'sending');
+        tile.classList.toggle('nocfg', st === 'none');
       }
-      if (s25Busy[id]) {
-        meta.textContent = '보내는 중';
-        if (tile) tile.classList.add('sending');
-        continue;
-      }
-      var at = prefs.s25sent[id] || 0;
-      if (at && Date.now() - at < 6000) {
-        meta.textContent = '전송됨';
-        if (tile) tile.classList.add('sent');
-      } else {
-        meta.textContent = '대기';
-        if (tile) tile.classList.remove('sent');
+      dot.setAttribute('title', st === 'none' ? '설정 필요' : st === 'sent' ? '전송됨' : st === 'sending' ? '보내는 중' : '대기');
+      var sub = document.querySelector('[data-s25sub="' + id + '"]');
+      if (sub) {
+        var def = '';
+        for (var j = 0; j < S25_IDS.length; j++) if (S25_IDS[j].id === id) def = S25_IDS[j].sub;
+        sub.textContent = st === 'none' ? '설정에서 웹훅 주소를 넣으세요' : def;
       }
     }
-    var sub = EL('dS25Sub'), line = EL('dS25Line');
-    if (sub) sub.textContent = base ? '연결됨 · 신호 보내기 준비' : '웹훅 주소 넣기';
+    var sub2 = EL('dS25Sub'), line = EL('dS25Line');
+    if (sub2) sub2.textContent = base ? '연결됨 · 신호 보내기 준비' : '웹훅 주소 넣기';
     if (line) {
       line.textContent = base
         ? 'S25 ' + s25Did(base) + ' · 버튼을 누르면 S25가 움직여요'
