@@ -50,7 +50,7 @@
       var d = document.getElementById('f1').contentWindow.document;
       var me = d.querySelector('#chatLog .cmsg.me');
       var box = d.getElementById('chatLog');
-      if (me && box) box.scrollTop = me.offsetTop - 6;
+      if (me && box) box.scrollTop += (me.getBoundingClientRect().top - box.getBoundingClientRect().top) - 8;
     } catch (e) {}
   }, 13000);
 </script>
