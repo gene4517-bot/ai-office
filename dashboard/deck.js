@@ -953,6 +953,14 @@
       if (b) openTv(b.getAttribute('data-tv'));
     });
     var tvHintOpen = EL('tvHintOpen'); if (tvHintOpen) tvHintOpen.addEventListener('click', tvNewWin);
+    var tvIf = EL('tvIframe');
+    if (tvIf) tvIf.addEventListener('load', function () {
+      /* 페이지가 실제로 뜨면 새 창 안내를 내립니다 */
+      clearTimeout(tvTimer);
+      var h = EL('tvHint');
+      var src = tvIf.getAttribute('src') || '';
+      if (h && src && src.indexOf('about:blank') < 0) h.hidden = true;
+    });
 
     /* 앱 실행 */
     var box = EL('deckApps');

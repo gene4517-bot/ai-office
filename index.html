@@ -3056,6 +3056,13 @@ const tvNewEl = document.getElementById('tvNewWin');
 if (tvNewEl) tvNewEl.addEventListener('click', tvNewWindow);
 const tvFallOpenEl = document.getElementById('tvFallOpen');
 if (tvFallOpenEl) tvFallOpenEl.addEventListener('click', tvNewWindow);
+const tvFrameEl = document.getElementById('tvFrame');
+if (tvFrameEl) tvFrameEl.addEventListener('load', () => {
+  /* 실제로 페이지가 떠서 load가 오면 새 창 안내를 내립니다 (막힌 경우엔 6초 안내가 남습니다) */
+  clearTimeout(tvTimer);
+  const el = document.getElementById('tvFall');
+  if (el && tvFrameEl.getAttribute('src') && tvFrameEl.getAttribute('src').indexOf('about:blank') < 0) el.hidden = true;
+});
 const tvFallCloseEl = document.getElementById('tvFallClose');
 if (tvFallCloseEl) tvFallCloseEl.addEventListener('click', () => {
   const el = document.getElementById('tvFall');
