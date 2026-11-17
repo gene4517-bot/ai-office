@@ -5,7 +5,7 @@
 > `gene 홈서버`용으로 다듬은 수정판입니다. 앱 이름은 **홈드로이드 KR**, 패키지 이름은
 > `dev.homedroid.kr`이라 영문판과 함께 설치됩니다.
 >
-> - 내려받기: [Releases](https://github.com/gene4517-bot/homedroid-kr/releases) 에서
+> - 내려받기: [Releases](https://github.com/gene4517-bot/ai-office/releases) 에서
 >   `homedroid-<버전>-arm64-v8a.apk` (갤럭시 노트10·S25 울트라 등 arm64, 안드로이드 10 이상)
 > - 빠른 설치 안내: [docs/releases/v0.9.4-kr.1.md](docs/releases/v0.9.4-kr.1.md)
 > - 바뀐 점: 웹 대시보드·앱 화면·알림 한국어화, `gene 홈서버` 브랜딩, 개요 화면의 "노트10 24시간

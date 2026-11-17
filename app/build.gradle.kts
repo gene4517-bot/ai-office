@@ -66,7 +66,10 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
+            // -PhomedroidUnsigned=true leaves the release APK unsigned, so CI can build it
+            // without holding the signing key and the key stays off GitHub entirely.
+            signingConfig = if (providers.gradleProperty("homedroidUnsigned").orNull == "true") null
+                            else signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
         }
     }
 
