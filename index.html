@@ -35,12 +35,12 @@
   /* ---------- top bar ---------- */
   #topbar{flex:0 0 auto;display:flex;align-items:center;gap:9px;padding:8px 11px;
     background:linear-gradient(180deg,#1b1510,#120e0a);border-bottom:1px solid var(--line);z-index:6}
-  .brand{display:flex;align-items:center;gap:8px;min-width:0;overflow:hidden}
+  .brand{display:flex;align-items:center;gap:8px;flex:0 0 auto;min-width:0;overflow:hidden}
   .logo{width:26px;height:26px;border-radius:9px;display:grid;place-items:center;font-size:13px;flex:0 0 auto;
     background:linear-gradient(150deg,#f7c884,#e08b4c);color:#3a2410;font-weight:900;box-shadow:0 2px 8px rgba(224,139,76,.35)}
   .brand b{display:block;font-size:13px;letter-spacing:-.3px;white-space:nowrap;line-height:1.2}
   .brand small{display:block;font-size:10px;color:var(--dim2);font-variant-numeric:tabular-nums;letter-spacing:.2px}
-  #phases{margin-left:auto;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:2px 0;flex:0 1 auto;min-width:0}
+  #phases{margin-left:auto;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:2px 0;flex:1 1 auto;min-width:0}
   #phases::-webkit-scrollbar{display:none}
   #phases button{flex:0 0 auto;font:700 11px/1 inherit;color:var(--dim);background:#1a140f;border:1px solid #33281d;
     padding:6px 9px;border-radius:999px;white-space:nowrap;cursor:pointer;transition:.15s}
@@ -236,7 +236,8 @@
     cursor:pointer;white-space:nowrap;box-shadow:0 2px 10px rgba(240,162,76,.3)}
   .tvbtn:active{transform:scale(.96)}
   .tvbtn b{font-weight:900}
-  @media (max-width:470px){ .tvbtn .tvtx{display:none} }
+  .tvbtn .tvshort{display:none}
+  @media (max-width:480px){ .tvbtn .tvfull{display:none} .tvbtn .tvshort{display:inline} }
   #tvModal{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;background:#0a0807}
   #tvModal[hidden]{display:none}
   .tvHead{flex:0 0 auto;display:flex;align-items:center;gap:8px;
@@ -334,7 +335,7 @@
       </div>
     </div>
     <div id="phases"></div>
-    <button id="tvBtn" class="tvbtn" aria-label="세계 무료 TV 열기"><span>📺</span> <span class="tvtx">세계 무료 TV</span></button>
+    <button id="tvBtn" class="tvbtn" aria-label="세계 무료 TV 열기">📺 <span class="tvfull">세계 무료 TV</span><span class="tvshort">TV</span></button>
   </header>
 
   <div id="body">

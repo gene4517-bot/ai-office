@@ -41,6 +41,15 @@
       if (w && w.AI_OFFICE && w.AI_OFFICE.chat) w.AI_OFFICE.chat.ask('수입 파이프라인 회의');
     } catch (e) {}
   }, 2500);
+  /* 회의가 끝나면 대표님 첫 안건이 맨 위에 오도록 스크롤 */
+  setTimeout(function () {
+    try {
+      var d = document.getElementById('f1').contentWindow.document;
+      var me = d.querySelector('#chatLog .cmsg.me');
+      var box = d.getElementById('chatLog');
+      if (me && box) box.scrollTop = me.offsetTop - 6;
+    } catch (e) {}
+  }, 11000);
 </script>
 </body>
 </html>
