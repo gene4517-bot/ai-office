@@ -17,8 +17,8 @@ const DEFAULT_CFG = {
 };
 
 const CITIES = [
-  { key: 'anseong', name: '안성', lat: 37.0080, lon: 127.2797 },
-  { key: 'changwon', name: '창원', lat: 35.2281, lon: 128.6811 }
+  { key: 'anseong', name: '현장 지역', lat: 37.0080, lon: 127.2797 },
+  { key: 'changwon', name: '자택 지역', lat: 35.2281, lon: 128.6811 }
 ];
 
 const STATE_NAME = { ok: '완료', info: '진행 중', bad: '확인 필요', idle: '대기' };

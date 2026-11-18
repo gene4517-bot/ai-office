@@ -116,7 +116,7 @@
     <div class="card" id="cardWxA">
       <div class="hd">
         <span class="ico" data-ico="cloud"></span>
-        <span class="ttl">안성 날씨</span>
+        <span class="ttl">현장 지역 날씨</span>
         <span class="meta" id="wxAMeta"></span>
       </div>
       <div class="bigrow">
@@ -130,7 +130,7 @@
     <div class="card" id="cardWxC">
       <div class="hd">
         <span class="ico" data-ico="cloud"></span>
-        <span class="ttl">창원 날씨</span>
+        <span class="ttl">자택 지역 날씨</span>
         <span class="meta" id="wxCMeta"></span>
       </div>
       <div class="bigrow">
@@ -306,8 +306,8 @@
 <!-- 🗂️ PC 앱 실행 -->
 <div class="modal" id="modalApps" hidden>
   <div class="sheet wide" role="dialog" aria-modal="true" aria-labelledby="appsTitle">
-    <h2 id="appsTitle">🗂️ PC 앱 실행 · 700곡 폴더</h2>
-    <p class="lead">누르면 PC 브릿지가 실제로 그 앱을 실행합니다. 700곡 장르 분류는 <b>탐색기</b>로 오디오 폴더를 연 뒤 진행하세요.</p>
+    <h2 id="appsTitle">🗂️ PC 앱 실행 · 오디오 폴더</h2>
+    <p class="lead">누르면 PC 브릿지가 실제로 그 앱을 실행합니다. 오디오 장르 분류는 <b>탐색기</b>로 오디오 폴더를 연 뒤 진행하세요.</p>
     <div class="deckapps" id="deckApps"></div>
     <div class="row"><button class="btn ghost" id="appsClose">닫기</button></div>
   </div>
@@ -317,11 +317,11 @@
 <div class="modal" id="modalDd" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="ddTitle">
     <h2 id="ddTitle">⛺ D-Day</h2>
-    <p class="lead">기본으로 들어 있는 항목은 <b>고삼저수지 차박(11/20)</b>·<b>올해 마지막 날(12/31)</b>입니다. 내 D-Day를 추가하면 이 폰에만 저장됩니다.</p>
+    <p class="lead">기본으로 들어 있는 항목은 <b>주말 차박(11/20)</b>·<b>올해 마지막 날(12/31)</b>입니다. 내 D-Day를 추가하면 이 폰에만 저장됩니다.</p>
     <div class="ddlist" id="ddList"></div>
     <div class="ddadd">
       <div class="field"><label for="ddIcon">아이콘</label><input id="ddIcon" type="text" maxlength="2" placeholder="🎯" /></div>
-      <div class="field"><label for="ddLabel">이름</label><input id="ddLabel" type="text" maxlength="24" placeholder="예: 고삼저수지 차박" /></div>
+      <div class="field"><label for="ddLabel">이름</label><input id="ddLabel" type="text" maxlength="24" placeholder="예: 주말 나들이" /></div>
       <div class="field"><label for="ddDate">날짜</label><input id="ddDate" type="date" /></div>
     </div>
     <div class="row">

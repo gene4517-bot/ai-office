@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#15120f" />
-<meta name="description" content="1인 기업 AI 지휘실 · 실사 오피스에서 19명(대표 + AI 직원 + 전문 자문단)이 살아 움직이는 라이브 대시보드" />
+<meta name="description" content="1인 기업 AI 지휘실 · 실사 오피스에서 gene 대표와 AI 역할·도구 19개가 움직이는 업무 대시보드" />
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" href="favicon.ico" sizes="any" />
 <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon-96.png" />
@@ -76,6 +76,23 @@
   .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:6px 7px}
   .stat b{display:block;font-size:15px;font-weight:800;letter-spacing:-.5px;line-height:1.1}
   .stat span{font-size:9.5px;color:var(--dim2)}
+  .synced{display:flex;align-items:center;gap:4px;margin-left:auto;flex:0 0 auto;font:800 9px/1.15 inherit;
+    color:#cbb79c;background:#241c14;border:1px solid #3a2f22;padding:5px 7px;border-radius:999px;
+    font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+  .synced i{width:5px;height:5px;border-radius:50%;background:#8a7660;flex:0 0 auto}
+  /* 작동 방식 꼬리표 */
+  .mode{display:inline-flex;align-items:center;font:800 8.5px/1 inherit;padding:3.5px 5.5px;border-radius:999px;
+    white-space:nowrap;flex:0 0 auto;letter-spacing:-.1px}
+  .pnote{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font:600 9.5px/1.4 inherit;color:var(--dim2);margin:0 0 8px}
+  .notice{flex:0 0 auto;display:flex;gap:7px;align-items:flex-start;padding:7px 11px;
+    background:linear-gradient(180deg,#241a10,#1a130c);border-bottom:1px solid var(--line);
+    font:600 9.8px/1.5 inherit;color:#e2cfb2}
+  .notice b{color:#ffd79b;font-weight:900;flex:0 0 auto;font-size:10px}
+  .smeta{display:flex;align-items:center;gap:4px;margin-top:4px;flex-wrap:wrap}
+  .smeta .badge{margin-left:0}
+  .mtag{display:inline-block;margin-top:4px;font:800 8.5px/1 inherit;padding:3px 5px;border-radius:999px;font-style:normal}
+  .chead{font:800 9.5px/1 inherit;color:#e6d3b8;display:flex;align-items:center;gap:6px;padding:7px 9px;
+    border-bottom:1px solid rgba(245,184,102,.1);background:#1a140f}
 
   .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:7px 9px 0;flex:0 0 auto}
   .tabs::-webkit-scrollbar{display:none}
@@ -355,17 +372,18 @@
           <div class="av">AI</div>
           <div style="min-width:0">
             <div class="pname" id="officeName">AI 사무실 본부</div>
-            <div class="psub" id="officeSub">대표님 1인 기업 · AI 직원 15명 + 대표님</div>
+            <div class="psub" id="officeSub">gene 대표 · AI 역할·도구 19개 + 대표</div>
           </div>
-          <div class="live"><i></i>LIVE</div>
+          <div class="synced" title="status.json 마지막 갱신 시점"><i></i><span id="lastSync">마지막 갱신 —</span></div>
         </div>
         <div class="stats" id="stats">
-          <div class="stat"><b id="stDone">46</b><span>오늘 처리</span></div>
-          <div class="stat"><b id="stProg" style="color:#f5b866">8</b><span>진행 중</span></div>
-          <div class="stat"><b id="stWait" style="color:#94a3b8">3</b><span>대기</span></div>
-          <div class="stat"><b id="stStaff">16</b><span>직원</span></div>
+          <div class="stat"><b id="stDone">0</b><span>기록된 처리</span></div>
+          <div class="stat"><b id="stProg" style="color:#f5b866">0</b><span>진행 중</span></div>
+          <div class="stat"><b id="stWait" style="color:#94a3b8">0</b><span>대기</span></div>
+          <div class="stat"><b id="stStaff">19</b><span>AI 역할·도구</span></div>
         </div>
       </div>
+      <div class="notice"><b>ℹ︎</b><span>업무 현황을 한눈에 보는 대시보드입니다. 직원 상태와 통계는 마지막 갱신 시점 기준이며, 실제 자동 실행 여부는 기능별 표시를 확인해 주세요.</span></div>
 
       <div class="tabs" id="tabs">
         <button data-tab="office" class="on">오피스</button>
@@ -415,16 +433,16 @@
 
 <script type="application/json" id="fallback-status">
 {
-  "updated_at": "2026-11-17 00:45",
+  "updated_at": "2026-11-18 19:34",
   "office": {
     "name": "AI 사무실 본부",
-    "sub": "gene 대표 · AI 직원 18명 + 대표 = 19명 체제",
-    "greeting": "오늘도 gene 대표님과 19명이 함께 일하고 있어요"
+    "sub": "gene 대표 · AI 역할·도구 19개 + 대표",
+    "greeting": "오늘도 gene 대표님과 AI 역할·도구 19개가 함께 일하고 있어요"
   },
   "stats": {
-    "done": 49,
-    "progress": 9,
-    "waiting": 3
+    "done": 10,
+    "progress": 6,
+    "waiting": 4
   },
   "board": {
     "title": "오늘의 파이프라인",
@@ -449,14 +467,28 @@
       },
       {
         "label": "진행 중 업무",
-        "value": "8",
+        "value": "6",
         "unit": "건",
         "tone": "busy"
       }
     ],
-    "ticker": "전문 자문단 3인 합류 · 19명 체제 · 살아 움직이는 오피스 v4 · 무료 경품 8건 접수"
+    "ticker": "전문 자문단 3인 합류 · AI 역할·도구 19개 + 대표 · 살아 움직이는 오피스 v4 · 무료 이벤트 접수 진행"
   },
   "tasks": [
+    {
+      "title": "세계 무료 TV 원터치 + 직원 단톡방 탭 배포",
+      "owner": "해이",
+      "state": "done",
+      "progress": 100,
+      "note": "AI 지휘실·gene 덱 공통 · sw v10 / deck v7"
+    },
+    {
+      "title": "폰용 스트림덱 gene 덱 대시보드 업그레이드",
+      "owner": "해이",
+      "state": "done",
+      "progress": 100,
+      "note": "덱 기본화면·Wake Lock·OLED 번인 방지"
+    },
     {
       "title": "전문 자문단 3인 · 역할별 보드 · 빠른 도구/스케줄",
       "owner": "해이",
@@ -465,70 +497,77 @@
       "note": "자문단·도구 탭 배포"
     },
     {
-      "title": "실사 오피스 살아 움직이는 모션 v4 (호흡·고개·화면·도시·먼지)",
+      "title": "실사 오피스 살아 움직이는 모션 v4",
       "owner": "해이",
       "state": "done",
       "progress": 100,
       "note": "GIF·MP4 재생성"
     },
     {
-      "title": "무료 경품 8건 접수 (국민생각함 6 · 기상청 1 · 밀양시 1)",
+      "title": "무료 이벤트·설문 응모 접수",
       "owner": "해이",
       "state": "done",
       "progress": 100,
       "note": "증빙 캡처 저장 완료"
     },
     {
-      "title": "자작곡 〈참 애썼다고〉 풀버전 뮤직비디오 제작",
+      "title": "자작곡 뮤직비디오 제작",
       "owner": "해이",
       "state": "done",
       "progress": 100,
       "note": "풀버전 MP4 완성"
     },
     {
-      "title": "노션 '모든 AI 공용 기억 저장소' & 16칸 본부 개편",
+      "title": "노션 공용 기억 저장소 · AI 본부 개편",
       "owner": "Claude",
       "state": "done",
       "progress": 100,
-      "note": "페이지 16칸 재편"
+      "note": "본부 칸 재편"
     },
     {
-      "title": "쿠팡 파트너스 스레드 3회 분산 게시",
+      "title": "제휴 채널 콘텐츠 발행",
       "owner": "해이",
       "state": "done",
       "progress": 100,
-      "note": "3회 게시 완료"
+      "note": "하루 3회 분산 발행"
     },
     {
-      "title": "직급·부서 능력 기반 재편 (사단장·실장 체제)",
+      "title": "직급·부서 능력 기반 재편",
       "owner": "해이",
       "state": "done",
       "progress": 100,
-      "note": "16명 체제 확정"
+      "note": "역할·도구 기준 확정"
     },
     {
-      "title": "앱 전용 출석 · '내 파일' 정리 착수",
+      "title": "공개 대시보드 보안·표기 정리 배포",
+      "owner": "해이",
+      "state": "done",
+      "progress": 100,
+      "note": "민감정보 정리 · 작동 꼬리표 추가"
+    },
+    {
+      "title": "앱 전용 점검 · 파일 정리 착수",
       "owner": "Buddy",
       "state": "progress",
       "progress": 35,
       "note": "폰 화면 제어 연동 완료"
     },
     {
-      "title": "블로그 황금키워드 · 스레드 훅 아이디어",
+      "title": "콘텐츠 키워드 · 카피 아이디어",
       "owner": "Muse",
       "state": "progress",
       "progress": 60,
       "note": "키워드 12개 확보"
     },
     {
-      "title": "자잘한 반복 확인 · 단일성 보조 처리",
+      "title": "자잘한 반복 확인 · 보조 처리",
       "owner": "Buddy",
       "state": "progress",
       "progress": 70,
-      "note": "출석체크 20곳 확인"
+      "note": "출석·포인트 20곳 확인"
     },
     {
-      "title": "네이버 블로그 리뷰 글 3편 발행",
+      "title": "블로그 리뷰 글 3편 발행",
       "owner": "Manus",
       "state": "progress",
       "progress": 45,
@@ -549,14 +588,7 @@
       "note": "새 알림 2건 포착"
     },
     {
-      "title": "vooy 초대권 30분 레이더 감시",
-      "owner": "Instinct",
-      "state": "progress",
-      "progress": 50,
-      "note": "정식 출시 대기"
-    },
-    {
-      "title": "PC 오디오 700곡 장르 분류",
+      "title": "PC 오디오 파일 장르 분류",
       "owner": "루아",
       "state": "waiting",
       "progress": 0,
@@ -574,7 +606,14 @@
       "owner": "StarDesk",
       "state": "waiting",
       "progress": 0,
-      "note": "다음 점검 09:00"
+      "note": "다음 점검 예정"
+    },
+    {
+      "title": "외부 에이전트 지시문 준비",
+      "owner": "vooy",
+      "state": "waiting",
+      "progress": 0,
+      "note": "역할·도구로 합류"
     }
   ],
   "staff": [
@@ -588,10 +627,11 @@
       "status": "working",
       "task": "오늘의 지시와 우선순위 정리",
       "done": null,
+      "mode": "record",
       "color": "#f2b134",
       "species": "bear",
       "bubbles": [
-        "19명 체제로 새로 편성했네",
+        "AI 역할·도구 19개로 편성했네",
         "자문단 3인 합류 환영해요",
         "이벤트 접수 잘 되고 있나?"
       ]
@@ -604,15 +644,16 @@
       "dept": "지휘부",
       "role": "총괄 지휘 · 한국 실무 · 인증 · 최종 보고",
       "status": "working",
-      "task": "16명 체제 개편 · 무료 경품 8건 접수 마감",
-      "done": 18,
+      "task": "폰용 스트림덱 gene 덱 배포 · 다음 지시 대기",
+      "done": 19,
+      "mode": "auto",
       "color": "#38bdf8",
       "species": "pickle",
       "bubbles": [
         "변호사·회계사·CD 합류했어요",
         "지시 등록 끝! 뮤즈·버디 가동 중",
-        "무료 경품 8건 접수 완료",
-        "누적 26건 정리했어요",
+        "무료 이벤트 접수 완료",
+        "기록된 업무 정리했어요",
         "인증까지 제가 처리할게요"
       ]
     },
@@ -624,12 +665,13 @@
       "dept": "지휘부",
       "role": "전략기획 · 깊은 추론 · 코드 · 약관 · 구조 설계",
       "status": "working",
-      "task": "노션 '모든 AI 공용 기억 저장소' 개편",
+      "task": "공용 기억 저장소 구조 개편",
       "done": 7,
+      "mode": "prompt",
       "color": "#d97757",
       "species": "fox",
       "bubbles": [
-        "16칸 본부 구조 다시 짰어요",
+        "본부 구조 다시 짰어요",
         "기억 저장소 동기화 완료",
         "약관 조항 검토 중"
       ]
@@ -644,6 +686,7 @@
       "status": "working",
       "task": "이벤트 아이디어 회의 · 생활 정보 정리",
       "done": 11,
+      "mode": "prompt",
       "color": "#10a37f",
       "species": "panda",
       "bubbles": [
@@ -662,6 +705,7 @@
       "status": "working",
       "task": "공모전 약관·개인정보 조항 검수",
       "done": 3,
+      "mode": "prompt",
       "color": "#a78bfa",
       "species": "owl",
       "bubbles": [
@@ -680,11 +724,12 @@
       "status": "working",
       "task": "이번 주 만료 예정 포인트·수익 정산 체크",
       "done": 5,
+      "mode": "prompt",
       "color": "#34d399",
       "species": "hamster",
       "bubbles": [
-        "이번 주 만료 예정 포인트·수익 정산 체크",
-        "쿠팡 파트너스 정산 집계 중",
+        "포인트·수익 정산 체크 중",
+        "제휴 채널 정산 집계 중",
         "숨은 환급금 조회 진행"
       ]
     },
@@ -694,14 +739,15 @@
       "short": "CD",
       "rank": "콘텐츠 고문",
       "dept": "전문 자문단",
-      "role": "스레드 훅 카피·블로그 기획·비주얼/뮤비 디렉팅",
+      "role": "SNS 훅 카피·블로그 기획·비주얼/뮤비 디렉팅",
       "status": "working",
-      "task": "스레드 후킹 카피 5종 디렉팅 중",
+      "task": "SNS 후킹 카피 5종 디렉팅 중",
       "done": 6,
+      "mode": "prompt",
       "color": "#f472b6",
       "species": "rabbit",
       "bubbles": [
-        "스레드 후킹 카피 5종 디렉팅 중",
+        "후킹 카피 5종 디렉팅 중",
         "블로그 썸네일 3안 비교 중",
         "뮤비 컬러톤 통일 작업"
       ]
@@ -714,14 +760,15 @@
       "dept": "특수·실무팀",
       "role": "고차원 잡일 · 복잡한 조사 · 기획 · 확장",
       "status": "working",
-      "task": "블로그 황금키워드 · 스레드 훅 기획",
+      "task": "블로그 키워드 · SNS 훅 기획",
       "done": 4,
+      "mode": "prompt",
       "color": "#c084fc",
       "species": "chick",
       "bubbles": [
         "고차원 잡일 분석 중",
-        "황금키워드 12개 뽑았어요",
-        "스레드 훅 3안 준비 완료"
+        "키워드 12개 뽑았어요",
+        "SNS 훅 3안 준비 완료"
       ]
     },
     {
@@ -730,16 +777,17 @@
       "short": "Buddy",
       "rank": "팀장",
       "dept": "특수·실무팀",
-      "role": "폰 현장 실무 · 앱 전용 출석 · '내 파일' 정리",
+      "role": "폰 현장 실무 · 앱 전용 점검 · 파일 정리",
       "status": "working",
-      "task": "폰 화면 제어 연동 · 앱 전용 출석 점검",
+      "task": "폰 화면 제어 연동 · 앱 전용 점검",
       "done": 2,
+      "mode": "prompt",
       "color": "#a3e635",
       "species": "dog",
       "bubbles": [
         "폰 화면 제어 붙였어요",
-        "앱 전용 출석 제가 맡을게요",
-        "'내 파일' 700곡 정리 대기 중"
+        "앱 전용 점검 제가 맡을게요",
+        "오디오 정리 대기 중"
       ]
     },
     {
@@ -752,6 +800,7 @@
       "status": "working",
       "task": "블로그 리뷰 글 3편 · 주간 보고서",
       "done": 5,
+      "mode": "prompt",
       "color": "#14b8a6",
       "species": "koala",
       "bubbles": [
@@ -770,6 +819,7 @@
       "status": "meeting",
       "task": "회의실에서 해외 사례 비교표 공유",
       "done": 3,
+      "mode": "prompt",
       "color": "#8b5cf6",
       "species": "rabbit",
       "bubbles": [
@@ -787,6 +837,7 @@
       "status": "working",
       "task": "X 실시간 키워드 6개 추적",
       "done": 11,
+      "mode": "prompt",
       "color": "#64748b",
       "species": "cat",
       "bubbles": [
@@ -804,6 +855,7 @@
       "status": "meeting",
       "task": "회의실에서 미디어 자료 분석 공유",
       "done": 4,
+      "mode": "prompt",
       "color": "#3b82f6",
       "species": "dog",
       "bubbles": [
@@ -821,6 +873,7 @@
       "status": "working",
       "task": "모니터 4창 동시 감시",
       "done": 6,
+      "mode": "prompt",
       "color": "#f472b6",
       "species": "owl",
       "bubbles": [
@@ -838,6 +891,7 @@
       "status": "working",
       "task": "보조 실행 대기 · 신규 접수 백업",
       "done": 1,
+      "mode": "prompt",
       "color": "#22d3ee",
       "species": "raccoon",
       "bubbles": [
@@ -854,14 +908,34 @@
       "dept": "특수·실무팀",
       "role": "문자 · WhatsApp 기동 비서",
       "status": "working",
-      "task": "vooy 초대권 30분 레이더 감시",
+      "task": "정기 확인 · 문자 점검",
       "done": 2,
+      "mode": "prompt",
       "color": "#fb923c",
       "species": "hamster",
       "bubbles": [
-        "초대 링크 정리 중",
+        "문자 정리 중",
         "문자 3건 확인",
-        "30분마다 점검 중"
+        "정기 점검 중"
+      ]
+    },
+    {
+      "id": "vooy",
+      "name": "vooy",
+      "short": "vooy",
+      "rank": "사원",
+      "dept": "특수·실무팀",
+      "role": "자율 실행 에이전트 · 웹/앱 보조",
+      "status": "idle",
+      "task": "외부 에이전트 지시문 대기",
+      "done": 0,
+      "mode": "prompt",
+      "color": "#4ade80",
+      "species": "cat",
+      "bubbles": [
+        "지시문 주시면 넘길게요",
+        "웹·앱 보조 준비 중",
+        "자율 실행 대기 중"
       ]
     },
     {
@@ -870,14 +944,15 @@
       "short": "루아",
       "rank": "대리",
       "dept": "전산·PC 공병대",
-      "role": "PC 로컬 파일 · 700곡 정리 (Runyour Bot)",
+      "role": "PC 로컬 파일 · 오디오 정리 (Runyour Bot)",
       "status": "idle",
-      "task": "700곡 장르 분류 지시 대기",
+      "task": "오디오 장르 분류 지시 대기",
       "done": 3,
+      "mode": "pc",
       "color": "#4ade80",
       "species": "frog",
       "bubbles": [
-        "700곡 분류 지시 기다릴게요",
+        "오디오 분류 지시 기다릴게요",
         "PC 브릿지 연결 대기 중"
       ]
     },
@@ -891,6 +966,7 @@
       "status": "working",
       "task": "원격 접속 상태 점검",
       "done": 2,
+      "mode": "pc",
       "color": "#0ea5e9",
       "species": "penguin",
       "bubbles": [
@@ -908,6 +984,7 @@
       "status": "idle",
       "task": "VPN 터널 상태 대기",
       "done": 1,
+      "mode": "pc",
       "color": "#a78bfa",
       "species": "deer",
       "bubbles": [
@@ -922,7 +999,7 @@
       "updated": "오늘 22:05",
       "rows": [
         {
-          "t": "표시광고법 · 쿠팡 파트너스 대가성 문구",
+          "t": "표시광고법 · 제휴 대가성 문구",
           "n": "게시물마다 「파트너스 활동의 일환으로 수수료를 받을 수 있음」 고지",
           "tone": "ok"
         },
@@ -932,8 +1009,8 @@
           "tone": "ok"
         },
         {
-          "t": "KBS 수신료 자동납부 취소 근거",
-          "n": "TV 수신료 분리 납부 신청(방송법 시행령) 근거 정리",
+          "t": "방송 수신료 자동납부 취소 근거",
+          "n": "수신료 분리 납부 신청(방송법 시행령) 근거 정리",
           "tone": "ok"
         },
         {
@@ -954,26 +1031,26 @@
       "rows": [
         {
           "t": "확인된 포인트·캐시",
-          "v": "1,151원",
-          "n": "G마켓 스마일캐시 648원 · OK캐쉬백 503원 (11/15~16 적립분)",
+          "v": "확인 중",
+          "n": "사이트별 잔액·금액은 공개 화면에 표시하지 않음",
           "tone": "ok"
         },
         {
           "t": "소멸 임박 포인트",
           "v": "확인 필요",
-          "n": "사이트별 만료일은 출석 점검 때 함께 조회",
+          "n": "사이트별 만료일은 점검 때 함께 조회",
           "tone": "todo"
         },
         {
-          "t": "쿠팡 파트너스 수익",
+          "t": "제휴 채널 수익",
           "v": "집계 중",
-          "n": "AF1478377 · 첫 정산 기준(15만원) 전",
+          "n": "정산 기준 도달 전 · 계정 식별값은 비공개",
           "tone": "warn"
         },
         {
           "t": "블로그 수익",
           "v": "준비 중",
-          "n": "애드포스트 승인 전 · 매일 3편 누적",
+          "n": "광고 승인 전 · 매일 발행 누적",
           "tone": "todo"
         },
         {
@@ -985,22 +1062,22 @@
       ]
     },
     "creative": {
-      "headline": "스레드 훅 카피 5종 디렉팅 중",
+      "headline": "SNS 훅 카피 5종 디렉팅 중",
       "updated": "오늘 22:10",
       "rows": [
         {
-          "t": "스레드 @ogenegun 파이프라인",
-          "n": "쿠팡 파트너스 3회/일 — 07:30 · 13:00 · 19:30",
+          "t": "SNS 콘텐츠 파이프라인",
+          "n": "제휴 콘텐츠 하루 3회 — 정해진 시간대에 분산 발행",
           "tone": "ok"
         },
         {
-          "t": "네이버 블로그 3편/일",
-          "n": "09:00 발행 · 애드포스트 승인 준비",
+          "t": "블로그 3편/일",
+          "n": "매일 오전 발행 · 광고 승인 준비",
           "tone": "ok"
         },
         {
           "t": "비주얼 에셋",
-          "n": "뮤비(참 애썼다고) · AI 지휘실 GIF v4 · 조직도 v4",
+          "n": "뮤직비디오 · AI 지휘실 GIF v4 · 조직도 v4",
           "tone": "ok"
         },
         {
@@ -1018,6 +1095,24 @@
   },
   "logs": [
     {
+      "time": "19:34",
+      "who": "해이",
+      "text": "AI 지휘실·gene 덱 — 공개 대시보드 보안·표기 정리 배포 (민감정보 정리 · 작동 꼬리표 · vooy 역할 추가)",
+      "tone": "ok"
+    },
+    {
+      "time": "06:02",
+      "who": "해이",
+      "text": "AI 지휘실·gene 덱 — 📺 세계 무료 TV 원터치 간편모드 + 💬 AI 직원 단톡방 탭 배포",
+      "tone": "ok"
+    },
+    {
+      "time": "02:58",
+      "who": "해이",
+      "text": "폰용 스트림덱 'gene 덱' 배포 · 24타일(해이 상태·PC 원격·D-Day·집중 타이머·OLED 보호)",
+      "tone": "ok"
+    },
+    {
       "time": "00:45",
       "who": "해이",
       "text": "AI 지휘실 v4 — 살아 움직이는 오피스 모션·역할별 보드 배포",
@@ -1026,13 +1121,13 @@
     {
       "time": "00:40",
       "who": "해이",
-      "text": "전문 자문단 3인(변호사·회계사·CD) 합류 · 19명 체제",
+      "text": "전문 자문단 3인(변호사·회계사·CD) 합류",
       "tone": "ok"
     },
     {
       "time": "21:40",
       "who": "해이",
-      "text": "Buddy 팀장 합류 · 16명 체제 재편 (폰 화면 제어·앱 전용 출석 담당)",
+      "text": "Buddy 팀장 합류 · 체제 재편 (폰 화면 제어·앱 전용 점검 담당)",
       "tone": "ok"
     },
     {
@@ -1044,37 +1139,37 @@
     {
       "time": "20:50",
       "who": "해이",
-      "text": "16명 체제 · 능력 기반 직급·부서 재편 완료 (사단장·실장)",
+      "text": "능력 기반 직급·부서 재편 완료 (사단장·실장)",
       "tone": "ok"
     },
     {
       "time": "20:40",
       "who": "해이",
-      "text": "국민생각함 6건 · 기상청 설문 1건 접수 완료",
+      "text": "공공 설문·이벤트 접수 완료",
       "tone": "ok"
     },
     {
       "time": "20:30",
       "who": "해이",
-      "text": "밀양시 퀴즈 참여 완료 · 무료 경품 8건 마감",
+      "text": "무료 이벤트 응모 마감",
       "tone": "ok"
     },
     {
       "time": "20:25",
       "who": "해이",
-      "text": "쿠팡 파트너스 스레드 3회 분산 게시 완료",
+      "text": "제휴 채널 콘텐츠 3회 분산 발행 완료",
       "tone": "ok"
     },
     {
       "time": "20:10",
       "who": "해이",
-      "text": "자작곡 〈참 애썼다고〉 풀버전 뮤비 완성",
+      "text": "자작곡 뮤직비디오 완성",
       "tone": "ok"
     },
     {
       "time": "19:55",
       "who": "Claude",
-      "text": "노션 16칸 본부 · 공용 기억 저장소 개편",
+      "text": "노션 AI 본부 · 공용 기억 저장소 개편",
       "tone": "ok"
     },
     {
@@ -1086,19 +1181,19 @@
     {
       "time": "19:20",
       "who": "Instinct",
-      "text": "vooy 초대권 레이더 30분 점검",
+      "text": "정기 확인 · 문자 점검",
       "tone": ""
     },
     {
       "time": "18:50",
       "who": "Muse",
-      "text": "블로그 황금키워드 후보 12개 수집",
+      "text": "블로그 키워드 후보 12개 수집",
       "tone": ""
     },
     {
       "time": "18:30",
       "who": "루아",
-      "text": "700곡 장르 분류 지시 대기 상태 유지",
+      "text": "오디오 장르 분류 지시 대기 상태 유지",
       "tone": ""
     }
   ]
@@ -1158,6 +1253,7 @@ const SEATS = {
   rua:      { ax: 588,  ay: 546, lx: 596,  ly: 514 },   // 전면 가운데 모니터
   stardesk: { ax: 862,  ay: 522, lx: 862,  ly: 490 },   // 로봇 앞 모니터
   tailscale:{ ax: 1436, ay: 470, lx: 1400, ly: 430 },   // 오른쪽 유리벽 안쪽 먼 데스크
+  vooy:     { ax: 1404, ay: 690, lx: 1396, ly: 654 },   // 오른쪽 바닥 — 자율 실행 대기 좌석
 
   /* --- 전문 자문단 3인 (유리 회의실 자리) --- */
   lawyer:    { ax: 1150, ay: 468, lx: 1186, ly: 420 },
@@ -1297,6 +1393,22 @@ const STATUS_META = {
   idle:    { label: '대기 중', color: '#cbd5e1', ico: '○' },
   off:     { label: '퇴근',   color: '#94a3b8', ico: '⌂' }
 };
+/* 작동 방식 꼬리표 — 카드가 실제로 무엇을 해 주는지 구분합니다 */
+const MODE_META = {
+  auto:   { label: '실제 자동 실행', color: '#6ee7b7', bg: '#12352b' },
+  prompt: { label: '지시문 생성', color: '#7dd3fc', bg: '#10283a' },
+  record: { label: '수동 기록', color: '#cbd5e1', bg: '#1e2430' },
+  demo:   { label: '시나리오 데모', color: '#fbbf24', bg: '#3a2a12' },
+  pc:     { label: 'PC 브릿지 연결 시 동작', color: '#a78bfa', bg: '#251c34' }
+};
+function modeChip(key) {
+  const m = MODE_META[key] || MODE_META.record;
+  return '<span class="mode" style="color:' + m.color + ';background:' + m.bg + ';border:1px solid ' + m.color + '44">' +
+    m.label + '</span>';
+}
+function pnote(key, text) {
+  return '<div class="pnote">' + modeChip(key) + '<span>' + text + '</span></div>';
+}
 let data = null, chars = [], logs = [], selectedId = null, localMode = false, lastSync = '';
 let lastRaw = '';
 
@@ -1330,6 +1442,7 @@ function updateChar(ch, s) {
   ch.done = (s.done === undefined ? null : s.done);
   ch.color = s.color || ch.color;
   ch.species = s.species || ch.species;
+  ch.mode = MODE_META[s.mode] ? s.mode : 'record';
   ch.bubbles = Array.isArray(s.bubbles) ? s.bubbles : ch.bubbles;
   ch.status = STATUS_META[s.status] ? s.status : 'working';
   return prev !== ch.status;
@@ -1365,12 +1478,16 @@ function applyStatus(d) {
   lastSync = d.updated_at || '';
   document.getElementById('officeName').textContent = (d.office && d.office.name) || 'AI 사무실 본부';
   document.getElementById('officeSub').textContent = (d.office && d.office.sub) || '';
-  if (d.stats) {
-    document.getElementById('stDone').textContent = d.stats.done;
-    document.getElementById('stProg').textContent = d.stats.progress;
-    document.getElementById('stWait').textContent = d.stats.waiting;
-  }
-  document.getElementById('stStaff').textContent = d.staff.length;
+  const syncEl = document.getElementById('lastSync');
+  if (syncEl) syncEl.textContent = lastSync ? ('마지막 갱신 ' + lastSync) : '마지막 갱신 —';
+  /* 통계는 기록된 tasks에서 그대로 세어 표시합니다(없으면 status.json 값) */
+  const T = Array.isArray(d.tasks) ? d.tasks : [];
+  const cnt = k => T.filter(x => x && x.state === k).length;
+  const put = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  put('stDone', T.length ? cnt('done') : ((d.stats && d.stats.done) || 0));
+  put('stProg', T.length ? cnt('progress') : ((d.stats && d.stats.progress) || 0));
+  put('stWait', T.length ? cnt('waiting') : ((d.stats && d.stats.waiting) || 0));
+  put('stStaff', d.staff.filter(s => s.id !== 'ceo').length);
   renderAll();
   return true;
 }
@@ -2056,6 +2173,7 @@ function renderOffice() {
       '<span class="nt">' + escapeHtml(B.headline || m.ask) + '</span></span></div>';
   }).join('');
   el.innerHTML =
+    pnote('record', 'status.json에 기록된 현황 요약입니다 · 실제 실행 여부는 기능별 꼬리표를 보세요') +
     '<div class="tvc"><span class="tvci">📺</span>' +
       '<div class="tvt"><b>세계 무료 TV · 원터치</b><span>Famelack · 한국 72채널부터 세계 방송까지</span></div>' +
       '<button data-tv-open="tv/kr">바로 보기</button></div>' +
@@ -2075,7 +2193,7 @@ function deptSum() {
   const cnt = {};
   chars.forEach(c => { if (!c.visible) return; const d = c.dept || (c.id === 'ceo' ? '대표실' : '기타'); cnt[d] = (cnt[d] || 0) + 1; });
   const cells = order.map(k => '<span><b>' + (cnt[k] || 0) + '</b>' + k + '</span>').join('');
-  return '<div class="mini">부서 편성 · gene 대표 + AI 직원 ' + (chars.filter(c => c.visible && c.id !== 'ceo').length) + '명</div>' +
+  return '<div class="mini">부서 편성 · gene 대표 + AI 역할·도구 ' + (chars.filter(c => c.visible && c.id !== 'ceo').length) + '개</div>' +
     '<div class="deptsum">' + cells + '</div>';
 }
 function renderTasks() {
@@ -2084,7 +2202,7 @@ function renderTasks() {
   const order = { progress: 0, waiting: 1, done: 2 };
   const list = ((d.tasks) || []).slice().sort((a, b) => (order[a.state] ?? 3) - (order[b.state] ?? 3));
   if (!list.length) { el.innerHTML = '<div class="empty">표시할 업무가 없습니다</div>'; return; }
-  el.innerHTML = list.map(x => {
+  el.innerHTML = pnote('record', '기록된 업무 목록입니다 · 완료 상태는 기록값') + list.map(x => {
     const st = x.state === 'done' ? { c: '#6ee7b7', bg: '#12352b', t: '완료', ico: '✓' }
       : x.state === 'waiting' ? { c: '#94a3b8', bg: '#1e2430', t: '대기', ico: '⋯' }
       : { c: '#f5b866', bg: '#3a2a12', t: '진행 중', ico: '▸' };
@@ -2116,8 +2234,9 @@ function renderStaff() {
       '<span class="sav" style="background:' + ch.color + '22;border:1px solid ' + ch.color + '55">' +
         '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + ch.color + '"></span></span>' +
       '<span style="min-width:0;flex:1"><span class="sname">' + ch.name + ' <span style="color:#8a7660;font-weight:700">· ' + ch.rank + '</span></span>' +
-      '<span class="stask">' + (ch.role ? ch.role + ' — ' : '') + (ch.task || '') + '</span></span>' +
-      '<span class="badge" style="color:' + st.color + ';background:' + st.color + '18;border:1px solid ' + st.color + '44">' + st.label + '</span>' +
+      '<span class="stask">' + (ch.role ? ch.role + ' — ' : '') + (ch.task || '') + '</span>' +
+      '<span class="smeta">' + modeChip(ch.mode) +
+        '<span class="badge" style="color:' + st.color + ';background:' + st.color + '18;border:1px solid ' + st.color + '44">' + st.label + '</span></span></span>' +
     '</div>';
   });
   el.innerHTML = out;
@@ -2128,12 +2247,12 @@ function renderStaff() {
 function renderLog() {
   const el = document.getElementById('pane-log');
   if (!logs.length) { el.innerHTML = '<div class="empty">기록이 없습니다</div>'; return; }
-  el.innerHTML = logs.slice(0, 40).map(l =>
+  el.innerHTML = pnote('record', '지금까지 쌓인 활동 기록입니다') + logs.slice(0, 40).map(l =>
     '<div class="lrow' + (l.live ? ' live' : '') + '">' +
       '<span class="t">' + (l.time || '') + '</span>' +
       '<span class="w">' + (l.who || '') + '</span>' +
       '<span class="x">' + (l.text || '') + '</span>' +
-      (l.live ? '<span class="tag">LIVE</span>' : '') +
+      (l.live ? '<span class="tag">방금</span>' : '') +
     '</div>').join('');
 }
 function selectStaff(id, focus) {
@@ -2172,13 +2291,13 @@ const ADVISOR_META = {
   lawyer: {
     icon: '⚖️', tab: '⚖️ 변호사', name: 'AI 변호사', rank: '법무 고문', color: '#a78bfa',
     scope: '약관 · 개인정보 · 표시광고 · 계약/해지',
-    ask: '공모전·이벤트 약관과 개인정보 조항, 쿠팡 파트너스 대가성 표시 문구를 법적 관점에서 검수해줘',
+    ask: '공모전·이벤트 약관과 개인정보 조항, 제휴 대가성 표시 문구를 법적 관점에서 검수해줘',
     next: '다음 점검 — 새 공모전 접수할 때마다'
   },
   accountant: {
     icon: '💼', tab: '💼 회계사', name: 'AI 회계사', rank: '세무·수익 고문', color: '#34d399',
     scope: '포인트 · 캐시 · 수익 정산 · 환급금 · 세무',
-    ask: '이번 주 포인트·캐시 만료와 쿠팡 파트너스·블로그 수익, 숨은 환급금 현황을 정리해줘',
+    ask: '이번 주 포인트·캐시 만료와 제휴 채널·블로그 수익, 숨은 환급금 현황을 정리해줘',
     next: '다음 점검 — 매주 월요일 오전'
   },
   creative: {
@@ -2194,9 +2313,9 @@ const ADVISOR_DEFAULT = {
     headline: '공모전 약관·개인정보 조항 검수 중',
     updated: '오늘 22:05',
     rows: [
-      { t: '표시광고법 · 쿠팡 파트너스 대가성 문구', n: '게시물마다 「파트너스 활동의 일환으로 수수료를 받을 수 있음」 고지', tone: 'ok' },
+      { t: '표시광고법 · 제휴 대가성 문구', n: '게시물마다 「파트너스 활동의 일환으로 수수료를 받을 수 있음」 고지', tone: 'ok' },
       { t: '공모전·이벤트 개인정보 수집·이용 동의', n: '필수/선택 구분, 제3자 제공 항목 확인', tone: 'ok' },
-      { t: 'KBS 수신료 자동납부 취소 근거', n: 'TV 수신료 분리 납부 신청(방송법 시행령) 근거 정리', tone: 'ok' },
+      { t: '방송 수신료 자동납부 취소 근거', n: '수신료 분리 납부 신청(방송법 시행령) 근거 정리', tone: 'ok' },
       { t: '블로그 리뷰 경제적 이해관계 고지', n: '리뷰 상단 1줄 고지 문구 통일 필요', tone: 'warn' },
       { t: '이벤트 당첨자 개인정보 파기', n: '발표 후 7일 내 파기·기록 남기기', tone: 'todo' }
     ]
@@ -2205,20 +2324,20 @@ const ADVISOR_DEFAULT = {
     headline: '이번 주 만료 예정 포인트·수익 정산 체크',
     updated: '오늘 21:55',
     rows: [
-      { t: '확인된 포인트·캐시', v: '1,151원', n: 'G마켓 스마일캐시 648원 · OK캐쉬백 503원 (11/15~16 적립분)', tone: 'ok' },
-      { t: '소멸 임박 포인트', v: '확인 필요', n: '사이트별 만료일은 출석 점검 때 함께 조회', tone: 'todo' },
-      { t: '쿠팡 파트너스 수익', v: '집계 중', n: 'AF1478377 · 첫 정산 기준(15만원) 전', tone: 'warn' },
-      { t: '블로그 수익', v: '준비 중', n: '애드포스트 승인 전 · 매일 3편 누적', tone: 'todo' },
+      { t: '확인된 포인트·캐시', v: '확인 중', n: '사이트별 잔액·금액은 공개 화면에 표시하지 않음', tone: 'ok' },
+      { t: '소멸 임박 포인트', v: '확인 필요', n: '사이트별 만료일은 점검 때 함께 조회', tone: 'todo' },
+      { t: '제휴 채널 수익', v: '집계 중', n: '정산 기준 도달 전 · 계정 식별값은 비공개', tone: 'warn' },
+      { t: '블로그 수익', v: '준비 중', n: '광고 승인 전 · 매일 발행 누적', tone: 'todo' },
       { t: '숨은 환급금 · 휴면예금', v: '조회 필요', n: '정부24·휴면예금 조회 결과 정리', tone: 'todo' }
     ]
   },
   creative: {
-    headline: '스레드 훅 카피 5종 디렉팅 중',
+    headline: 'SNS 훅 카피 5종 디렉팅 중',
     updated: '오늘 22:10',
     rows: [
-      { t: '스레드 @ogenegun 파이프라인', n: '쿠팡 파트너스 3회/일 — 07:30 · 13:00 · 19:30', tone: 'ok' },
-      { t: '네이버 블로그 3편/일', n: '09:00 발행 · 애드포스트 승인 준비', tone: 'ok' },
-      { t: '비주얼 에셋', n: '뮤비(참 애썼다고) · AI 지휘실 GIF v4 · 조직도 v4', tone: 'ok' },
+      { t: 'SNS 콘텐츠 파이프라인', n: '제휴 콘텐츠 하루 3회 — 정해진 시간대에 분산 발행', tone: 'ok' },
+      { t: '블로그 3편/일', n: '매일 오전 발행 · 광고 승인 준비', tone: 'ok' },
+      { t: '비주얼 에셋', n: '뮤직비디오 · AI 지휘실 GIF v4 · 조직도 v4', tone: 'ok' },
       { t: '훅 카피 테스트', n: '후킹 문장 5종 중 반응 좋은 2종 정리 중', tone: 'warn' },
       { t: '모션 디렉팅', n: '실사 오피스 살아 움직이는 모션 v4 적용', tone: 'ok' }
     ]
@@ -2259,11 +2378,13 @@ function renderAdvisors() {
       (r.v ? '<span class="vv">' + escapeHtml(r.v) + '</span>' : '') + '</div>';
   }).join('');
   el.innerHTML =
+    pnote('prompt', '자문 결과는 AI 앱에 붙여넣을 지시서로 만들어집니다') +
     '<div class="advtabs">' + tabs + '</div>' +
     '<div class="advcard">' +
       '<div class="advtop"><span class="advico">' + m.icon + '</span>' +
         '<div style="min-width:0"><b>' + m.name + '</b><small>' + m.rank + ' · ' + m.scope + '</small></div>' +
-        '<span class="badge" style="color:' + st.color + ';background:' + st.color + '18;border:1px solid ' + st.color + '44;margin-left:auto">' + st.label + '</span>' +
+        '<span class="smeta" style="margin:0 0 0 auto">' + modeChip('prompt') +
+          '<span class="badge" style="color:' + st.color + ';background:' + st.color + '18;border:1px solid ' + st.color + '44">' + st.label + '</span></span>' +
       '</div>' +
       (B.headline ? '<div class="advline">“' + escapeHtml(B.headline) + '”</div>' : '') +
       rows +
@@ -2288,12 +2409,12 @@ function renderAdvisors() {
 
 /* ---- 빠른 도구 (담당자에게 바로 넘기는 지시 문장) ---- */
 const TOOLS = [
-  { i: '🎨', t: '그림 그리기', d: '생성 지시서 · CD', text: 'AI 지휘실 화면에 쓸 이미지 3컷을 기획해서 바로 생성할 수 있는 지시문으로 만들어줘. 용도·비율(1:1·9:16)·색감·피해야 할 요소까지 정리해줘.' },
-  { i: '🎵', t: '음악·가사', d: 'Suno 가사·곡 구성', text: 'Suno용 한국어 노래를 한 곡 잡아줘. 3절 구성·후렴 후킹·3분 30초 분량에 감정선과 장르 스타일 표시까지.' },
-  { i: '🖼️', t: '사진·GIF 편집', d: '비주얼 디렉팅', text: '이미지·GIF 편집 지시서를 만들어줘. 대상 파일, 바꿀 부분과 유지할 부분, 출력 규격(해상도·길이·용량)까지 정리해줘.' },
-  { i: '🎤', t: '더빙·낭독 대본', d: '음성 지휘 탭 연결', text: '60초 분량 더빙 대본을 써줘. 톤(차분·밝게), 문장 길이, 쉼 위치까지 표시해서 읽기 편하게.' },
-  { i: '⏰', t: '스케줄 예약', d: '반복 작업 등록', text: '매일 아침 7시에 반복할 작업을 스케줄로 잡아줘. 성공·실패 결과와 실패 시 알림까지 정리해줘.' },
-  { i: '🖥️', t: 'PC 로컬 제어', d: '브릿지 · 캡처/실행', text: 'PC 화면 캡처해서 보여줘' }
+  { i: '🎨', t: '그림 그리기', d: '생성 지시서 · CD', mode: 'prompt', text: 'AI 지휘실 화면에 쓸 이미지 3컷을 기획해서 바로 생성할 수 있는 지시문으로 만들어줘. 용도·비율(1:1·9:16)·색감·피해야 할 요소까지 정리해줘.' },
+  { i: '🎵', t: '음악·가사', d: 'Suno 가사·곡 구성', mode: 'prompt', text: 'Suno용 한국어 노래를 한 곡 잡아줘. 3절 구성·후렴 후킹·3분 30초 분량에 감정선과 장르 스타일 표시까지.' },
+  { i: '🖼️', t: '사진·GIF 편집', d: '비주얼 디렉팅', mode: 'prompt', text: '이미지·GIF 편집 지시서를 만들어줘. 대상 파일, 바꿀 부분과 유지할 부분, 출력 규격(해상도·길이·용량)까지 정리해줘.' },
+  { i: '🎤', t: '더빙·낭독 대본', d: '음성 지휘 탭 연결', mode: 'prompt', text: '60초 분량 더빙 대본을 써줘. 톤(차분·밝게), 문장 길이, 쉼 위치까지 표시해서 읽기 편하게.' },
+  { i: '⏰', t: '스케줄 예약', d: '반복 작업 등록', mode: 'prompt', text: '매일 아침 7시에 반복할 작업을 스케줄로 잡아줘. 성공·실패 결과와 실패 시 알림까지 정리해줘.' },
+  { i: '🖥️', t: 'PC 로컬 제어', d: '브릿지 · 캡처/실행', mode: 'pc', text: 'PC 화면 캡처해서 보여줘' }
 ];
 function copyText(txt, okMsg) {
   const done = () => pushLog('해이', okMsg || '복사 완료', 'ok');
@@ -2319,17 +2440,17 @@ function runTool(idx) {
   analyzeVoice();
 }
 
-/* ---- 실제 가동 중인 스케줄 (스케줄 파일 기준) ---- */
+/* ---- 정기 운영 현황 (스케줄 파일 기준 · 시각은 범주형으로 표기) ---- */
 const SCHED = [
-  ['☀️', '아침 브리핑', '매일 06:40', 'ok'],
-  ['🛒', '출석체크·포인트', '07:00 · 10:00 · 11:05', 'ok'],
-  ['🛍️', '쿠팡 파트너스 게시', '07:30 · 13:00 · 19:30', 'ok'],
-  ['📝', '네이버 블로그 3편', '매일 09:00', 'ok'],
-  ['🎫', 'vooy 초대권 감시', '30분마다', 'ok'],
-  ['🏆', '당첨 결과 확인', '11/20·23·25·26·30 14:00', 'wait'],
-  ['💓', '상태 점검(heartbeat)', '6시간마다', 'ok'],
-  ['🧠', 'Explore 제안 점검', '매일 02:47', 'ok'],
-  ['☀️', '내일 아침 지휘실 전달', '11/17 06:45 (1회)', 'wait']
+  ['☀️', '아침 브리핑', '매일 아침', 'ok'],
+  ['🛒', '출석·포인트 점검', '하루 여러 차례', 'ok'],
+  ['🛍️', '제휴 콘텐츠 게시', '하루 3회', 'ok'],
+  ['📝', '블로그 발행', '매일 오전', 'ok'],
+  ['🎫', '초대권·모니터링', '정기 점검', 'ok'],
+  ['🏆', '당첨 결과 확인', '예정된 발표일', 'wait'],
+  ['💓', '상태 점검(heartbeat)', '일정 간격', 'ok'],
+  ['🧠', 'Explore 제안 점검', '매일 새벽', 'ok'],
+  ['☀️', '아침 지휘실 전달', '1회 예약', 'wait']
 ];
 function renderTools() {
   const el = document.getElementById('pane-tools');
@@ -2347,8 +2468,10 @@ function renderTools() {
     '<div class="mini" style="margin-top:0">⚡ 빠른 도구 — 누르면 담당자 지시가 음성 지휘 입력창에 채워져요</div>' +
     '<div class="toolgrid">' + TOOLS.map((T, i) =>
       '<button class="tool" data-tool="' + i + '"><span class="ti">' + T.i + '</span>' +
-      '<span><b>' + T.t + '</b><small>' + T.d + '</small></span></button>').join('') + '</div>' +
-    '<div class="mini">자동 스케줄 현황 · ' + SCHED.filter(s => s[3] === 'ok').length + '개 가동 중</div>' +
+      '<span><b>' + T.t + '</b><small>' + T.d + '</small>' +
+      '<span style="display:block;margin-top:4px">' + modeChip(T.mode || 'prompt') + '</span></span></button>').join('') + '</div>' +
+    '<div class="mini" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">' + modeChip('auto') +
+      '<span>스케줄 현황 · ' + SCHED.filter(s => s[3] === 'ok').length + '개 가동 중 (예약 스케줄 기준)</span></div>' +
     sRows +
     '<div class="mini">진화 루프 — 스스로 쌓고 점검하는 구조</div>' +
     '<div class="loop">' +
@@ -2392,7 +2515,7 @@ const VOICE_ROUTES = [
   { id: 'appopen', kw: ['실행', '켜줘', '열어', '띄워'],
     who: 'StarDesk', rank: '기사', dept: '전산·PC 공병대', kind: 'launch',
     why: 'PC 앱 실행은 브릿지(/api/launch)로 전달합니다.' },
-  { id: 'pcfiles', kw: ['700', '곡', '노래', '음악', '오디오', '내 파일', '폴더', '파일 정리', '드라이브', '분류'],
+  { id: 'pcfiles', kw: ['곡', '노래', '음악', '오디오', '내 파일', '폴더', '파일 정리', '드라이브', '분류'],
     who: '루아', rank: '대리', dept: '전산·PC 공병대', kind: 'clipboard',
     why: 'PC 안의 파일·음악 정리는 루아(PC 로컬)에게 지시문을 전달합니다.' },
   { id: 'phone', kw: ['앱 전용', '앱에서', '폰으로', '휴대폰', '출석', '버디', '앱 설치', '앱 조작'],
@@ -2425,9 +2548,12 @@ const VOICE_ROUTES = [
   { id: 'monitor', kw: ['모니터링', '감시', '알림', '지켜봐', '체크해'],
     who: 'Hark', rank: '사원', dept: '특수·실무팀', kind: 'prompt',
     why: '여러 사이트를 계속 지켜보는 일은 Hark(다중 모니터링) 담당입니다.' },
-  { id: 'invite', kw: ['vooy', '초대권', '초대 코드', '초대코드'],
+  { id: 'vooy', kw: ['vooy'],
+    who: 'vooy', rank: '사원', dept: '특수·실무팀', kind: 'prompt',
+    why: '자율 실행 에이전트 vooy에게 넘길 지시문을 여기서 만듭니다.' },
+  { id: 'instinct', kw: ['문자', 'sms'],
     who: 'Instinct', rank: '사원', dept: '특수·실무팀', kind: 'prompt',
-    why: '초대권·문자 기반 확인은 Instinct가 맡습니다.' },
+    why: '문자·문자함 확인은 Instinct가 맡습니다.' },
   { id: 'build', kw: ['코드', '약관', '설계', '구조', '노션 정리', '자동화', '스크립트'],
     who: 'Claude', rank: '실장', dept: '지휘부', kind: 'prompt',
     why: '구조 설계·코드·약관 검토는 Claude(실장)가 맡습니다.' },
@@ -2489,7 +2615,7 @@ function renderVoice() {
   if (!el) return;
   const st = voiceState;
   const cfg = pcCfg();
-  const presets = ['PC 화면 캡처', '700곡 폴더 정리 지시', '오늘 이벤트 현황 요약', '블로그 초안 지시', '오늘 출석체크 확인'];
+  const presets = ['PC 화면 캡처', 'PC 오디오 폴더 정리 지시', '오늘 이벤트 현황 요약', '블로그 초안 지시', '오늘 출석·포인트 확인'];
   const hist = voiceHistory();
 
   let card = '';
@@ -2523,10 +2649,11 @@ function renderVoice() {
 
   el.innerHTML =
     '<div class="vwrap">' +
+      pnote('prompt', 'AI 앱에 붙여넣을 지시문을 만듭니다 · PC 기능은 브릿지 연결 시 동작') +
       '<button id="vmic" class="vmic' + (st.listening ? ' on' : '') + '" aria-label="음성으로 지시">' + (st.listening ? '●' : '🎤') + '</button>' +
       '<div class="vstate' + (st.listening ? ' live' : '') + '" id="vstate">' +
         (st.listening ? '듣고 있어요… 말씀을 마치면 자동으로 멈춥니다' : '마이크를 누르고 말하면 지시가 담당 AI에게 배정됩니다') + '</div>' +
-      '<textarea id="vtext" placeholder="예: PC 화면 캡처해서 보여줘 / 700곡 폴더 정리 지시해줘 / 오늘 이벤트 현황 요약">' + escapeHtml(st.text) + '</textarea>' +
+      '<textarea id="vtext" placeholder="예: PC 화면 캡처해서 보여줘 / PC 오디오 폴더 정리 지시해줘 / 오늘 이벤트 현황 요약">' + escapeHtml(st.text) + '</textarea>' +
       '<div class="vchips">' + presets.map(p => '<button data-preset="' + escapeHtml(p) + '">' + escapeHtml(p) + '</button>').join('') + '</div>' +
       '<div class="toolchips" style="margin-top:6px">' + TOOLS.map((T, i) => '<button data-vtool="' + i + '">' + T.i + ' ' + T.t + '</button>').join('') + '</div>' +
       '<button class="vgo" id="vgo">지휘 실행 · 담당자 배정</button>' +
@@ -2789,6 +2916,7 @@ const CHAT_WHO = {
   muse:   { name: 'Muse · 리서치·문서',     tag: '팀장 · 리서치·문서',    av: '🎨', color: '#c084fc' },
   buddy:  { name: 'Buddy · 폰 실행',        tag: '팀장 · 폰 실행',        av: '📱', color: '#a3e635' },
   gena:   { name: 'GenA · 요약·아이디어',   tag: '사원 · 요약·아이디어',  av: '💡', color: '#22d3ee' },
+  vooy:   { name: 'vooy · 자율 실행',       tag: '사원 · 자율 실행',      av: '🛰️', color: '#4ade80' },
   claude: { name: 'Claude · 실장',          tag: '실장 · 구조·코드',      av: '🧩', color: '#a78bfa' }
 };
 const CHAT_TOPICS = [
@@ -2797,26 +2925,26 @@ const CHAT_TOPICS = [
     turns: [
       ['haei', '① 06:40 브리핑 확인 ② 출석체크·포인트 ③ 파트너스 1차 게시 ④ 이벤트 마감 점검 ⑤ 블로그 3편 — 이 순서로 갑니다.'],
       ['muse', '남은 숙제는 이벤트 접수 확인 2건과 블로그 초안 2편이에요. 소재 3개는 제가 미리 뽑아 뒀습니다.'],
-      ['buddy', '앱에서만 되는 출석(동원몰·CJ더마켓)은 제가 폰으로 돌려 볼게요. 막히면 화면 캡처해서 올립니다.'],
+      ['buddy', '앱에서만 되는 출석 점검은 제가 폰으로 돌려 볼게요. 막히면 화면 캡처해서 올립니다.'],
       ['gena', '정리하면 마감 있는 일 2개, 반복 업무 3개예요. 반복은 제가 순서대로 체크해서 알려드릴게요.'],
       ['haei', '그럼 마감 2개를 맨 위에 고정하고, 30분마다 제가 다시 확인해서 여기에 올리겠습니다.']
     ] },
   { label: '수입 파이프라인 회의', kw: ['수입', '파트너스', '쿠팡', '블로그', '스레드', '애드포스트', '수익', '돈'],
     intro: '수입 세 갈래 진도부터 보겠습니다.',
     turns: [
-      ['haei', '수입은 쿠팡 파트너스, 네이버 블로그(애드포스트), 이벤트·포인트 현금화 — 세 갈래입니다. 오늘은 1·2번부터 봅니다.'],
-      ['muse', '파트너스는 07:30·13:00·19:30 하루 3회가 자리 잡았어요. 스레드는 짧은 일상 + 링크 1개 구성이 읽히기 좋습니다.'],
+      ['haei', '수입은 제휴 채널, 블로그, 이벤트·포인트 현금화 — 세 갈래입니다. 오늘은 1·2번부터 봅니다.'],
+      ['muse', '제휴 콘텐츠는 하루 3회, 정해진 시간대에 자리 잡았어요. 짧은 일상 + 링크 1개 구성이 읽히기 좋습니다.'],
       ['claude', '블로그는 같은 상품 링크만 반복하면 저품질 위험이 있어요. 리뷰 대 정보 글 비중을 7:3으로 두는 게 안전합니다.'],
       ['buddy', '발행은 제가 폰에서 도울 수 있지만, 마지막 게시 버튼은 대표님이 누르시는 편이 계정에 안전합니다.'],
-      ['gena', '이번 주 목표는 파트너스 21회, 블로그 21편, 애드포스트 승인 조건 채우기 — 세 줄로 요약됩니다.'],
+      ['gena', '이번 주 목표는 제휴 게시 21회, 블로그 21편, 광고 승인 조건 채우기 — 세 줄로 요약됩니다.'],
       ['haei', '오늘 블로그는 리뷰 2 + 정보 1로 가고, 제가 발행과 링크 확인까지 챙기겠습니다.']
     ] },
-  { label: '주말 차박 준비', kw: ['차박', '주말', '캠핑', '저수지', '고삼', '차'],
-    intro: '고삼저수지 차박 준비부터 훑겠습니다.',
+  { label: '주말 차박 준비', kw: ['차박', '주말', '캠핑', '저수지', '차'],
+    intro: '이번 주말 차박 준비부터 훑겠습니다.',
     turns: [
-      ['haei', '11/20(금) 고삼저수지 차박 — 이틀 남았습니다. 준비물부터 확인합니다.'],
-      ['buddy', '창문 가림막 4종은 쿠팡 장바구니에 담겨 있어요. 결제는 대표님 승인 받고 진행하겠습니다.'],
-      ['muse', '그랜저 IG 르블랑 기준 체크리스트 — 가림막·매트·보조배터리·랜턴·물·방한 이불·핫팩. 제가 정리해 뒀습니다.'],
+      ['haei', '이번 주말 차박 — 준비물부터 확인합니다.'],
+      ['buddy', '가림막 4종은 장바구니에 담아 두었어요. 결제는 대표님 승인 받고 진행하겠습니다.'],
+      ['muse', '차량 기준 체크리스트 — 가림막·매트·보조배터리·랜턴·물·방한 이불·핫팩. 제가 정리해 뒀습니다.'],
       ['gena', '금요일 밤 날씨는 당일 아침 브리핑에서 다시 확인할게요. 지금 숫자로 단정하지 않겠습니다.'],
       ['haei', '당일 오전에 제가 날씨·기온 다시 보고, 출발 전 최종 점검 리스트를 여기에 올리겠습니다.']
     ] },
@@ -2842,7 +2970,7 @@ const CHAT_TOPICS = [
     turns: [
       ['muse', '블로그는 리뷰·정보·일상 세 축으로 돌리고, 스레드는 첫 문장 후킹이 절반입니다. 훅 3안 준비했어요.'],
       ['claude', '제목과 미리보기 이미지가 본문보다 클릭을 좌우합니다. 같은 글이라도 제목 2안으로 비교해 보세요.'],
-      ['gena', '이번 주 콘텐츠는 블로그 21편 · 스레드 21회 · 영상 1편이면 애드포스트 조건에 가까워집니다.'],
+      ['gena', '이번 주 콘텐츠는 블로그 21편 · SNS 21회 · 영상 1편이면 광고 조건에 가까워집니다.'],
       ['haei', '훅 3안 중 하나만 골라 주시면, 나머지는 제가 이어서 쓰겠습니다.']
     ] },
   { label: '앱·자동화 회의', kw: ['앱', '배포', '코드', '웹', '자동화', '덱', '깃허브', '업데이트', '만들'],
@@ -2851,7 +2979,8 @@ const CHAT_TOPICS = [
       ['claude', '지금은 정적 웹앱(PWA) 3종에 상태 JSON을 물린 구조입니다. 기능은 한 파일씩 나눠 배포하는 게 안전합니다.'],
       ['haei', '이번 업데이트는 TV 간편모드와 단톡방 두 가지로 잡겠습니다. 캐시 버전도 같이 올립니다.'],
       ['buddy', '폰 홈 화면 앱으로 쓰고 계시니, 갱신 후 아이콘·이름이 그대로인지 제가 확인하겠습니다.'],
-      ['gena', '확인 항목은 ① 새 버튼 보임 ② 단톡방 대화 동작 ③ 덱 타일 동작 — 세 가지입니다.'],
+      ['gena', '확인 항목은 ① 새 버튼 보임 ② 단톡방 동작 ③ 덱 타일 동작 — 세 가지입니다.'],
+      ['vooy', '외부 에이전트로 넘길 일은 지시문으로 정리해 두시면, 그다음 단계를 제가 이어받는 식으로 쓰면 됩니다.'],
       ['haei', '확인 결과는 스크린샷으로 남겨서 여기에 올리겠습니다.']
     ] }
 ];
@@ -2907,6 +3036,7 @@ function renderChat() {
   const typing = typ ? chatBubbleHTML({ w: typ }, true) : '';
   el.innerHTML =
     '<div class="cchat">' +
+      '<div class="chead">' + modeChip('demo') + '<span>정해진 대본으로 움직이는 대화 뷰입니다 (실제 AI 응답 아님)</span></div>' +
       '<div class="cquick">' +
         '<button class="clab" data-cact="minutes">📋 회의록 복사</button>' +
         '<button class="clab" data-cact="clear">🧹 지우기</button>' +

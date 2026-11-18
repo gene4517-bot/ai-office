@@ -3,7 +3,7 @@
    - 네트워크 우선: 평소에는 항상 최신 파일을 먼저 받고, 실패했을 때만 캐시로 대체
    - PC 브릿지(http://192.168.x.x:8765 · http://localhost:8765 · Tailscale)나 날씨 API 같은
      외부 요청은 절대 가로채지 않고 그대로 통과시킵니다. */
-const CACHE = 'pc-dashboard-v6';
+const CACHE = 'pc-dashboard-v7';
 const PRECACHE = ['./', './index.html', './style.css', './deck.css', './app.js', './deck.js', './manifest.json',
                   './icon-192.png', './icon-512.png', './icon-maskable-192.png', './icon-maskable-512.png',
                   './apple-touch-icon.png', './favicon.ico'];

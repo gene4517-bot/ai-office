@@ -84,7 +84,7 @@
   }
 
   var DEF_DD = [
-    { icon: '⛺', label: '고삼저수지 차박', date: '2026-11-20' },
+    { icon: '⛺', label: '주말 차박', date: '2026-11-20' },
     { icon: '🎆', label: '올해 마지막 날', date: '2026-12-31', yearly: true }
   ];
 
@@ -143,7 +143,7 @@
       tileLink('🎤', '음성 지휘', '「해이, 출석체크 해줘」처럼 말로', '../index.html?tab=voice', 'ai') +
       tileLink('👔', '전문 자문단', '변호사 · 회계사 · CD 역할별 보드', '../index.html?tab=advisor', 'ai') +
       tileLink('🧠', '노션 AI 본부', '16칸 본부 · 모든 AI 공용 기억', 'https://app.notion.com/p/gene-AI-418dcae81cc081b8873ac0d72de949db', 'ai') +
-      tileLink('🏢', 'AI 지휘실', '19명 오피스 · 살아 움직이는 화면', '../index.html', 'ai') +
+      tileLink('🏢', 'AI 지휘실', 'AI 역할·도구 19개 + 대표 오피스', '../index.html', 'ai') +
 
       section('PC 원격 제어') +
       '<button class="tile pc" data-act="capture">' +
@@ -155,7 +155,7 @@
         '<div class="tline" style="margin-top:auto">보낸 글은 PC에서 Ctrl+V로 붙여넣기</div>' +
       '</button>' +
       '<button class="tile pc" data-act="apps">' +
-        '<div class="trow"><span class="dico">🗂️</span><div style="min-width:0"><div class="ttl">앱 실행 · 700곡</div></div></div>' +
+        '<div class="trow"><span class="dico">🗂️</span><div style="min-width:0"><div class="ttl">앱 실행 · 오디오</div></div></div>' +
         '<div class="tline" style="margin-top:auto">탐색기로 오디오 폴더를 엽니다</div>' +
       '</button>' +
       '<button class="tile pc" data-act="cfg">' +
@@ -177,11 +177,11 @@
       section('수입 · SNS') +
       '<button class="tile sns span2" data-act="threads">' +
         '<div class="trow"><span class="dico">🧵</span>' +
-          '<div style="min-width:0"><div class="ttl">스레드 @ogenegun</div><div class="tsub" id="dThreadAgo">눌러서 열기 · 확인 시각 기록</div></div>' +
+          '<div style="min-width:0"><div class="ttl">SNS 채널 (스레드)</div><div class="tsub" id="dThreadAgo">눌러서 열기 · 확인 시각 기록</div></div>' +
           '<span class="tmeta">↗</span></div>' +
-        '<div class="tline" style="margin-top:auto">쿠팡 파트너스 3회/일 — 07:30 · 13:00 · 19:30</div>' +
+        '<div class="tline" style="margin-top:auto">제휴 콘텐츠 하루 3회 — 정해진 시간대에 분산 발행</div>' +
       '</button>' +
-      tileLink('📝', '네이버 블로그', 'dynamic4516 · 매일 3편', 'https://blog.naver.com/dynamic4516', 'sns') +
+      tileLink('📝', '네이버 블로그', '매일 3편 발행 · 관리', 'https://blog.naver.com/', 'sns') +
       tileLink('🛍️', '쿠팡 파트너스', '링크 생성 · 실적 확인', 'https://partners.coupang.com', 'sns') +
 
       section('일상 · D-Day') +
@@ -539,7 +539,7 @@
       return '<span class="wxchip">' + name + ' <b>' + w.temp + '°</b>' + esc(w.label) +
         ' <small>' + w.min + '° / ' + w.max + '°</small></span>';
     };
-    box.innerHTML = one('안성', a) + one('창원', c);
+    box.innerHTML = one('현장', a) + one('자택', c);
   }
 
   /* ---------------- 해이 상태 (status.json) ---------------- */
@@ -806,7 +806,7 @@
       case 'threads':
         prefs.threadsAt = Date.now();
         savePrefs(); renderThreads();
-        window.open('https://www.threads.net/@ogenegun', '_blank', 'noopener');
+        window.open('https://www.threads.net/', '_blank', 'noopener');
         return;
       case 'dd':
         openDd();
