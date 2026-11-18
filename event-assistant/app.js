@@ -173,7 +173,7 @@
         }
         if (it.due) {
           var d = dayDiff(it.due, t);
-          if (d === 0) push('오늘 마감', 'hot', it, '마감', 1);
+          if (d === 0) push('오늘 마감', 'hot', it, 'D-DAY', 1);
           else if (d < 0) push('마감 지남', 'warn', it, 'D+' + (-d), -5);
           else if (d <= 3) push('마감 임박', '', it, 'D-' + d, 20 + d);
         }
@@ -321,10 +321,10 @@
       ? '<a class="open-link" href="' + esc(it.link) + '" target="_blank" rel="noopener noreferrer">원문 ↗</a>'
       : '<span class="open-link none">링크 없음</span>';
 
-    var seg = Object.keys(STATUS).map(function (s) {
+    var seg = '<div class="seg" role="group" aria-label="단계 변경">' + Object.keys(STATUS).map(function (s) {
       return '<button type="button" data-act="status" data-status="' + s + '"' +
         (it.status === s ? ' class="on" aria-pressed="true"' : ' aria-pressed="false"') + '>' + STATUS[s] + '</button>';
-    }).join('');
+    }).join('') + '</div>';
 
     return '<article class="' + cls + '" data-id="' + esc(it.id) + '">' +
       '<div class="card-top">' +
@@ -337,8 +337,7 @@
       (meta.length ? '<dl class="meta">' + meta.join('') + '</dl>' : '') +
       (it.prize ? '<p class="prize"><span>🎁</span><span>' + esc(it.prize) + '</span></p>' : '') +
       (it.memo ? '<p class="memo' + (/필수|구독|서명|대기|지남/.test(it.memo) ? ' hot' : '') + '"><span>📌</span><span>' + esc(it.memo) + '</span></p>' : '') +
-      '<div class="card-foot">' + link + '<div class="seg" role="group" aria-label="단계 변경">' + seg + '</div></div>' +
-      '</article>';
+      '<div class="card-foot">' + link + '</div>' + seg + '</article>';
   }
 
   function renderList() {
