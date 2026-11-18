@@ -2497,6 +2497,9 @@ const HUB_URL = 'https://app.notion.com/p/AI-41adcae81cc08104-863c-fe360f46b626'
 
 /* 지시 → 담당 부서/사원 자동 배정 규칙 (위에서부터 먼저 맞는 것) */
 const VOICE_ROUTES = [
+  { id: 'vooy', kw: ['vooy'],
+    who: 'vooy', rank: '사원', dept: '특수·실무팀', kind: 'prompt',
+    why: '자율 실행 에이전트 vooy에게 넘길 지시문을 여기서 만듭니다.' },
   { id: 'music', kw: ['suno', '가사', '작곡', '멜로디', '발라드'],
     who: 'AI 크리에이티브 디렉터', rank: '콘텐츠 고문', dept: '전문 자문단', kind: 'prompt',
     why: '노래·가사·곡 구성 기획은 전문 자문단 크리에이티브 디렉터가 디렉팅합니다.' },
@@ -2548,9 +2551,6 @@ const VOICE_ROUTES = [
   { id: 'monitor', kw: ['모니터링', '감시', '알림', '지켜봐', '체크해'],
     who: 'Hark', rank: '사원', dept: '특수·실무팀', kind: 'prompt',
     why: '여러 사이트를 계속 지켜보는 일은 Hark(다중 모니터링) 담당입니다.' },
-  { id: 'vooy', kw: ['vooy'],
-    who: 'vooy', rank: '사원', dept: '특수·실무팀', kind: 'prompt',
-    why: '자율 실행 에이전트 vooy에게 넘길 지시문을 여기서 만듭니다.' },
   { id: 'instinct', kw: ['문자', 'sms'],
     who: 'Instinct', rank: '사원', dept: '특수·실무팀', kind: 'prompt',
     why: '문자·문자함 확인은 Instinct가 맡습니다.' },
