@@ -284,6 +284,15 @@
   .tvbtn b{font-weight:900}
   .tvbtn .tvshort{display:none}
   @media (max-width:480px){ .tvbtn .tvfull{display:none} .tvbtn .tvshort{display:inline} }
+
+  /* ---------- 📋 체험단 비서 바로가기 ---------- */
+  .eabtn{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;font:800 10.5px/1 inherit;color:#04211d;
+    background:linear-gradient(150deg,#a8f0dc,#57cbaf);border:1px solid #8ee8d1;padding:7px 9px;border-radius:999px;
+    text-decoration:none;white-space:nowrap;cursor:pointer;box-shadow:0 2px 10px rgba(87,203,175,.26)}
+  .eabtn:active{transform:scale(.96)}
+  .eabtn:focus-visible{outline:2px solid #8ee8d1;outline-offset:2px}
+  .eabtn .eashort{display:none}
+  @media (max-width:480px){ .eabtn .eafull{display:none} .eabtn .eashort{display:inline} }
   #tvModal{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;background:#0a0807}
   #tvModal[hidden]{display:none}
   .tvHead{flex:0 0 auto;display:flex;align-items:center;gap:8px;
@@ -381,6 +390,7 @@
       </div>
     </div>
     <div id="phases"></div>
+    <a id="eaBtn" class="eabtn" href="./event-assistant/" title="오늘 챙길 체험단·이벤트 D-day 비서 열기" aria-label="체험단 비서 열기">📋 <span class="eafull">체험단 비서</span><span class="eashort">체험단</span></a>
     <button id="tvBtn" class="tvbtn" aria-label="세계 무료 TV 열기">📺 <span class="tvfull">세계 무료 TV</span><span class="tvshort">TV</span></button>
   </header>
 
