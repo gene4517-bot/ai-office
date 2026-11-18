@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5" />
+<meta name="theme-color" content="#2a2320" />
+<meta name="description" content="체험단 · 이벤트 · 공모전의 발표일과 마감을 D-day로 챙기는 비서 — 오늘 챙길 것, 단계별 관리, 기기 저장" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="체험단 비서" />
+<title>체험단 · 이벤트 비서</title>
+<link rel="manifest" href="./manifest.json" />
+<link rel="icon" href="./icon-192.png" sizes="192x192" />
+<link rel="icon" href="./icon-512.png" sizes="512x512" />
+<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+<header class="bar">
+  <div class="brand">
+    <img class="brand-logo" src="./icon-192.png" alt="" width="38" height="38" />
+    <div class="brand-txt">
+      <h1>체험단 · 이벤트 비서</h1>
+      <p id="brandSub">불러오는 중…</p>
+    </div>
+  </div>
+  <button class="icon-btn" id="btnBell" type="button" aria-label="알림 켜기 · 테스트" title="알림">🔔</button>
+  <button class="icon-btn" id="btnMenu" type="button" aria-label="더 보기 메뉴" title="메뉴" aria-haspopup="dialog">⋯</button>
+</header>
+
+<main>
+  <!-- 오늘 챙길 것 -->
+  <section class="today" aria-labelledby="todayH">
+    <div class="today-head">
+      <div class="h">
+        <h2 id="todayH">오늘 챙길 것</h2>
+        <div class="date" id="todayDate">—</div>
+      </div>
+      <div class="today-count" id="todayCount"><b>0</b>건 확인</div>
+    </div>
+    <div class="today-list" id="todayList"></div>
+    <button class="today-more" id="todayMore" type="button" hidden>임박한 일정 모두 보기 →</button>
+  </section>
+
+  <!-- 요약 -->
+  <div class="stats" id="stats"></div>
+
+  <!-- 검색 · 필터 -->
+  <div class="tools">
+    <div class="search" id="searchWrap">
+      <span aria-hidden="true" style="color:var(--dim);font-size:14px">🔍</span>
+      <input id="q" type="search" placeholder="제목 · 경품 · 메모 검색" aria-label="검색" autocomplete="off" enterkeyhint="search" />
+      <button class="sx" id="qClear" type="button" aria-label="검색 지우기">✕</button>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="단계 필터"></nav>
+  </div>
+
+  <div id="listHost"></div>
+
+  <!-- 알림 · 연동 안내 -->
+  <section class="note">
+    <h3>🔔 알림과 함께 쓰기</h3>
+    <ul>
+      <li><b>매일 06:40 아침 브리핑</b> — 날씨·뉴스와 함께 오늘 발표·마감을 알려 드립니다.</li>
+      <li><b>매일 14:00 당첨 확인</b> — 발표일이 된 항목의 결과를 해이가 직접 확인합니다.</li>
+      <li><b>이 앱의 알림</b> — 정적 웹앱이라 앱을 열 때 오늘 일정을 알림으로 띄웁니다(백그라운드 푸시 없음).</li>
+      <li><b>캘린더 내보내기</b> — 발표일 14:00·마감일을 폰 캘린더에 넣어 두면 30분 전에 알려 줍니다.</li>
+    </ul>
+    <div class="btns">
+      <button class="btn primary" id="btnNotify" type="button">🔔 알림 권한 · 테스트</button>
+      <button class="btn" id="btnIcs" type="button">📅 캘린더(.ics) 내보내기</button>
+    </div>
+    <p class="fine">기록은 이 기기 브라우저에만 저장되고 서버로 보내지 않습니다. 공개 저장소이므로 이름·연락처 같은 개인정보는 넣지 않았습니다. · gene</p>
+  </section>
+</main>
+
+<button class="fab" id="fab" type="button"><span class="plus">+</span>새 일정</button>
+
+<div class="scrim" id="scrim"></div>
+
+<!-- 편집 시트 -->
+<section class="sheet" id="editSheet" role="dialog" aria-modal="true" aria-labelledby="editH" hidden>
+  <div class="grip"></div>
+  <div class="sheet-in">
+    <h2 id="editH">새 일정 추가</h2>
+    <p class="sub">발표일과 마감만 넣어도 D-day로 정리해 드립니다.</p>
+    <form class="form" id="editForm" novalidate>
+      <div class="field">
+        <label for="fTitle">제목 <span style="color:var(--red)">*</span></label>
+        <input id="fTitle" type="text" placeholder="예) 알비온 허벌 오일 체험단" maxlength="90" required />
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="fCat">구분</label>
+          <select id="fCat">
+            <option value="체험단">체험단</option>
+            <option value="이벤트">이벤트 · 설문</option>
+            <option value="공모전">공모전</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="fStatus">단계</label>
+          <select id="fStatus">
+            <option value="wait">발표 대기</option>
+            <option value="win">당첨 · 리뷰 중</option>
+            <option value="lost">미당첨</option>
+            <option value="done">완료</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="fOrg">주최 · 출처</label>
+        <input id="fOrg" type="text" placeholder="예) SSG닷컴 MONDAY MOON" maxlength="60" />
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="fApplied">응모일</label>
+          <input id="fApplied" type="date" />
+        </div>
+        <div class="field">
+          <label for="fAnnounce">발표일</label>
+          <input id="fAnnounce" type="date" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="fDue">리뷰 · 응모 마감일</label>
+        <input id="fDue" type="date" />
+      </div>
+      <div class="field">
+        <label for="fPrize">경품 · 혜택</label>
+        <input id="fPrize" type="text" placeholder="예) 네이버페이 1만원 (300명)" maxlength="100" />
+      </div>
+      <div class="field">
+        <label for="fLink">원문 링크</label>
+        <input id="fLink" type="url" placeholder="https://…" maxlength="300" inputmode="url" />
+      </div>
+      <div class="field">
+        <label for="fMemo">메모 · 주의사항</label>
+        <textarea id="fMemo" placeholder="예) 수령 후 2주 내 후기 작성 필수" maxlength="400"></textarea>
+      </div>
+    </form>
+    <div class="sheet-actions">
+      <button class="btn ghost" id="btnDelete" type="button" hidden>삭제</button>
+      <button class="btn" id="btnCancel" type="button">취소</button>
+      <button class="btn primary" id="btnSave" type="button">저장</button>
+    </div>
+    <p class="hintline">발표일을 비워 두면 ‘발표일 미정’으로 따로 모아 둡니다.</p>
+  </div>
+</section>
+
+<!-- 메뉴 시트 -->
+<section class="sheet" id="menuSheet" role="dialog" aria-modal="true" aria-labelledby="menuH" hidden>
+  <div class="grip"></div>
+  <div class="sheet-in">
+    <h2 id="menuH">관리 · 백업</h2>
+    <p class="sub" id="menuSub">—</p>
+    <div class="menu-list">
+      <button class="menu-item" id="mNotify" type="button">
+        <span class="mi">🔔</span>
+        <span class="mt"><b>알림 켜기 · 테스트</b><small id="mNotifySub">앱을 열 때 오늘 일정을 알림으로</small></span>
+      </button>
+      <button class="menu-item" id="mIcs" type="button">
+        <span class="mi">📅</span>
+        <span class="mt"><b>캘린더(.ics) 내보내기</b><small>발표일·마감일을 폰 캘린더에 등록</small></span>
+      </button>
+      <button class="menu-item" id="mExport" type="button">
+        <span class="mi">⬇️</span>
+        <span class="mt"><b>JSON 백업</b><small>지금 목록을 파일로 저장</small></span>
+      </button>
+      <button class="menu-item" id="mImport" type="button">
+        <span class="mi">⬆️</span>
+        <span class="mt"><b>JSON 복원</b><small>백업 파일에서 목록 되살리기</small></span>
+      </button>
+      <button class="menu-item" id="mReseed" type="button">
+        <span class="mi">♻️</span>
+        <span class="mt"><b>기본 일정 다시 불러오기</b><small>빠진 기본 항목만 추가 (내 기록 유지)</small></span>
+      </button>
+      <button class="menu-item danger" id="mReset" type="button">
+        <span class="mi">🗑</span>
+        <span class="mt"><b>전체 초기화</b><small>모두 지우고 기본 일정으로 되돌림</small></span>
+      </button>
+      <a class="menu-item" href="../index.html">
+        <span class="mi">🏢</span>
+        <span class="mt"><b>AI 지휘실로</b><small>gene 대표의 AI 사무실</small></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<input type="file" id="restoreFile" accept="application/json,.json" hidden />
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="./data.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
