@@ -181,7 +181,7 @@ class AppsActivity : MobileActivity() {
                     setStorage(app, dir)
                 } else {
                     pending = app to dir
-                    Toast.makeText(this, "${app.name}이 $dir을 쓰려면 파일 접근을 허용해 주세요", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "${app.name}이 ${dir}을 쓰려면 파일 접근을 허용해 주세요", Toast.LENGTH_LONG).show()
                     Storage.requestAccess(this)
                 }
             }
@@ -245,7 +245,7 @@ class AppsActivity : MobileActivity() {
     private fun libraryOption(app: AppDef): String? {
         val label = app.storageLabel?.lowercase() ?: return null
         val sharing = apps.sharing(app).joinToString { it.name }
-        return "$label 안의 파일도 함께 삭제" + if (sharing.isEmpty()) "" else " ($sharing도 함께 사용)"
+        return "$label 안의 파일도 함께 삭제" + if (sharing.isEmpty()) "" else " (${sharing}도 함께 사용)"
     }
 
     private fun Supervisor.State.severity() = when (this) {
