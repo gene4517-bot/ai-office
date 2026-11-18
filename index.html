@@ -73,9 +73,21 @@
   .live i{width:5px;height:5px;border-radius:50%;background:#0f1a12;animation:pulse 1.8s infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
   .stats{display:flex;gap:5px;margin-top:8px}
-  .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:6px 7px}
+  .stat{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:6px 7px 7px;
+    cursor:pointer;text-align:left;font-family:inherit;color:inherit;position:relative;appearance:none;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+    transition:transform .12s ease,background .16s ease,border-color .16s ease,box-shadow .16s ease}
   .stat b{display:block;font-size:15px;font-weight:800;letter-spacing:-.5px;line-height:1.1}
-  .stat span{font-size:9.5px;color:var(--dim2)}
+  .stat span{display:block;font-size:9.5px;color:var(--dim2);line-height:1.25;padding-right:7px}
+  .stat .statgo{position:absolute;top:5px;right:5px;font:800 9px/1 inherit;color:#6b5a45;font-style:normal;
+    transition:color .16s ease,transform .16s ease}
+  .stat:hover{background:#221b13;border-color:#5b4931}
+  .stat:hover .statgo{color:#c9a97a;transform:translateX(1px)}
+  .stat:active{transform:scale(.965);background:#2b2114}
+  .stat.on{border-color:#f5b866;background:#2b2114;
+    box-shadow:0 0 0 1px rgba(245,184,102,.42) inset,0 4px 14px rgba(240,176,100,.16)}
+  .stat.on .statgo{color:#f5b866;transform:translateX(1px)}
+  .stat:focus-visible{outline:2px solid #f5b866;outline-offset:2px}
   .synced{display:flex;align-items:center;gap:4px;margin-left:auto;flex:0 0 auto;font:800 9px/1.15 inherit;
     color:#cbb79c;background:#241c14;border:1px solid #3a2f22;padding:5px 7px;border-radius:999px;
     font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
@@ -98,7 +110,20 @@
   .tabs::-webkit-scrollbar{display:none}
   .tabs button{min-width:0;padding:7px 4px;border-radius:9px;background:#17120d;border:1px solid #2a2118;
     color:var(--dim);font:700 10.5px/1 inherit;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .tabs button.on{background:var(--card);border-color:var(--line);color:var(--ink)}  .pane{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--card);
+  .tabs button.on{background:var(--card);border-color:var(--line);color:var(--ink)}
+  /* 통계 카드 필터 배지 */
+  .filbar{flex:0 0 auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:6px 10px;
+    background:linear-gradient(180deg,#302413,#241b10);border-top:1px solid #4a3826;border-bottom:1px solid var(--line);
+    font:800 10px/1.35 inherit;color:#ffd79b}
+  .filbar[hidden]{display:none}
+  .filbar .fico{font-size:10.5px;line-height:1}
+  .filbar .fcnt{font:700 9.5px/1.35 inherit;color:#d8c3a3;background:#1c1510;border:1px solid #3f3225;
+    border-radius:999px;padding:3px 7px;font-variant-numeric:tabular-nums}
+  .filbar button{margin-left:auto;font:800 9.5px/1 inherit;color:#ffd79b;background:#3a2a12;border:1px solid #6b5230;
+    border-radius:999px;padding:6px 9px;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+  .filbar button:active{transform:scale(.96);background:#4a3618}
+  .filbar button:focus-visible{outline:2px solid #ffd79b;outline-offset:1px}
+  .pane{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--card);
     border-top:1px solid var(--line);padding:9px 10px calc(14px + env(safe-area-inset-bottom))}
   .pane[hidden]{display:none}
 
@@ -245,7 +270,9 @@
     .hud span{font-size:10.5px;padding:5px 7px}
     .stask{max-width:250px}
   }
-  @media (max-width:480px){ .synced{font-size:8.5px;padding:4px 6px} .notice{font-size:9.4px} }
+  @media (max-width:480px){ .synced{font-size:8.5px;padding:4px 6px} .notice{font-size:9.4px}
+    .stat{padding:5px 6px 6px} .stat b{font-size:14px} .stat span{font-size:8.8px;letter-spacing:-.2px}
+    .stat .statgo{top:4px;right:4px;font-size:8px} .filbar{padding:6px 8px;font-size:9.4px} }
   @media (max-height:640px){ .phead{padding:6px 10px 6px} .stat b{font-size:13.5px} .stats{margin-top:5px}
     .notice{padding:5px 10px;font-size:9px} .synced{font-size:8.5px;padding:4px 6px} }
 
@@ -379,10 +406,10 @@
           <div class="synced" title="status.json 마지막 갱신 시점"><i></i><span id="lastSync">마지막 갱신 —</span></div>
         </div>
         <div class="stats" id="stats">
-          <div class="stat"><b id="stDone">0</b><span>기록된 처리</span></div>
-          <div class="stat"><b id="stProg" style="color:#f5b866">0</b><span>진행 중</span></div>
-          <div class="stat"><b id="stWait" style="color:#94a3b8">0</b><span>대기</span></div>
-          <div class="stat"><b id="stStaff">19</b><span>AI 역할·도구</span></div>
+          <button type="button" class="stat" data-stat="done" title="터치하면 완료된 기록만 보기" aria-label="기록된 처리 — 완료 업무만 보기"><b id="stDone">0</b><span>기록된 처리</span><i class="statgo" aria-hidden="true">›</i></button>
+          <button type="button" class="stat" data-stat="progress" title="터치하면 진행 중인 일과 맡은 직원 보기" aria-label="진행 중 — 진행 중 업무와 맡은 직원 보기"><b id="stProg" style="color:#f5b866">0</b><span>진행 중</span><i class="statgo" aria-hidden="true">›</i></button>
+          <button type="button" class="stat" data-stat="waiting" title="터치하면 대기 중인 일과 대기 직원 보기" aria-label="대기 — 대기 중 업무와 직원 보기"><b id="stWait" style="color:#94a3b8">0</b><span>대기</span><i class="statgo" aria-hidden="true">›</i></button>
+          <button type="button" class="stat" data-stat="staff" title="터치하면 직원 현황 탭에서 전체 AI 역할·도구 보기" aria-label="AI 역할·도구 — 직원 현황 탭에서 전체 보기"><b id="stStaff">19</b><span>AI 역할·도구</span><i class="statgo" aria-hidden="true">›</i></button>
         </div>
       </div>
       <div class="notice"><b>ℹ︎</b><span>업무 현황을 한눈에 보는 대시보드입니다. 직원 상태와 통계는 마지막 갱신 시점 기준이며, 실제 자동 실행 여부는 기능별 표시를 확인해 주세요.</span></div>
@@ -396,6 +423,11 @@
         <button data-tab="tools">⚡ 도구</button>
         <button data-tab="log">활동 로그</button>
         <button data-tab="voice">🎤 음성 지휘</button>
+      </div>
+
+      <div class="filbar" id="filbar" hidden>
+        <span class="fico" id="filIco">▸</span><span id="filLab">필터</span><span class="fcnt" id="filCnt"></span>
+        <button type="button" id="filClear" aria-label="필터 해제하고 전체 보기">전체 보기 ✕</button>
       </div>
 
       <div class="pane" id="pane-office"></div>
@@ -1412,6 +1444,14 @@ function pnote(key, text) {
   return '<div class="pnote">' + modeChip(key) + '<span>' + text + '</span></div>';
 }
 let data = null, chars = [], logs = [], selectedId = null, localMode = false, lastSync = '';
+/* 통계 카드 터치 필터 상태: null | 'done' | 'progress' | 'waiting' | 'staff' */
+let statFilter = null;
+const STAT_FILTER_META = {
+  done:     { tab: 'tasks', label: '기록된 처리', word: '완료만 보기',   ico: '✓', color: '#6ee7b7' },
+  progress: { tab: 'tasks', label: '진행 중',     word: '진행 중만 보기', ico: '▸', color: '#f5b866' },
+  waiting:  { tab: 'tasks', label: '대기',        word: '대기만 보기',    ico: '⋯', color: '#94a3b8' },
+  staff:    { tab: 'staff', label: 'AI 역할·도구', word: '전체 보기',     ico: '👥', color: '#7dd3fc' }
+};
 let lastRaw = '';
 
 function makeChar(s) {
@@ -2198,25 +2238,125 @@ function deptSum() {
   return '<div class="mini">부서 편성 · gene 대표 + AI 역할·도구 ' + (chars.filter(c => c.visible && c.id !== 'ceo').length) + '개</div>' +
     '<div class="deptsum">' + cells + '</div>';
 }
+function taskRowHtml(x) {
+  const st = x.state === 'done' ? { c: '#6ee7b7', bg: '#12352b', t: '완료', ico: '✓' }
+    : x.state === 'waiting' ? { c: '#94a3b8', bg: '#1e2430', t: '대기', ico: '⋯' }
+    : { c: '#f5b866', bg: '#3a2a12', t: '진행 중', ico: '▸' };
+  return '<div class="task">' +
+    '<div class="ico" style="background:' + st.bg + ';color:' + st.c + '">' + st.ico + '</div>' +
+    '<div style="min-width:0;flex:1">' +
+      '<div class="tt">' + x.title + '</div>' +
+      '<div class="bar"><i style="width:' + (x.progress || 0) + '%;background:' + st.c + '"></i></div>' +
+      '<div class="tmeta"><span class="who">' + x.owner + '</span><span>·</span><span>' + st.t + '</span>' +
+        (x.note ? '<span style="margin-left:auto">' + x.note + '</span>' : '') + '</div>' +
+    '</div></div>';
+}
+function tasksOf(state) {
+  return (((data && data.tasks) || [])).filter(x => x && x.state === state);
+}
+function charByName(name) {
+  if (!name) return null;
+  const n = String(name).trim();
+  return chars.find(c => c.visible && c.name === n) ||
+    chars.find(c => c.visible && String(c.name || '').toLowerCase() === n.toLowerCase()) || null;
+}
+function staffRowsHtml(list) {
+  return list.map(ch => {
+    const st = STATUS_META[ch.status] || STATUS_META.working;
+    return '<div class="srow' + (ch.id === selectedId ? ' sel' : '') + '" data-id="' + ch.id + '">' +
+      '<span class="sav" style="background:' + ch.color + '22;border:1px solid ' + ch.color + '55">' +
+        '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + ch.color + '"></span></span>' +
+      '<span style="min-width:0;flex:1"><span class="sname">' + ch.name +
+        ' <span style="color:#8a7660;font-weight:700">· ' + ch.rank + '</span></span>' +
+      '<span class="stask">' + (ch.role ? ch.role + ' — ' : '') + (ch.task || '') + '</span>' +
+      '<span class="smeta">' + modeChip(ch.mode) +
+        '<span class="badge" style="color:' + st.color + ';background:' + st.color + '18;border:1px solid ' + st.color + '44">' + st.label + '</span></span></span>' +
+    '</div>';
+  }).join('');
+}
+function secHead(text, count, color) {
+  return '<div class="dhead"><i style="background:' + color + '"></i>' + text + '<span>' + count + '</span></div>';
+}
+function ownerStaff(list) {
+  const out = [];
+  list.forEach(t => {
+    const ch = charByName(t.owner);
+    if (ch && !out.some(o => o.id === ch.id)) out.push(ch);
+  });
+  return out.sort((a, b) => a.order - b.order);
+}
+function updateFilbar() {
+  const bar = document.getElementById('filbar');
+  document.querySelectorAll('#stats .stat').forEach(b => {
+    b.classList.toggle('on', !!statFilter && b.getAttribute('data-stat') === statFilter);
+  });
+  if (!bar) return;
+  if (!statFilter) { bar.hidden = true; return; }
+  const M = STAT_FILTER_META[statFilter];
+  const n = statFilter === 'staff'
+    ? chars.filter(c => c.visible && c.id !== 'ceo').length
+    : tasksOf(statFilter).length;
+  const icoEl = document.getElementById('filIco');
+  if (icoEl) icoEl.textContent = M.ico;
+  document.getElementById('filLab').textContent = '필터: ' + M.label + ' · ' + M.word;
+  document.getElementById('filCnt').textContent = n + (statFilter === 'staff' ? '개' : '건');
+  bar.hidden = false;
+}
+function openStatFilter(key) {
+  const M = STAT_FILTER_META[key];
+  if (!M) return;
+  /* 이미 켜진 카드를 다시 누르면 필터를 풀고 전체 보기로 돌아갑니다 */
+  statFilter = (statFilter === key) ? null : key;
+  if (statFilter) switchTab(M.tab);
+  renderTasks();
+  renderStaff();
+  updateFilbar();
+  const p = document.getElementById('pane-' + (statFilter ? M.tab : 'tasks'));
+  if (p) p.scrollTop = 0;
+}
+function clearStatFilter() {
+  statFilter = null;
+  renderTasks();
+  renderStaff();
+  updateFilbar();
+}
 function renderTasks() {
   const d = data || {};
   const el = document.getElementById('pane-tasks');
   const order = { progress: 0, waiting: 1, done: 2 };
-  const list = ((d.tasks) || []).slice().sort((a, b) => (order[a.state] ?? 3) - (order[b.state] ?? 3));
-  if (!list.length) { el.innerHTML = '<div class="empty">표시할 업무가 없습니다</div>'; return; }
-  el.innerHTML = pnote('record', '기록된 업무 목록입니다 · 완료 상태는 기록값') + list.map(x => {
-    const st = x.state === 'done' ? { c: '#6ee7b7', bg: '#12352b', t: '완료', ico: '✓' }
-      : x.state === 'waiting' ? { c: '#94a3b8', bg: '#1e2430', t: '대기', ico: '⋯' }
-      : { c: '#f5b866', bg: '#3a2a12', t: '진행 중', ico: '▸' };
-    return '<div class="task">' +
-      '<div class="ico" style="background:' + st.bg + ';color:' + st.c + '">' + st.ico + '</div>' +
-      '<div style="min-width:0;flex:1">' +
-        '<div class="tt">' + x.title + '</div>' +
-        '<div class="bar"><i style="width:' + (x.progress || 0) + '%;background:' + st.c + '"></i></div>' +
-        '<div class="tmeta"><span class="who">' + x.owner + '</span><span>·</span><span>' + st.t + '</span>' +
-          (x.note ? '<span style="margin-left:auto">' + x.note + '</span>' : '') + '</div>' +
-      '</div></div>';
-  }).join('');
+  const f = (statFilter && statFilter !== 'staff') ? statFilter : null;
+  const list = (f ? tasksOf(f) : (d.tasks || [])).slice()
+    .sort((a, b) => (order[a.state] ?? 3) - (order[b.state] ?? 3));
+  if (!list.length) {
+    el.innerHTML = '<div class="empty">' + (f ? STAT_FILTER_META[f].label + ' 상태의 업무가 없습니다' : '표시할 업무가 없습니다') + '</div>';
+    updateFilbar();
+    return;
+  }
+  let html = f
+    ? pnote('record', STAT_FILTER_META[f].label + ' ' + list.length + '건' +
+        (f === 'done' ? ' · 완료된 기록된 처리만 모았습니다'
+          : ' · 이 일을 맡은 직원까지 함께 표시합니다'))
+    : pnote('record', '기록된 업무 목록입니다 · 완료 상태는 기록값');
+  html += list.map(taskRowHtml).join('');
+  if (f === 'progress' || f === 'waiting') {
+    const owners = ownerStaff(list);
+    html += secHead(f === 'progress' ? '👥 진행 중인 일을 맡은 직원' : '👥 대기 중인 일을 맡은 직원',
+      owners.length + '명', STAT_FILTER_META[f].color);
+    html += owners.length ? staffRowsHtml(owners) : '<div class="empty">직원을 찾지 못했습니다</div>';
+    if (f === 'waiting') {
+      const idle = chars.filter(c => c.visible && c.status === 'idle' && !owners.some(o => o.id === c.id))
+        .sort((a, b) => a.order - b.order);
+      if (idle.length) {
+        html += secHead('😴 지금 대기 중(idle)인 직원', idle.length + '명', '#cbd5e1');
+        html += staffRowsHtml(idle);
+      }
+    }
+  }
+  el.innerHTML = html;
+  el.querySelectorAll('.srow').forEach(row => {
+    row.addEventListener('click', () => selectStaff(row.getAttribute('data-id'), true));
+  });
+  updateFilbar();
 }
 function renderStaff() {
   const el = document.getElementById('pane-staff');
@@ -2224,7 +2364,6 @@ function renderStaff() {
   const DC = { '대표실': '#f2b134', '지휘부': '#f5b866', '전문 자문단': '#a78bfa', '특수·실무팀': '#7dd3fc', '전산·PC 공병대': '#a78bfa' };
   let out = '', last = null;
   list.forEach(ch => {
-    const st = STATUS_META[ch.status] || STATUS_META.working;
     const dept = ch.dept || (ch.id === 'ceo' ? '대표실' : '기타');
     if (dept !== last) {
       last = dept;
@@ -2232,19 +2371,16 @@ function renderStaff() {
       out += '<div class="dhead"><i style="background:' + (DC[dept] || '#cbb79c') + '"></i>' + dept +
         '<span>' + n + (dept === '대표실' ? '명 · 대표님 포함' : '명') + '</span></div>';
     }
-    out += '<div class="srow' + (ch.id === selectedId ? ' sel' : '') + '" data-id="' + ch.id + '">' +
-      '<span class="sav" style="background:' + ch.color + '22;border:1px solid ' + ch.color + '55">' +
-        '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + ch.color + '"></span></span>' +
-      '<span style="min-width:0;flex:1"><span class="sname">' + ch.name + ' <span style="color:#8a7660;font-weight:700">· ' + ch.rank + '</span></span>' +
-      '<span class="stask">' + (ch.role ? ch.role + ' — ' : '') + (ch.task || '') + '</span>' +
-      '<span class="smeta">' + modeChip(ch.mode) +
-        '<span class="badge" style="color:' + st.color + ';background:' + st.color + '18;border:1px solid ' + st.color + '44">' + st.label + '</span></span></span>' +
-    '</div>';
+    out += staffRowsHtml([ch]);
   });
-  el.innerHTML = out;
+  const lead = statFilter === 'staff'
+    ? pnote('record', 'AI 역할·도구 전체 ' + list.filter(c => c.id !== 'ceo').length + '개 + gene 대표 · 부서별 목록')
+    : '';
+  el.innerHTML = lead + out;
   el.querySelectorAll('.srow').forEach(row => {
     row.addEventListener('click', () => selectStaff(row.getAttribute('data-id'), true));
   });
+  updateFilbar();
 }
 function renderLog() {
   const el = document.getElementById('pane-log');
@@ -2258,6 +2394,7 @@ function renderLog() {
     '</div>').join('');
 }
 function selectStaff(id, focus) {
+  statFilter = null;   /* 필터 보기에서 직원을 고르면 전체 직원 현황으로 이동합니다 */
   selectedId = (selectedId === id) ? null : id;
   renderStaff();
   if (selectedId && focus) {
@@ -3173,8 +3310,18 @@ phasesEl.addEventListener('click', e => {
 });
 document.getElementById('tabs').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
+  /* 탭을 직접 고르면 통계 카드 필터는 해제합니다(전체 보기) */
+  statFilter = null; updateFilbar();
   switchTab(b.getAttribute('data-tab'));
 });
+/* 🖱️ 상단 통계 카드 4칸 터치/클릭 */
+const statsEl = document.getElementById('stats');
+if (statsEl) statsEl.addEventListener('click', e => {
+  const b = e.target.closest('[data-stat]');
+  if (b) openStatFilter(b.getAttribute('data-stat'));
+});
+const filClearEl = document.getElementById('filClear');
+if (filClearEl) filClearEl.addEventListener('click', clearStatFilter);
 /* 📺 세계 무료 TV 간편모드 */
 const tvBtnEl = document.getElementById('tvBtn');
 if (tvBtnEl) tvBtnEl.addEventListener('click', () => openTV());
