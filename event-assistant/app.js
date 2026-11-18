@@ -534,12 +534,12 @@
     d.setDate(d.getDate() + n);
     return toKey(d);
   }
-  function eventLines(it, kind, day, timed) {
+  function eventLines(it, kind, day, timed, key) {
     var desc = [it.org, it.prize ? '경품: ' + it.prize : '', it.memo ? '메모: ' + it.memo : '', it.link || '']
       .filter(Boolean).join('\n');
     var out = [
       'BEGIN:VEVENT',
-      'UID:' + it.id + '-' + kind + '@event-assistant',
+      'UID:' + it.id + '-' + (key || 'evt') + '@event-assistant',
       'DTSTAMP:' + stamp(),
       'SUMMARY:' + icsText('[' + kind + '] ' + it.title)
     ];
@@ -568,8 +568,8 @@
     var count = 0;
     state.items.forEach(function (it) {
       if (it.status === 'lost' || it.status === 'done') return;
-      if (it.announce) { lines = lines.concat(eventLines(it, '발표', it.announce, true)); count++; }
-      if (it.due) { lines = lines.concat(eventLines(it, '마감', it.due, false)); count++; }
+      if (it.announce) { lines = lines.concat(eventLines(it, '발표', it.announce, true, 'announce')); count++; }
+      if (it.due) { lines = lines.concat(eventLines(it, '마감', it.due, false, 'due')); count++; }
     });
     lines.push('END:VCALENDAR');
     return { text: lines.join('\r\n'), count: count };
