@@ -1,7 +1,7 @@
 {
   "name": "AI 지휘실",
   "short_name": "AI 지휘실",
-  "description": "음성으로 지시하는 AI 지휘실 · 실사 오피스에서 gene 대표와 AI 역할·도구 19개가 함께 움직이는 업무 대시보드",
+  "description": "음성으로 지시하는 AI 지휘실 · 실사 오피스와 AI 합동 채팅방(gene 대표 + AI 12명)에서 역할별 의견을 한 방에서 받는 업무 대시보드",
   "lang": "ko",
   "dir": "ltr",
   "start_url": "./index.html",
@@ -84,8 +84,8 @@
       ]
     },
     {
-      "name": "💬 AI 직원 단톡방",
-      "short_name": "단톡방",
+      "name": "💬 AI 합동 채팅방",
+      "short_name": "합동채팅",
       "url": "./index.html?tab=chat",
       "icons": [
         {
