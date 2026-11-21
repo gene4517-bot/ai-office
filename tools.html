@@ -478,6 +478,7 @@ $$("#tabs .tab").forEach(function (b) {
   b.addEventListener("click", function () {
     $$("#tabs .tab").forEach(function (x) { x.classList.toggle("on", x === b); });
     $$(".pane").forEach(function (p) { p.classList.toggle("on", p.id === b.dataset.tab); });
+    try { b.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" }); } catch (e) { }
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 });
