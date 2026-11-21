@@ -168,7 +168,7 @@
         <div class="cvwrap"><canvas id="t1cv"></canvas></div>
         <div class="row">
           <div class="seg" id="t1mode"><button data-v="mosaic" class="on">모자이크</button><button data-v="blur">블러</button></div>
-          <label class="sld">굵기 <input id="t1brush" type="range" min="12" max="120" value="38"><b id="t1brushv">38</b></label>
+          <label class="sld">굵기 <input id="t1brush" type="range" min="12" max="120" value="44"><b id="t1brushv">44</b></label>
         </div>
         <div class="row">
           <button class="btn ghost" id="t1undo">↶ 되돌리기</button>
@@ -495,7 +495,7 @@ function onSeg(id, cb) {
 /* ===================================================================
    ① EXIF 제거 & 모자이크
    =================================================================== */
-var T1 = { base: null, work: null, wctx: null, strokes: [], cur: null, brush: 38, mode: "mosaic", name: "photo", W: 0, H: 0 };
+var T1 = { base: null, work: null, wctx: null, strokes: [], cur: null, brush: 44, mode: "mosaic", name: "photo", W: 0, H: 0 };
 var CAP = 2600;
 
 function exifInfo(buf) {
@@ -549,7 +549,7 @@ function t1Apply(ctx, p, mode, size) {
   var x = Math.max(0, Math.min(T1.W - s, p.x - s / 2));
   var y = Math.max(0, Math.min(T1.H - s, p.y - s / 2));
   var t = document.createElement("canvas");
-  var cells = Math.max(3, Math.round(s / (mode === "mosaic" ? 7 : 5)));
+  var cells = Math.max(3, Math.round(s / (mode === "mosaic" ? 11 : 5)));
   t.width = cells; t.height = cells;
   var tc = t.getContext("2d");
   tc.imageSmoothingEnabled = true;
