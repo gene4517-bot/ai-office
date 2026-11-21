@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=5">
+<title>피클 유틸 7종 · 진근 님 로컬 도구</title>
+<meta name="theme-color" content="#15120f">
+<meta name="description" content="사진 EXIF 제거·모자이크, URL 추적 제거, PDF↔이미지, 압축·포맷 변환, QR 생성, SNS 비율, 워터마크 — 전부 내 폰 브라우저 안에서만 처리">
+<link rel="manifest" href="./tools.webmanifest">
+<link rel="apple-touch-icon" href="./assets/icon-180.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="유틸 7종">
+<meta name="referrer" content="no-referrer">
+<style>
+  :root{
+    --bg:#15120f; --bg2:#1b1510; --card:#201a14; --card2:#241d16; --line:#33281d; --line2:#3f3225;
+    --txt:#f6efe4; --dim:#a89680; --dim2:#7d6b56;
+    --gold:#f0b064; --gold2:#ffd79b; --mint:#57cbaf; --mint2:#a8f0dc; --pink:#e08b8b;
+    --safe-t:env(safe-area-inset-top,0px); --safe-b:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);
+    font:500 14px/1.45 -apple-system,BlinkMacSystemFont,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    min-height:100vh;-webkit-text-size-adjust:100%}
+  a{color:var(--gold2)}
+  /* ---------- 헤더 ---------- */
+  header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:9px;
+    padding:calc(8px + var(--safe-t)) 12px 8px;
+    background:linear-gradient(180deg,#1b1510,#120e0a);border-bottom:1px solid var(--line)}
+  .back{flex:0 0 auto;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;
+    background:#241c14;border:1px solid var(--line2);color:var(--gold2);text-decoration:none;font-size:16px}
+  .back:active{transform:scale(.95)}
+  .ht{min-width:0;flex:1 1 auto}
+  .ht b{display:block;font-size:14px;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ht small{display:block;font-size:10px;color:var(--dim2);margin-top:1px}
+  .lock{flex:0 0 auto;font:800 9.5px/1.2 inherit;color:#04211d;background:linear-gradient(150deg,#a8f0dc,#57cbaf);
+    border:1px solid #8ee8d1;border-radius:999px;padding:5px 8px;white-space:nowrap}
+  /* ---------- 탭 ---------- */
+  nav.tabs{position:sticky;top:calc(49px + var(--safe-t));z-index:19;display:flex;gap:6px;overflow-x:auto;
+    padding:8px 10px;background:#120e0a;border-bottom:1px solid var(--line);scrollbar-width:none}
+  nav.tabs::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;font:800 11.5px/1 inherit;color:var(--dim);
+    background:#1a140f;border:1px solid var(--line);padding:8px 11px;border-radius:999px;cursor:pointer;white-space:nowrap}
+  .tab.on{color:#2a1a08;background:linear-gradient(160deg,#ffd79b,#f0b064);border-color:var(--gold2);
+    box-shadow:0 2px 10px rgba(240,176,100,.25)}
+  /* ---------- 본문 ---------- */
+  main{padding:12px 12px calc(28px + var(--safe-b));max-width:760px;margin:0 auto}
+  .pane{display:none;animation:fade .18s ease}
+  .pane.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .ph{margin:2px 0 10px}
+  .ph b{display:block;font-size:15px;letter-spacing:-.3px}
+  .ph span{display:block;font-size:11.5px;color:var(--dim2);margin-top:3px;line-height:1.5}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+  .sub{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:11px;margin-bottom:10px}
+  .sub>b{display:block;font-size:12.5px;color:var(--gold2);margin-bottom:8px}
+  .pick{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;
+    font:800 13px/1 inherit;color:#20150a;background:linear-gradient(150deg,#ffe0a8,#f0a24c);
+    border:1px solid #ffd79b;padding:13px 12px;border-radius:12px;cursor:pointer;text-align:center;
+    box-shadow:0 2px 12px rgba(240,162,76,.24)}
+  .pick:active{transform:scale(.985)}
+  .btn{flex:1 1 0;min-width:96px;display:inline-flex;align-items:center;justify-content:center;gap:5px;
+    font:800 12.5px/1 inherit;color:#20150a;background:linear-gradient(150deg,#ffe0a8,#f0a24c);
+    border:1px solid #ffd79b;padding:12px 10px;border-radius:11px;cursor:pointer}
+  .btn.mint{color:#04211d;background:linear-gradient(150deg,#a8f0dc,#57cbaf);border-color:#8ee8d1}
+  .btn.ghost{color:#e6d3b8;background:#241c14;border:1px solid var(--line2)}
+  .btn[disabled]{opacity:.45;pointer-events:none}
+  .btn:active,.pick:active{filter:brightness(1.05)}
+  .row{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-top:9px}
+  .row.tight{margin-top:6px}
+  .sel{flex:1 1 130px;min-width:0;display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--dim)}
+  select{flex:1 1 auto;min-width:0;font:700 12px/1 inherit;color:var(--txt);background:#1a140f;
+    border:1px solid var(--line2);border-radius:9px;padding:9px 8px;appearance:none}
+  .sld{flex:1 1 100%;display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--dim)}
+  .sld input[type=range]{flex:1 1 auto;min-width:0;accent-color:#f0b064;height:26px}
+  .sld b{flex:0 0 auto;font-size:11px;color:var(--gold2);min-width:34px;text-align:right;font-variant-numeric:tabular-nums}
+  .seg{display:flex;flex:1 1 100%;gap:5px;background:#120e0a;border:1px solid var(--line);border-radius:10px;padding:3px}
+  .seg button{flex:1 1 0;font:800 11.5px/1 inherit;color:var(--dim);background:transparent;border:0;
+    padding:9px 6px;border-radius:8px;cursor:pointer;white-space:nowrap}
+  .seg button.on{color:#2a1a08;background:linear-gradient(160deg,#ffd79b,#f0b064)}
+  textarea,input[type=text],input[type=password]{width:100%;font:600 13px/1.5 inherit;color:var(--txt);
+    background:#120e0a;border:1px solid var(--line2);border-radius:11px;padding:11px;resize:vertical}
+  textarea:focus,input:focus{outline:2px solid #6b5a3f;outline-offset:1px}
+  .meta{font-size:11px;color:var(--dim2);margin-top:9px;line-height:1.55}
+  .meta b{color:var(--gold2)}
+  .meta .warn{color:#ffb4a8}
+  .empty{border:1px dashed var(--line2);border-radius:12px;padding:18px 12px;text-align:center;
+    color:var(--dim2);font-size:11.5px;margin-top:10px}
+  .ok{margin-top:9px;font-size:11.5px;color:var(--mint2);line-height:1.55;word-break:break-all}
+  .warnbox{margin-top:9px;font-size:11.5px;line-height:1.55;color:#ffd9a8;background:#2a2013;
+    border:1px solid #5a4224;border-radius:10px;padding:9px 10px}
+  .out{margin-top:9px;background:#120e0a;border:1px solid var(--line2);border-radius:11px;padding:11px;
+    font:700 13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:#ffe7c4;word-break:break-all;min-height:44px}
+  .chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+  .chip{font:700 10.5px/1 inherit;color:#ffb4a8;background:#31201a;border:1px solid #553229;
+    border-radius:999px;padding:6px 8px}
+  .cvwrap{margin-top:10px;background:#0d0a08;border:1px solid var(--line);border-radius:12px;overflow:hidden;
+    display:flex;justify-content:center}
+  canvas#t1cv,canvas#t5cv{display:block;max-width:100%;height:auto;touch-action:none}
+  .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:7px;margin-top:10px}
+  .th{position:relative;background:#120e0a;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .th img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;background:#000}
+  .th .x{position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;border:0;
+    background:rgba(0,0,0,.66);color:#fff;font:800 12px/22px inherit;cursor:pointer;padding:0}
+  .th .n{display:block;font-size:9px;color:var(--dim2);padding:3px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .th .mv{position:absolute;bottom:16px;left:3px;display:flex;gap:3px}
+  .th .mv button{width:20px;height:20px;border-radius:6px;border:0;background:rgba(0,0,0,.66);color:#fff;
+    font:800 11px/20px inherit;cursor:pointer;padding:0}
+  .list{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+  .it{display:flex;gap:9px;align-items:center;background:#120e0a;border:1px solid var(--line);border-radius:11px;padding:8px}
+  .it img{width:52px;height:52px;border-radius:8px;object-fit:cover;background:#000;flex:0 0 auto}
+  .it .info{flex:1 1 auto;min-width:0}
+  .it .info b{display:block;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .it .info small{display:block;font-size:10.5px;color:var(--dim2);margin-top:2px}
+  .it .info small em{font-style:normal;color:var(--mint2)}
+  .it button{flex:0 0 auto;font:800 11px/1 inherit;color:#20150a;background:linear-gradient(150deg,#ffe0a8,#f0a24c);
+    border:0;border-radius:9px;padding:9px 10px;cursor:pointer}
+  .grid9{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;flex:1 1 168px}
+  .grid9 button{aspect-ratio:1/1;border-radius:9px;border:1px solid var(--line2);background:#1a140f;
+    color:var(--dim);font:800 13px/1 inherit;cursor:pointer}
+  .grid9 button.on{background:linear-gradient(160deg,#ffd79b,#f0b064);color:#2a1a08;border-color:var(--gold2)}
+  .hint{font-size:10.5px;color:var(--dim2);margin-top:7px;line-height:1.5}
+  #toast{position:fixed;left:50%;bottom:calc(22px + var(--safe-b));transform:translate(-50%,20px);
+    background:#2c2318;border:1px solid #6b5228;color:#ffe7c4;font:700 12px/1.4 inherit;padding:11px 15px;
+    border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.55);opacity:0;pointer-events:none;
+    transition:.22s;max-width:88vw;text-align:center;z-index:60}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  .busy{position:relative}
+  .spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.25);
+    border-top-color:#ffe7c4;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:5px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  footer{text-align:center;font-size:10.5px;color:#5f5244;padding:8px 0 0;line-height:1.6}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="./index.html" title="AI 지휘실로 돌아가기" aria-label="AI 지휘실로 돌아가기">←</a>
+  <div class="ht">
+    <b>🛠️ 피클 유틸 7종</b>
+    <small>사진·PDF·링크 손질을 한 화면에서</small>
+  </div>
+  <span class="lock">🔒 폰 안에서만</span>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="tab on" data-tab="t1">① EXIF·모자이크</button>
+  <button class="tab" data-tab="t2">② URL 추적 제거</button>
+  <button class="tab" data-tab="t3">③ PDF ↔ 이미지</button>
+  <button class="tab" data-tab="t4">④ 압축·변환</button>
+  <button class="tab" data-tab="t5">⑤ QR 생성</button>
+  <button class="tab" data-tab="t6">⑥ SNS 비율</button>
+  <button class="tab" data-tab="t7">⑦ 워터마크</button>
+</nav>
+
+<main>
+  <!-- ============ ① EXIF 제거 & 모자이크 ============ -->
+  <section class="pane on" id="t1">
+    <div class="ph"><b>① EXIF 제거 &amp; 모자이크</b><span>사진의 위치·기기 정보를 지우고, 계좌번호·얼굴 같은 곳을 손가락으로 칠해서 가려요</span></div>
+    <div class="card">
+      <label class="pick" for="t1file">📷 사진 선택</label>
+      <input id="t1file" type="file" accept="image/*" hidden>
+      <div class="meta" id="t1meta"></div>
+      <div class="empty" id="t1empty">사진을 고르면 바로 칠해서 가릴 수 있어요. 저장하면 위치·촬영기기 정보가 사라진 새 파일이 만들어져요.</div>
+      <div id="t1stage" hidden>
+        <div class="cvwrap"><canvas id="t1cv"></canvas></div>
+        <div class="row">
+          <div class="seg" id="t1mode"><button data-v="mosaic" class="on">모자이크</button><button data-v="blur">블러</button></div>
+          <label class="sld">굵기 <input id="t1brush" type="range" min="12" max="120" value="38"><b id="t1brushv">38</b></label>
+        </div>
+        <div class="row">
+          <button class="btn ghost" id="t1undo">↶ 되돌리기</button>
+          <button class="btn ghost" id="t1clear">전체 지우기</button>
+        </div>
+        <div class="row">
+          <button class="btn" id="t1jpg">JPG로 저장</button>
+          <button class="btn mint" id="t1png">PNG로 저장</button>
+        </div>
+        <div class="ok" id="t1done"></div>
+        <div class="hint">저장 파일은 캔버스로 새로 그린 것이라 EXIF·GPS·기기정보가 0바이트도 들어가지 않아요.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ② URL 추적 제거 ============ -->
+  <section class="pane" id="t2">
+    <div class="ph"><b>② URL 추적 제거</b><span>utm·igshid·fbclid 같은 꼬리표를 떼고 깨끗한 원본 링크만 남겨요</span></div>
+    <div class="card">
+      <textarea id="t2in" rows="3" placeholder="여기에 링크를 붙여넣으세요 (앞뒤에 다른 글자가 섞여 있어도 링크만 찾아요)"></textarea>
+      <div class="row">
+        <button class="btn ghost" id="t2paste">📋 붙여넣기</button>
+        <button class="btn" id="t2go">정리하기</button>
+      </div>
+      <div class="out" id="t2out">—</div>
+      <div class="row">
+        <button class="btn mint" id="t2copy">복사</button>
+        <button class="btn ghost" id="t2open">새 탭에서 열기</button>
+      </div>
+      <div class="chips" id="t2removed"></div>
+      <div class="warnbox" id="t2note" hidden></div>
+      <div class="hint">지우는 항목: utm_*, igshid·igsh, fbclid·gclid, share, si, hvrq, NaPm, trackingCode, src, spec 등 40여 가지. 단축 링크가 리다이렉트를 거치는 경우(쿠팡 파트너스 등)에는 안내가 함께 떠요.</div>
+    </div>
+  </section>
+
+  <!-- ============ ③ PDF ↔ 이미지 ============ -->
+  <section class="pane" id="t3">
+    <div class="ph"><b>③ PDF ↔ 이미지</b><span>사진 여러 장을 PDF 한 개로 묶거나, PDF를 페이지별 사진으로 풀어요</span></div>
+    <div class="card">
+      <div class="sub">
+        <b>이미지 → PDF</b>
+        <label class="pick" for="t3imgs">🖼 이미지 여러 장 선택</label>
+        <input id="t3imgs" type="file" accept="image/*" multiple hidden>
+        <div class="thumbs" id="t3list"></div>
+        <div class="row">
+          <label class="sel">페이지 <select id="t3size"><option value="a4">A4 (여백 있음)</option><option value="ratio">원본 비율</option></select></label>
+          <label class="sel">여백 <select id="t3margin"><option value="0">0mm</option><option value="8" selected>8mm</option><option value="15">15mm</option></select></label>
+          <label class="sel">화질 <select id="t3q"><option value="0.92">높음</option><option value="0.8" selected>보통</option><option value="0.65">가벼움</option></select></label>
+        </div>
+        <div class="row"><button class="btn" id="t3go">PDF 만들기</button></div>
+        <div class="ok" id="t3st"></div>
+      </div>
+      <div class="sub">
+        <b>PDF → 이미지</b>
+        <label class="pick" for="t3pdf">📄 PDF 선택</label>
+        <input id="t3pdf" type="file" accept="application/pdf" hidden>
+        <div class="row">
+          <label class="sel">해상도 <select id="t3w"><option value="1080">1080px</option><option value="1600" selected>1600px</option><option value="2400">2400px</option></select></label>
+          <label class="sel">형식 <select id="t3fmt"><option value="image/png">PNG</option><option value="image/jpeg">JPG</option></select></label>
+        </div>
+        <div class="row"><button class="btn" id="t3split">페이지별 이미지로 풀기</button><button class="btn ghost" id="t3zip" hidden>전체 ZIP 저장</button></div>
+        <div class="ok" id="t3st2"></div>
+        <div class="thumbs" id="t3out"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ④ 압축 & 포맷 변환 ============ -->
+  <section class="pane" id="t4">
+    <div class="ph"><b>④ 이미지 압축 &amp; 포맷 변환</b><span>화질·최대 너비를 줄여 용량을 다이어트하고 JPG·PNG·WebP로 한꺼번에 바꿔요</span></div>
+    <div class="card">
+      <label class="pick" for="t4file">🖼 사진 여러 장 선택</label>
+      <input id="t4file" type="file" accept="image/*" multiple hidden>
+      <div class="row">
+        <label class="sld">화질 <input id="t4q" type="range" min="30" max="100" step="5" value="80"><b id="t4qv">80%</b></label>
+        <label class="sel">최대 너비 <select id="t4w"><option value="0">원본 유지</option><option value="2048">2048px</option><option value="1600">1600px</option><option value="1200" selected>1200px</option><option value="800">800px</option></select></label>
+        <label class="sel">형식 <select id="t4fmt"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></label>
+      </div>
+      <div class="row"><button class="btn" id="t4go">압축·변환 실행</button><button class="btn ghost" id="t4zip" hidden>전체 ZIP 저장</button></div>
+      <div class="ok" id="t4st"></div>
+      <div class="list" id="t4out"></div>
+    </div>
+  </section>
+
+  <!-- ============ ⑤ QR 생성 ============ -->
+  <section class="pane" id="t5">
+    <div class="ph"><b>⑤ 만료 없는 QR 생성기</b><span>광고·만료 없이 내 QR을 직접 만들어 PNG로 저장해요</span></div>
+    <div class="card">
+      <div class="seg" id="t5type">
+        <button data-v="url" class="on">URL</button>
+        <button data-v="text">텍스트</button>
+        <button data-v="wifi">와이파이</button>
+      </div>
+      <div id="t5urlBox" style="margin-top:10px"><input id="t5url" type="text" inputmode="url" placeholder="example.com 또는 https://..."></div>
+      <div id="t5textBox" style="margin-top:10px;display:none"><textarea id="t5text" rows="3" placeholder="QR에 담을 글자"></textarea></div>
+      <div id="t5wifiBox" style="margin-top:10px;display:none">
+        <input id="t5ssid" type="text" placeholder="와이파이 이름(SSID)" style="margin-bottom:7px">
+        <input id="t5pw" type="text" placeholder="비밀번호" style="margin-bottom:7px">
+        <div class="row" style="margin-top:0">
+          <label class="sel">암호화 <select id="t5sec"><option value="WPA">WPA/WPA2</option><option value="WEP">WEP</option><option value="nopass">없음</option></select></label>
+        </div>
+      </div>
+      <div class="row">
+        <label class="sel">크기 <select id="t5size"><option value="512">512px</option><option value="1024" selected>1024px</option><option value="2048">2048px</option></select></label>
+        <label class="sel">복원력 <select id="t5ecl"><option value="L">L (작게)</option><option value="M" selected>M (기본)</option><option value="Q">Q (강함)</option><option value="H">H (최강)</option></select></label>
+      </div>
+      <div class="cvwrap" style="background:#fff;padding:10px"><canvas id="t5cv" width="10" height="10"></canvas></div>
+      <div class="row"><button class="btn" id="t5go">QR 만들기</button><button class="btn mint" id="t5save">PNG 저장</button></div>
+      <div class="ok" id="t5st"></div>
+      <div class="hint">와이파이 QR은 손님이 카메라로 찍으면 바로 접속돼요. 암호는 QR 안에만 들어가고 어디로도 전송되지 않아요.</div>
+    </div>
+  </section>
+
+  <!-- ============ ⑥ SNS 비율 리사이즈 ============ -->
+  <section class="pane" id="t6">
+    <div class="ph"><b>⑥ SNS 비율 리사이즈</b><span>1:1·4:5·16:9·9:16에 사진이 잘리지 않게 여백(흰색·검정·블러)을 채워요</span></div>
+    <div class="card">
+      <label class="pick" for="t6file">🖼 사진 여러 장 선택</label>
+      <input id="t6file" type="file" accept="image/*" multiple hidden>
+      <div class="seg" id="t6ratio" style="margin-top:10px">
+        <button data-v="1:1" class="on">1:1</button>
+        <button data-v="4:5">4:5</button>
+        <button data-v="16:9">16:9</button>
+        <button data-v="9:16">9:16</button>
+      </div>
+      <div class="row">
+        <label class="sel">긴 변 <select id="t6base"><option value="1080" selected>1080px</option><option value="1440">1440px</option><option value="2048">2048px</option></select></label>
+      </div>
+      <div class="seg" id="t6bg" style="margin-top:7px">
+        <button data-v="blur" class="on">블러 배경</button>
+        <button data-v="white">흰색</button>
+        <button data-v="black">검정</button>
+      </div>
+      <div class="row"><button class="btn" id="t6go">리사이즈 실행</button><button class="btn ghost" id="t6zip" hidden>전체 ZIP 저장</button></div>
+      <div class="ok" id="t6st"></div>
+      <div class="list" id="t6out"></div>
+    </div>
+  </section>
+
+  <!-- ============ ⑦ 워터마크 ============ -->
+  <section class="pane" id="t7">
+    <div class="ph"><b>⑦ 워터마크 일괄 삽입</b><span>사진 여러 장에 내 아이디나 문구를 한 번에 박아요</span></div>
+    <div class="card">
+      <label class="pick" for="t7file">🖼 사진 여러 장 선택</label>
+      <input id="t7file" type="file" accept="image/*" multiple hidden>
+      <div class="row"><input id="t7text" type="text" value="@ogenegun" placeholder="워터마크 글자"></div>
+      <div class="row">
+        <div class="grid9" id="t7pos">
+          <button data-v="tl">↖</button><button data-v="tc">↑</button><button data-v="tr">↗</button>
+          <button data-v="ml">←</button><button data-v="mc" class="on">가운데</button><button data-v="mr">→</button>
+          <button data-v="bl">↙</button><button data-v="bc">↓</button><button data-v="br">↘</button>
+        </div>
+      </div>
+      <div class="row">
+        <label class="sld">크기 <input id="t7size" type="range" min="2" max="14" step="0.5" value="4.5"><b id="t7sizev">4.5%</b></label>
+        <label class="sld">투명도 <input id="t7op" type="range" min="10" max="100" step="5" value="55"><b id="t7opv">55%</b></label>
+      </div>
+      <div class="seg" id="t7color" style="margin-top:7px">
+        <button data-v="white" class="on">흰 글자</button>
+        <button data-v="black">검은 글자</button>
+      </div>
+      <div class="row"><button class="btn" id="t7go">워터마크 넣기</button><button class="btn ghost" id="t7zip" hidden>전체 ZIP 저장</button></div>
+      <div class="ok" id="t7st"></div>
+      <div class="list" id="t7out"></div>
+    </div>
+  </section>
+
+  <footer>모든 처리는 이 브라우저 안에서만 돌아갑니다 · 사진·PDF·링크가 서버로 전송되지 않아요<br>gene4517-bot.github.io/ai-office/tools.html</footer>
+</main>
+
+<div id="toast"></div>
+
+<script src="./assets/vendor/qrcode.js" defer></script>
+<script>
+/* ===================================================================
+   피클 유틸 7종 — 100% 로컬 처리 (Canvas / FileReader / Blob)
+   외부 API 호출 없음. 모든 계산은 이 페이지 안에서 끝납니다.
+   =================================================================== */
+"use strict";
+
+/* ---------- 공통 도우미 ---------- */
+var $ = function (s, r) { return (r || document).querySelector(s); };
+var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+function toast(msg) {
+  var t = $("#toast"); t.textContent = msg; t.classList.add("on");
+  clearTimeout(toast._t); toast._t = setTimeout(function () { t.classList.remove("on"); }, 2200);
+}
+function fmtBytes(n) {
+  if (!n && n !== 0) return "-";
+  if (n < 1024) return n + "B";
+  if (n < 1024 * 1024) return (n / 1024).toFixed(1) + "KB";
+  return (n / 1024 / 1024).toFixed(2) + "MB";
+}
+function esc(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+function stamp() {
+  var d = new Date(), p = function (v) { return (v < 10 ? "0" : "") + v; };
+  return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + "-" + p(d.getHours()) + p(d.getMinutes());
+}
+function baseName(name, i) {
+  var b = String(name || "file").replace(/\.[^.]+$/, "");
+  return b + (i === undefined ? "" : "-" + (i + 1));
+}
+function downloadBlob(blob, name) {
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.rel = "noopener";
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 5000);
+}
+function loadImg(src) {
+  return new Promise(function (res, rej) {
+    var im = new Image();
+    im.onload = function () { res(im); };
+    im.onerror = function () { rej(new Error("이미지를 열 수 없어요. 다른 사진으로 다시 시도해 주세요.")); };
+    if (src instanceof Blob) { im.src = URL.createObjectURL(src); }
+    else { im.src = src; }
+  });
+}
+function canvasToBlob(cv, type, q) {
+  return new Promise(function (res) {
+    cv.toBlob(function (b) { res(b); }, type, q);
+  });
+}
+/* 외부 라이브러리는 필요할 때만, 이 사이트 안에서 불러옵니다 */
+var _libs = {};
+function loadScript(src) {
+  if (_libs[src]) return _libs[src];
+  _libs[src] = new Promise(function (res, rej) {
+    var s = document.createElement("script");
+    s.src = src; s.async = true;
+    s.onload = function () { res(); };
+    s.onerror = function () { rej(new Error("라이브러리를 불러오지 못했어요. 새로고침 후 다시 시도해 주세요.")); };
+    document.head.appendChild(s);
+  });
+  return _libs[src];
+}
+/* ---------- ZIP (무압축 저장 방식, 라이브러리 없이) ---------- */
+var CRC_T = (function () {
+  var t = new Uint32Array(256);
+  for (var n = 0; n < 256; n++) {
+    var c = n;
+    for (var k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+function crc32(u8) {
+  var c = 0xFFFFFFFF;
+  for (var i = 0; i < u8.length; i++) c = CRC_T[(c ^ u8[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+function makeZip(files) {
+  var enc = new TextEncoder(), parts = [], central = [], offset = 0, i;
+  for (i = 0; i < files.length; i++) {
+    var f = files[i], nameU8 = enc.encode(f.name), crc = crc32(f.u8), size = f.u8.length;
+    var lh = new Uint8Array(30 + nameU8.length), dv = new DataView(lh.buffer);
+    dv.setUint32(0, 0x04034b50, true); dv.setUint16(4, 20, true); dv.setUint16(6, 0x0800, true);
+    dv.setUint16(8, 0, true); dv.setUint16(10, 0, true); dv.setUint16(12, 0, true);
+    dv.setUint32(14, crc, true); dv.setUint32(18, size, true); dv.setUint32(22, size, true);
+    dv.setUint16(26, nameU8.length, true); dv.setUint16(28, 0, true);
+    lh.set(nameU8, 30);
+    parts.push(lh, f.u8);
+    var ch = new Uint8Array(46 + nameU8.length), cv = new DataView(ch.buffer);
+    cv.setUint32(0, 0x02014b50, true); cv.setUint16(4, 20, true); cv.setUint16(6, 20, true);
+    cv.setUint16(8, 0x0800, true); cv.setUint16(10, 0, true); cv.setUint16(12, 0, true);
+    cv.setUint16(14, 0, true); cv.setUint32(16, crc, true); cv.setUint32(20, size, true);
+    cv.setUint32(24, size, true); cv.setUint16(28, nameU8.length, true); cv.setUint16(30, 0, true);
+    cv.setUint16(32, 0, true); cv.setUint16(34, 0, true); cv.setUint16(36, 0, true);
+    cv.setUint32(38, 0, true); cv.setUint32(42, offset, true);
+    ch.set(nameU8, 46);
+    central.push(ch);
+    offset += lh.length + size;
+  }
+  var cSize = central.reduce(function (a, b) { return a + b.length; }, 0);
+  var eocd = new Uint8Array(22), ev = new DataView(eocd.buffer);
+  ev.setUint32(0, 0x06054b50, true); ev.setUint16(4, 0, true); ev.setUint16(6, 0, true);
+  ev.setUint16(8, files.length, true); ev.setUint16(10, files.length, true);
+  ev.setUint32(12, cSize, true); ev.setUint32(16, offset, true); ev.setUint16(20, 0, true);
+  return new Blob(parts.concat(central, [eocd]), { type: "application/zip" });
+}
+function zipFromBlobs(items) {
+  return Promise.all(items.map(function (it) {
+    return it.blob.arrayBuffer().then(function (b) { return { name: it.name, u8: new Uint8Array(b) }; });
+  })).then(makeZip);
+}
+
+/* ---------- 탭 전환 ---------- */
+$$("#tabs .tab").forEach(function (b) {
+  b.addEventListener("click", function () {
+    $$("#tabs .tab").forEach(function (x) { x.classList.toggle("on", x === b); });
+    $$(".pane").forEach(function (p) { p.classList.toggle("on", p.id === b.dataset.tab); });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+});
+function setSeg(id, val) {
+  $$("#" + id + " button").forEach(function (b) { b.classList.toggle("on", b.dataset.v === val); });
+}
+function onSeg(id, cb) {
+  $$("#" + id + " button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      setSeg(id, b.dataset.v); cb(b.dataset.v);
+    });
+  });
+}
+
+/* ===================================================================
+   ① EXIF 제거 & 모자이크
+   =================================================================== */
+var T1 = { base: null, work: null, wctx: null, strokes: [], cur: null, brush: 38, mode: "mosaic", name: "photo", W: 0, H: 0 };
+var CAP = 2600;
+
+function exifInfo(buf) {
+  var out = { hasExif: false, gps: false, make: "", model: "", date: "" };
+  try {
+    var dv = new DataView(buf);
+    if (dv.getUint16(0) !== 0xFFD8) return out;
+    var off = 2;
+    while (off + 4 < dv.byteLength) {
+      var marker = dv.getUint16(off);
+      if ((marker & 0xFF00) !== 0xFF00) break;
+      var len = dv.getUint16(off + 2);
+      if (marker === 0xFFE1 && dv.getUint32(off + 4) === 0x45786966) {
+        out.hasExif = true;
+        var tiff = off + 10;
+        var le = dv.getUint16(tiff) === 0x4949;
+        var g16 = function (o) { return dv.getUint16(o, le); };
+        var g32 = function (o) { return dv.getUint32(o, le); };
+        var ifd = tiff + g32(tiff + 4);
+        var n = g16(ifd);
+        for (var i = 0; i < n; i++) {
+          var e = ifd + 2 + i * 12, tag = g16(e), type = g16(e + 2), cnt = g32(e + 4);
+          if (tag === 0x8825) out.gps = true;
+          if (tag === 0x010F || tag === 0x0110 || tag === 0x0132) {
+            if (type === 2 && cnt > 0) {
+              var s = "", vlen = Math.min(cnt, 32);
+              for (var k = 0; k < vlen; k++) {
+                var c = dv.getUint8(e + 8 + k);
+                if (c === 0) break;
+                s += String.fromCharCode(c);
+              }
+              if (tag === 0x010F) out.make = s;
+              if (tag === 0x0110) out.model = s;
+              if (tag === 0x0132) out.date = s;
+            }
+          }
+        }
+        break;
+      }
+      off += 2 + len;
+      if (marker === 0xFFDA) break;
+    }
+  } catch (err) { }
+  return out;
+}
+
+function t1Apply(ctx, p, mode, size) {
+  var s = Math.max(10, size);
+  var x = Math.max(0, Math.min(T1.W - s, p.x - s / 2));
+  var y = Math.max(0, Math.min(T1.H - s, p.y - s / 2));
+  var t = document.createElement("canvas");
+  var cells = Math.max(3, Math.round(s / (mode === "mosaic" ? 7 : 5)));
+  t.width = cells; t.height = cells;
+  var tc = t.getContext("2d");
+  tc.imageSmoothingEnabled = true;
+  tc.drawImage(T1.base, x, y, s, s, 0, 0, cells, cells);
+  ctx.save();
+  ctx.imageSmoothingEnabled = mode === "mosaic" ? false : true;
+  if (mode === "blur") {
+    ctx.beginPath(); ctx.arc(x + s / 2, y + s / 2, s / 2, 0, Math.PI * 2); ctx.clip();
+  }
+  ctx.drawImage(t, 0, 0, cells, cells, x, y, s, s);
+  ctx.restore();
+}
+function t1Repaint() {
+  T1.wctx.clearRect(0, 0, T1.W, T1.H);
+  T1.wctx.drawImage(T1.base, 0, 0);
+  T1.strokes.forEach(function (st) {
+    st.pts.forEach(function (p) { t1Apply(T1.wctx, p, st.mode, st.size); });
+  });
+}
+
+$("#t1file").addEventListener("change", async function (e) {
+  var file = e.target.files && e.target.files[0];
+  if (!file) return;
+  try {
+    var img = await loadImg(file);
+    var w = img.naturalWidth, h = img.naturalHeight, k = Math.min(1, CAP / Math.max(w, h));
+    T1.W = Math.round(w * k); T1.H = Math.round(h * k);
+    T1.base = document.createElement("canvas");
+    T1.base.width = T1.W; T1.base.height = T1.H;
+    T1.base.getContext("2d").drawImage(img, 0, 0, T1.W, T1.H);
+    T1.work = $("#t1cv"); T1.work.width = T1.W; T1.work.height = T1.H;
+    T1.wctx = T1.work.getContext("2d");
+    T1.strokes = []; T1.cur = null;
+    T1.name = baseName(file.name);
+    t1Repaint();
+    var info = exifInfo(await file.arrayBuffer());
+    var bits = ["원본 " + fmtBytes(file.size), w + "×" + h];
+    if (info.hasExif) {
+      bits.push('<b class="warn">EXIF 있음' + (info.gps ? " · GPS 위치 포함" : " · GPS 없음") + "</b>");
+    } else { bits.push("EXIF 없음"); }
+    if (info.model) bits.push(esc(info.make + " " + info.model));
+    if (info.date) bits.push(esc(info.date));
+    $("#t1meta").innerHTML = bits.join(" · ");
+    $("#t1stage").hidden = false;
+    $("#t1empty").hidden = true;
+    $("#t1done").textContent = "손가락으로 가릴 곳을 칠한 뒤 저장을 누르세요.";
+  } catch (err) { toast(err.message); }
+});
+
+(function () {
+  var cv = $("#t1cv");
+  function pos(ev) {
+    var r = cv.getBoundingClientRect();
+    return { x: (ev.clientX - r.left) * cv.width / r.width, y: (ev.clientY - r.top) * cv.height / r.height };
+  }
+  function dispScale() {
+    var r = cv.getBoundingClientRect();
+    return r.width ? cv.width / r.width : 1;
+  }
+  cv.addEventListener("pointerdown", function (ev) {
+    if (!T1.base) return;
+    ev.preventDefault();
+    try { cv.setPointerCapture(ev.pointerId); } catch (e) { }
+    var p = pos(ev), size = T1.brush * dispScale();
+    T1.cur = { mode: T1.mode, size: size, pts: [p] };
+    t1Apply(T1.wctx, p, T1.cur.mode, size);
+  });
+  cv.addEventListener("pointermove", function (ev) {
+    if (!T1.cur) return;
+    ev.preventDefault();
+    var p = pos(ev), last = T1.cur.pts[T1.cur.pts.length - 1];
+    var d = Math.hypot(p.x - last.x, p.y - last.y);
+    if (d < T1.cur.size * 0.28) return;
+    var steps = Math.max(1, Math.round(d / (T1.cur.size * 0.28)));
+    for (var i = 1; i <= steps; i++) {
+      var q = { x: last.x + (p.x - last.x) * i / steps, y: last.y + (p.y - last.y) * i / steps };
+      T1.cur.pts.push(q);
+      t1Apply(T1.wctx, q, T1.cur.mode, T1.cur.size);
+    }
+  });
+  function end() {
+    if (T1.cur) { T1.strokes.push(T1.cur); T1.cur = null; }
+  }
+  cv.addEventListener("pointerup", end);
+  cv.addEventListener("pointercancel", end);
+  cv.addEventListener("pointerleave", end);
+})();
+
+$("#t1brush").addEventListener("input", function () {
+  T1.brush = +this.value; $("#t1brushv").textContent = this.value;
+});
+onSeg("t1mode", function (v) { T1.mode = v; });
+$("#t1undo").addEventListener("click", function () {
+  if (!T1.strokes.length) { toast("되돌릴 게 없어요"); return; }
+  T1.strokes.pop(); t1Repaint(); toast("한 획 되돌렸어요");
+});
+$("#t1clear").addEventListener("click", function () {
+  T1.strokes = []; t1Repaint(); toast("가린 곳을 모두 지웠어요");
+});
+async function t1Save(type) {
+  if (!T1.base) { toast("사진을 먼저 골라 주세요"); return; }
+  var ext = type === "image/png" ? "png" : "jpg";
+  var blob = await canvasToBlob(T1.work, type, 0.92);
+  downloadBlob(blob, T1.name + "-clean." + ext);
+  $("#t1done").textContent = "✅ 저장됨 · " + T1.name + "-clean." + ext + " · " + fmtBytes(blob.size) +
+    " · EXIF·GPS·기기정보 제거 완료";
+}
+$("#t1jpg").addEventListener("click", function () { t1Save("image/jpeg"); });
+$("#t1png").addEventListener("click", function () { t1Save("image/png"); });
+
+/* ===================================================================
+   ② URL 추적 제거
+   =================================================================== */
+var TRACK_EXACT = ["fbclid", "gclid", "gbraid", "wbraid", "dclid", "msclkid", "twclid", "ttclid", "yclid",
+  "igshid", "igsh", "ig_mid", "ig_rid", "si", "share", "share_id", "shareid", "utm", "trk", "trk_contact",
+  "trk_module", "trk_msg", "trk_sid", "mkt_tok", "_ga", "_gl", "_hsenc", "_hsmi", "hsa_cam", "hsa_grp",
+  "hsa_mt", "hsa_src", "hsa_ad", "hsa_acc", "hsa_net", "hsa_kw", "hsa_tgt", "hsa_ver", "hsa_evt",
+  "cmpid", "campaign", "campaignid", "adgroupid", "adid", "trackingcode", "hvrq", "hmci", "hmcu", "hmkw",
+  "hmpl", "hmti", "ref_src", "ref_url", "s_kwcid", "ef_id", "spm", "scm", "from", "from_source", "is_from",
+  "src", "spec", "napm", "npck", "nptk", "nt_source", "nt_medium", "nt_campaign", "fb_action_ids",
+  "fb_action_types", "fb_source", "fb_ref", "piwik_campaign", "pk_campaign", "pk_kwd", "pk_source",
+  "pk_medium", "mtm_campaign", "mtm_source", "mtm_medium", "vero_id", "vero_conv", "oly_anon_id",
+  "oly_enc_id", "wickedid", "tw_source", "guccounter", "guce_referrer", "guce_referrer_sig", "cndid",
+  "sfnsn", "ncid", "smid", "cmp", "yclid", "li_fat_id", "mc_cid", "mc_eid", "srsltid", "gad_source",
+  "gad_campaignid", "geniuslink", "ascsubtag", "tag", "linkcode", "creative", "creativeasin", "pd_rd_r",
+  "pd_rd_w", "pd_rd_wg", "pf_rd_p", "pf_rd_r", "qid", "sr", "crid", "sprefix", "th", "psc"];
+var TRACK_PREFIX = ["utm_", "pd_", "pf_rd_", "sc_", "pk_", "mtm_", "_hs", "hsa_", "vero_", "oly_", "at_", "ns_", "xtor"];
+var WRAP_HOSTS = ["l.threads.com", "l.instagram.com", "lm.facebook.com", "l.facebook.com", "l.messenger.com",
+  "out.reddit.com", "away.vk.com", "safelinks.protection.outlook.com", "link.medium.com", "href.li",
+  "redirect.viglink.com", "www.google.com"];
+
+function isTrack(k) {
+  var lk = k.toLowerCase();
+  if (TRACK_EXACT.indexOf(lk) >= 0) return true;
+  for (var i = 0; i < TRACK_PREFIX.length; i++) if (lk.indexOf(TRACK_PREFIX[i]) === 0) return true;
+  return false;
+}
+function cleanUrl(raw) {
+  var res = { ok: false, clean: "", removed: [], note: "", wrapper: "" };
+  var s = String(raw || "").trim();
+  if (!s) return res;
+  var m = s.match(/https?:\/\/[^\s<>"'\)]+/i);
+  if (!m) m = s.match(/(?:[a-z0-9-]+\.)+[a-z]{2,}(?:\/[^\s<>"'\)]*)?/i);
+  if (!m) return res;
+  var u = m[0];
+  if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+  var hops = 0;
+  while (hops < 4) {
+    var pu;
+    try { pu = new URL(u); } catch (e) { break; }
+    var host = pu.hostname.replace(/^www\./, "");
+    var isWrap = WRAP_HOSTS.indexOf(pu.hostname) >= 0 ||
+      (host === "google.com" && pu.pathname === "/url") || host === "bing.com" && pu.pathname === "/ck/a";
+    if (!isWrap) break;
+    var inner = pu.searchParams.get("u") || pu.searchParams.get("url") || pu.searchParams.get("q") ||
+      pu.searchParams.get("target") || pu.searchParams.get("redirect") || pu.searchParams.get("dest") ||
+      pu.searchParams.get("uddg");
+    if (!inner) break;
+    try { inner = decodeURIComponent(inner); } catch (e) { }
+    if (!/^https?:\/\//i.test(inner)) inner = "https://" + inner;
+    res.wrapper = pu.hostname;
+    u = inner; hops++;
+  }
+  var p;
+  try { p = new URL(u); } catch (e) { return res; }
+  var keys = [];
+  p.searchParams.forEach(function (v, k) { keys.push(k); });
+  keys.forEach(function (k) {
+    if (isTrack(k)) {
+      if (p.searchParams.get(k) !== "") res.removed.push(k);
+      p.searchParams.delete(k);
+    } else if (p.searchParams.get(k) === "") {
+      p.searchParams.delete(k);
+    }
+  });
+  var out = p.toString();
+  out = out.replace(/\?$/, "").replace(/#$/, "");
+  res.clean = out; res.ok = true;
+
+  var host2 = p.hostname;
+  var shopping = /coupa\.ng|link\.coupang\.com|coupang\.com|smartstore\.naver\.com|brand\.naver\.com|shopping\.naver\.com/i.test(host2);
+  var hadAffiliate = res.removed.some(function (k) {
+    return /^(src|spec|napm|hvrq|linkcode|tag)$/i.test(k);
+  });
+  if (/coupa\.ng|link\.coupang\.com/i.test(host2)) {
+    res.note = "쿠팡 파트너스 단축 링크는 리다이렉트 자체에 내 제휴 표시가 들어 있어요. 이 링크는 그대로 쓰는 게 안전해요(정리본을 쓰면 수수료가 잡히지 않을 수 있어요).";
+  } else if (shopping && hadAffiliate) {
+    res.note = "쇼핑 제휴 표시(src·spec·NaPm 등)가 함께 지워졌어요. 내 파트너스 링크로 홍보할 때는 정리본 대신 원본을 쓰세요.";
+  } else if (res.wrapper) {
+    res.note = "짧은 공유 링크(" + res.wrapper + ")를 벗겨서 실제 주소만 남겼어요.";
+  }
+  return res;
+}
+function t2Run() {
+  var r = cleanUrl($("#t2in").value);
+  var outEl = $("#t2out"), chips = $("#t2removed"), noteEl = $("#t2note");
+  chips.innerHTML = "";
+  noteEl.hidden = true;
+  if (!r.ok) {
+    outEl.textContent = String($("#t2in").value || "").trim() ? "링크를 찾지 못했어요. 주소를 확인해 주세요." : "—";
+    return;
+  }
+  outEl.textContent = r.clean;
+  r.removed.forEach(function (k) {
+    var c = document.createElement("span"); c.className = "chip"; c.textContent = k + " ✕"; chips.appendChild(c);
+  });
+  if (!r.removed.length) {
+    var c2 = document.createElement("span"); c2.className = "chip";
+    c2.style.color = "#a8f0dc"; c2.style.background = "#14251f"; c2.style.borderColor = "#2c5148";
+    c2.textContent = "지울 추적 파라미터 없음 ✓"; chips.appendChild(c2);
+  }
+  if (r.note) { noteEl.hidden = false; noteEl.textContent = "ⓘ " + r.note; }
+}
+$("#t2go").addEventListener("click", t2Run);
+var t2t = null;
+$("#t2in").addEventListener("input", function () {
+  clearTimeout(t2t); t2t = setTimeout(t2Run, 220);
+});
+$("#t2paste").addEventListener("click", async function () {
+  try {
+    var txt = await navigator.clipboard.readText();
+    if (!txt) { toast("클립보드가 비어 있어요"); return; }
+    $("#t2in").value = txt; t2Run();
+  } catch (e) { toast("붙여넣기가 막혔어요 — 입력창을 길게 눌러 붙여넣어 주세요"); }
+});
+$("#t2copy").addEventListener("click", async function () {
+  var txt = $("#t2out").textContent;
+  if (!txt || txt === "—") { toast("먼저 정리하기를 눌러 주세요"); return; }
+  try {
+    await navigator.clipboard.writeText(txt); toast("복사했어요");
+  } catch (e) {
+    var ta = document.createElement("textarea"); ta.value = txt; document.body.appendChild(ta);
+    ta.select(); try { document.execCommand("copy"); toast("복사했어요"); } catch (e2) { toast("복사가 막혔어요"); }
+    ta.remove();
+  }
+});
+$("#t2open").addEventListener("click", function () {
+  var txt = $("#t2out").textContent;
+  if (!txt || txt === "—") { toast("먼저 정리하기를 눌러 주세요"); return; }
+  window.open(txt, "_blank", "noopener");
+});
+
+/* ===================================================================
+   ③ PDF ↔ 이미지
+   =================================================================== */
+var T3 = { imgs: [], pages: [] };
+
+function renderThumbs(box, items, opts) {
+  box.innerHTML = "";
+  items.forEach(function (it, i) {
+    var d = document.createElement("div"); d.className = "th";
+    d.innerHTML = '<img alt="" src="' + it.thumb + '"><span class="n">' + esc(opts.label(i, it)) + "</span>";
+    if (opts.onRemove) {
+      var x = document.createElement("button"); x.className = "x"; x.textContent = "✕";
+      x.addEventListener("click", function () { opts.onRemove(i); });
+      d.appendChild(x);
+    }
+    if (opts.onMove) {
+      var mv = document.createElement("div"); mv.className = "mv";
+      var l = document.createElement("button"); l.textContent = "◀";
+      l.addEventListener("click", function () { opts.onMove(i, -1); });
+      var r = document.createElement("button"); r.textContent = "▶";
+      r.addEventListener("click", function () { opts.onMove(i, 1); });
+      mv.appendChild(l); mv.appendChild(r); d.appendChild(mv);
+    }
+    box.appendChild(d);
+  });
+}
+
+$("#t3imgs").addEventListener("change", async function (e) {
+  var fs = Array.prototype.slice.call(e.target.files || []);
+  if (!fs.length) return;
+  for (var i = 0; i < fs.length; i++) {
+    T3.imgs.push({ file: fs[i], name: fs[i].name, thumb: URL.createObjectURL(fs[i]) });
+  }
+  t3List();
+  $("#t3st").textContent = T3.imgs.length + "장 준비됨 · PDF 만들기를 누르세요";
+});
+function t3List() {
+  renderThumbs($("#t3list"), T3.imgs, {
+    label: function (i, it) { return it.name; },
+    onRemove: function (i) { T3.imgs.splice(i, 1); t3List(); },
+    onMove: function (i, d) {
+      var j = i + d; if (j < 0 || j >= T3.imgs.length) return;
+      var t = T3.imgs[i]; T3.imgs[i] = T3.imgs[j]; T3.imgs[j] = t; t3List();
+    }
+  });
+}
+$("#t3go").addEventListener("click", async function () {
+  if (!T3.imgs.length) { toast("이미지를 먼저 골라 주세요"); return; }
+  var st = $("#t3st");
+  st.innerHTML = '<span class="spin"></span>PDF 만드는 중…';
+  try {
+    await loadScript("./assets/vendor/jspdf.umd.min.js");
+    var JsPDF = window.jspdf && window.jspdf.jsPDF;
+    if (!JsPDF) throw new Error("PDF 라이브러리를 못 열었어요");
+    var mode = $("#t3size").value, margin = +$("#t3margin").value, q = +$("#t3q").value;
+    var doc = null;
+    for (var i = 0; i < T3.imgs.length; i++) {
+      var im = await loadImg(T3.imgs[i].file);
+      var w = im.naturalWidth, h = im.naturalHeight, k = Math.min(1, 3000 / Math.max(w, h));
+      var cv = document.createElement("canvas");
+      cv.width = Math.round(w * k); cv.height = Math.round(h * k);
+      var cx = cv.getContext("2d");
+      cx.fillStyle = "#fff"; cx.fillRect(0, 0, cv.width, cv.height);
+      cx.drawImage(im, 0, 0, cv.width, cv.height);
+      var data = cv.toDataURL("image/jpeg", q);
+      var ar = cv.width / cv.height;
+      if (mode === "a4") {
+        if (!doc) doc = new JsPDF({ unit: "mm", format: "a4", orientation: "p" });
+        else doc.addPage("a4", "p");
+        var pw = 210, ph = 297, m = margin;
+        var aw = pw - 2 * m, ah = ph - 2 * m;
+        var iw = aw, ih = iw / ar;
+        if (ih > ah) { ih = ah; iw = ih * ar; }
+        doc.addImage(data, "JPEG", (pw - iw) / 2, (ph - ih) / 2, iw, ih);
+      } else {
+        var pw2 = 210, ph2 = Math.min(1200, Math.max(40, 210 / ar));
+        if (!doc) doc = new JsPDF({ unit: "mm", format: [pw2, ph2], orientation: "p" });
+        else doc.addPage([pw2, ph2], "p");
+        doc.addImage(data, "JPEG", 0, 0, pw2, ph2);
+      }
+      st.innerHTML = '<span class="spin"></span>' + (i + 1) + " / " + T3.imgs.length + "장 넣는 중…";
+    }
+    var blob = doc.output("blob");
+    var nm = "photos-" + stamp() + ".pdf";
+    downloadBlob(blob, nm);
+    st.textContent = "✅ " + nm + " · " + T3.imgs.length + "페이지 · " + fmtBytes(blob.size) + " · 다운로드 폴더를 확인하세요";
+  } catch (err) {
+    st.textContent = "⚠️ " + err.message;
+  }
+});
+
+$("#t3pdf").addEventListener("change", async function (e) {
+  var f = e.target.files && e.target.files[0];
+  if (!f) return;
+  var st = $("#t3st2");
+  st.innerHTML = '<span class="spin"></span>PDF 읽는 중…';
+  try {
+    var lib = await loadPdfJs();
+    var data = new Uint8Array(await f.arrayBuffer());
+    var doc = await lib.getDocument({ data: data }).promise;
+    var targetW = +$("#t3w").value, type = $("#t3fmt").value, ext = type === "image/png" ? "png" : "jpg";
+    T3.pages = [];
+    st.innerHTML = '<span class="spin"></span>' + doc.numPages + "페이지 여는 중…";
+    for (var i = 1; i <= doc.numPages; i++) {
+      var page = await doc.getPage(i);
+      var vp1 = page.getViewport({ scale: 1 });
+      var vp = page.getViewport({ scale: targetW / vp1.width });
+      var cv = document.createElement("canvas");
+      cv.width = Math.round(vp.width); cv.height = Math.round(vp.height);
+      var cx = cv.getContext("2d");
+      cx.fillStyle = "#fff"; cx.fillRect(0, 0, cv.width, cv.height);
+      await page.render({ canvasContext: cx, viewport: vp, background: "#ffffff" }).promise;
+      var blob = await canvasToBlob(cv, type, 0.92);
+      T3.pages.push({ blob: blob, name: baseName(f.name) + "-p" + i + "." + ext, thumb: cv.toDataURL("image/jpeg", 0.5), w: cv.width, h: cv.height });
+      st.innerHTML = '<span class="spin"></span>' + i + " / " + doc.numPages + "페이지";
+    }
+    renderThumbs($("#t3out"), T3.pages, { label: function (i, it) { return "p" + (i + 1); } });
+    $("#t3zip").hidden = false;
+    var total = T3.pages.reduce(function (a, b) { return a + b.blob.size; }, 0);
+    st.textContent = "✅ " + doc.numPages + "페이지 · " + T3.pages[0].w + "px 폭 · 합계 " + fmtBytes(total) + " — 썸네일을 눌러 저장하거나 전체 ZIP";
+    $$("#t3out .th img").forEach(function (img, idx) {
+      img.style.cursor = "pointer";
+      img.addEventListener("click", function () {
+        downloadBlob(T3.pages[idx].blob, T3.pages[idx].name);
+        st.textContent = "저장: " + T3.pages[idx].name;
+      });
+    });
+  } catch (err) {
+    st.textContent = "⚠️ " + (err && err.message ? err.message : "PDF를 열지 못했어요. 암호가 걸린 PDF는 풀 수 없어요.");
+  }
+});
+async function loadPdfJs() {
+  if (window.pdfjsLib) return window.pdfjsLib;
+  await loadScript("./assets/vendor/pdf.min.js");
+  var lib = window.pdfjsLib;
+  if (!lib) throw new Error("PDF 엔진을 못 열었어요");
+  lib.GlobalWorkerOptions.workerSrc = "./assets/vendor/pdf.worker.min.js";
+  return lib;
+}
+$("#t3zip").addEventListener("click", async function () {
+  if (!T3.pages.length) return;
+  var st = $("#t3st2");
+  st.innerHTML = '<span class="spin"></span>ZIP 만드는 중…';
+  var zip = await zipFromBlobs(T3.pages);
+  downloadBlob(zip, "pdf-pages-" + stamp() + ".zip");
+  st.textContent = "✅ ZIP 저장 · " + fmtBytes(zip.size);
+});
+
+/* ===================================================================
+   ④ 이미지 압축 & 포맷 변환
+   =================================================================== */
+var T4 = { files: [], out: [] };
+$("#t4q").addEventListener("input", function () { $("#t4qv").textContent = this.value + "%"; });
+$("#t4file").addEventListener("change", function (e) {
+  T4.files = Array.prototype.slice.call(e.target.files || []);
+  $("#t4st").textContent = T4.files.length + "장 준비됨 · 실행을 누르면 용량이 줄어요";
+  $("#t4out").innerHTML = "";
+  $("#t4zip").hidden = true;
+});
+$("#t4go").addEventListener("click", async function () {
+  if (!T4.files.length) { toast("사진을 먼저 골라 주세요"); return; }
+  var st = $("#t4st"), q = +$("#t4q").value / 100, maxW = +$("#t4w").value, type = $("#t4fmt").value;
+  var ext = type === "image/png" ? "png" : type === "image/webp" ? "webp" : "jpg";
+  T4.out = []; $("#t4out").innerHTML = ""; $("#t4zip").hidden = true;
+  var savedTotal = 0, origTotal = 0;
+  for (var i = 0; i < T4.files.length; i++) {
+    st.innerHTML = '<span class="spin"></span>' + (i + 1) + " / " + T4.files.length + " 처리 중…";
+    try {
+      var im = await loadImg(T4.files[i]);
+      var w = im.naturalWidth, h = im.naturalHeight;
+      var k = maxW && w > maxW ? maxW / w : 1;
+      var cv = document.createElement("canvas");
+      cv.width = Math.max(1, Math.round(w * k)); cv.height = Math.max(1, Math.round(h * k));
+      var cx = cv.getContext("2d");
+      if (type !== "image/png") { cx.fillStyle = "#fff"; cx.fillRect(0, 0, cv.width, cv.height); }
+      cx.imageSmoothingQuality = "high";
+      cx.drawImage(im, 0, 0, cv.width, cv.height);
+      var blob = await canvasToBlob(cv, type, type === "image/png" ? undefined : q);
+      var name = baseName(T4.files[i].name, i) + "-" + cv.width + "." + ext;
+      origTotal += T4.files[i].size; savedTotal += blob.size;
+      T4.out.push({ blob: blob, name: name, w: cv.width, h: cv.height });
+      addListItem($("#t4out"), {
+        name: name,
+        sub: fmtBytes(T4.files[i].size) + " → " + fmtBytes(blob.size) + " · " + cv.width + "×" + cv.height,
+        pct: Math.round((1 - blob.size / T4.files[i].size) * 100),
+        thumb: cv.toDataURL("image/jpeg", 0.4),
+        blob: blob, fname: name
+      });
+    } catch (err) { toast("한 장을 건너뛰었어요: " + err.message); }
+  }
+  $("#t4zip").hidden = T4.out.length < 2;
+  st.textContent = "✅ " + T4.out.length + "장 완료 · " + fmtBytes(origTotal) + " → " + fmtBytes(savedTotal) +
+    " (" + Math.round((1 - savedTotal / Math.max(1, origTotal)) * 100) + "% 절약)";
+});
+$("#t4zip").addEventListener("click", async function () {
+  var zip = await zipFromBlobs(T4.out);
+  downloadBlob(zip, "compressed-" + stamp() + ".zip");
+  toast("ZIP 저장했어요 · " + fmtBytes(zip.size));
+});
+function addListItem(box, o) {
+  var d = document.createElement("div"); d.className = "it";
+  var pct = (o.pct === undefined ? "" : ' <em>' + (o.pct >= 0 ? "−" + o.pct + "%" : "+" + Math.abs(o.pct) + "%") + "</em>");
+  d.innerHTML = '<img alt="" src="' + o.thumb + '"><div class="info"><b>' + esc(o.name) + "</b><small>" + esc(o.sub) + pct + "</small></div>";
+  var b = document.createElement("button"); b.textContent = "저장";
+  b.addEventListener("click", function () { downloadBlob(o.blob, o.fname); toast("저장: " + o.fname); });
+  d.appendChild(b);
+  box.appendChild(d);
+}
+
+/* ===================================================================
+   ⑤ QR 생성기
+   =================================================================== */
+var T5 = { type: "url", last: null, cvs: null };
+onSeg("t5type", function (v) {
+  T5.type = v;
+  $("#t5urlBox").style.display = v === "url" ? "" : "none";
+  $("#t5textBox").style.display = v === "text" ? "" : "none";
+  $("#t5wifiBox").style.display = v === "wifi" ? "" : "none";
+  t5Make();
+});
+function qrEsc(s) { return String(s || "").replace(/([\\;,:"])/g, "\\$1"); }
+function qrPayload() {
+  if (T5.type === "wifi") {
+    var sec = $("#t5sec").value, ssid = $("#t5ssid").value.trim(), pw = $("#t5pw").value;
+    if (!ssid) return "";
+    if (sec === "nopass") return "WIFI:T:nopass;S:" + qrEsc(ssid) + ";;";
+    return "WIFI:T:" + sec + ";S:" + qrEsc(ssid) + ";P:" + qrEsc(pw) + ";;";
+  }
+  if (T5.type === "text") return $("#t5text").value;
+  var u = $("#t5url").value.trim();
+  if (u && !/^[a-z][a-z0-9+.-]*:/i.test(u)) u = "https://" + u;
+  return u;
+}
+$("#t5go").addEventListener("click", t5Make);
+var t5t = null;
+["t5url", "t5text", "t5ssid", "t5pw"].forEach(function (id) {
+  $("#" + id).addEventListener("input", function () { clearTimeout(t5t); t5t = setTimeout(t5Make, 320); });
+});
+["t5sec", "t5size", "t5ecl"].forEach(function (id) {
+  $("#" + id).addEventListener("change", t5Make);
+});
+function t5Make() {
+  var st = $("#t5st"), cv = $("#t5cv");
+  var payload = qrPayload();
+  if (!payload) { st.textContent = "내용을 입력하면 QR이 바로 생겨요."; return; }
+  if (typeof qrcode !== "function") { st.textContent = "QR 엔진을 불러오는 중…"; setTimeout(t5Make, 250); return; }
+  try {
+    var size = +$("#t5size").value, ecl = $("#t5ecl").value, margin = 4;
+    qrcode.stringToBytes = qrcode.stringToBytesFuncs["UTF-8"];
+    var qr = qrcode(0, ecl);
+    qr.addData(payload, "Byte");
+    qr.make();
+    var n = qr.getModuleCount();
+    var px = Math.max(2, Math.floor(size / (n + margin * 2)));
+    var side = (n + margin * 2) * px;
+    cv.width = side; cv.height = side;
+    var cx = cv.getContext("2d");
+    cx.fillStyle = "#ffffff"; cx.fillRect(0, 0, side, side);
+    cx.fillStyle = "#111111";
+    for (var r = 0; r < n; r++) {
+      for (var c = 0; c < n; c++) {
+        if (qr.isDark(r, c)) cx.fillRect((c + margin) * px, (r + margin) * px, px, px);
+      }
+    }
+    T5.last = { canvas: cv, name: "qr-" + stamp() + ".png" };
+    st.textContent = "✅ " + side + "×" + side + "px · " + n + "×" + n + "모듈 · " + payload.length + "자 · 저장을 누르면 PNG로 내려받아요";
+  } catch (err) {
+    st.textContent = "⚠️ " + (err && err.message ? err.message : "내용이 너무 길어요") + " — 글자를 줄이거나 복원력을 L로 낮춰 보세요.";
+  }
+}
+$("#t5save").addEventListener("click", async function () {
+  if (!T5.last) t5Make();
+  if (!T5.last) { toast("먼저 QR을 만들어 주세요"); return; }
+  var blob = await canvasToBlob(T5.last.canvas, "image/png");
+  downloadBlob(blob, T5.last.name);
+  toast("QR 저장: " + T5.last.name + " · " + fmtBytes(blob.size));
+});
+
+/* ===================================================================
+   ⑥ SNS 비율 리사이즈
+   =================================================================== */
+var T6 = { files: [], ratio: "1:1", bg: "blur", out: [] };
+$("#t6file").addEventListener("change", function (e) {
+  T6.files = Array.prototype.slice.call(e.target.files || []);
+  $("#t6st").textContent = T6.files.length + "장 준비됨 · 비율을 고르고 실행하세요";
+  $("#t6out").innerHTML = ""; $("#t6zip").hidden = true;
+});
+onSeg("t6ratio", function (v) { T6.ratio = v; });
+onSeg("t6bg", function (v) { T6.bg = v; });
+function ratioWH(r, base) {
+  var a = r.split(":").map(Number), rv = a[0] / a[1];
+  if (rv >= 1) return { w: base, h: Math.round(base / rv) };
+  return { w: Math.round(base * rv), h: base };
+}
+$("#t6go").addEventListener("click", async function () {
+  if (!T6.files.length) { toast("사진을 먼저 골라 주세요"); return; }
+  var st = $("#t6st"), base = +$("#t6base").value, dim = ratioWH(T6.ratio, base);
+  T6.out = []; $("#t6out").innerHTML = "";
+  for (var i = 0; i < T6.files.length; i++) {
+    st.innerHTML = '<span class="spin"></span>' + (i + 1) + " / " + T6.files.length + " 만드는 중…";
+    try {
+      var im = await loadImg(T6.files[i]);
+      var cv = document.createElement("canvas");
+      cv.width = dim.w; cv.height = dim.h;
+      var cx = cv.getContext("2d");
+      cx.fillStyle = T6.bg === "black" ? "#000" : "#fff";
+      cx.fillRect(0, 0, dim.w, dim.h);
+      var iw = im.naturalWidth, ih = im.naturalHeight;
+      if (T6.bg === "blur") {
+        var cover = Math.max(dim.w / iw, dim.h / ih);
+        var cw = iw * cover, chh = ih * cover;
+        cx.save();
+        cx.filter = "blur(" + Math.round(Math.max(dim.w, dim.h) / 40) + "px)";
+        cx.drawImage(im, (dim.w - cw) / 2, (dim.h - chh) / 2, cw, chh);
+        cx.restore();
+        cx.fillStyle = "rgba(0,0,0,.22)"; cx.fillRect(0, 0, dim.w, dim.h);
+      }
+      var fit = Math.min(dim.w / iw, dim.h / ih);
+      var fw = iw * fit, fh = ih * fit;
+      cx.imageSmoothingQuality = "high";
+      cx.drawImage(im, (dim.w - fw) / 2, (dim.h - fh) / 2, fw, fh);
+      var blob = await canvasToBlob(cv, "image/jpeg", 0.92);
+      var name = baseName(T6.files[i].name, i) + "-" + T6.ratio.replace(":", "x") + ".jpg";
+      T6.out.push({ blob: blob, name: name });
+      addListItem($("#t6out"), {
+        name: name, sub: dim.w + "×" + dim.h + " · " + fmtBytes(blob.size),
+        thumb: cv.toDataURL("image/jpeg", 0.4), blob: blob, fname: name
+      });
+    } catch (err) { toast("한 장을 건너뛰었어요: " + err.message); }
+  }
+  $("#t6zip").hidden = T6.out.length < 2;
+  st.textContent = "✅ " + T6.out.length + "장 완료 · " + T6.ratio + " (" + dim.w + "×" + dim.h + ") · 배경 " +
+    ({ blur: "블러", white: "흰색", black: "검정" })[T6.bg];
+});
+$("#t6zip").addEventListener("click", async function () {
+  var zip = await zipFromBlobs(T6.out);
+  downloadBlob(zip, "sns-" + stamp() + ".zip");
+  toast("ZIP 저장했어요 · " + fmtBytes(zip.size));
+});
+
+/* ===================================================================
+   ⑦ 워터마크
+   =================================================================== */
+var T7 = { files: [], pos: "mc", color: "white", out: [] };
+$("#t7file").addEventListener("change", function (e) {
+  T7.files = Array.prototype.slice.call(e.target.files || []);
+  $("#t7st").textContent = T7.files.length + "장 준비됨 · 문구와 위치를 정하고 실행하세요";
+  $("#t7out").innerHTML = ""; $("#t7zip").hidden = true;
+});
+onSeg("t7pos", function (v) { T7.pos = v; });
+onSeg("t7color", function (v) { T7.color = v; });
+$("#t7size").addEventListener("input", function () { $("#t7sizev").textContent = this.value + "%"; });
+$("#t7op").addEventListener("input", function () { $("#t7opv").textContent = this.value + "%"; });
+$("#t7go").addEventListener("click", async function () {
+  if (!T7.files.length) { toast("사진을 먼저 골라 주세요"); return; }
+  var st = $("#t7st"), text = $("#t7text").value || "@ogenegun";
+  var sizePct = +$("#t7size").value / 100, op = +$("#t7op").value / 100;
+  T7.out = []; $("#t7out").innerHTML = "";
+  for (var i = 0; i < T7.files.length; i++) {
+    st.innerHTML = '<span class="spin"></span>' + (i + 1) + " / " + T7.files.length + " 넣는 중…";
+    try {
+      var im = await loadImg(T7.files[i]);
+      var w = im.naturalWidth, h = im.naturalHeight, k = Math.min(1, 2560 / Math.max(w, h));
+      var cv = document.createElement("canvas");
+      cv.width = Math.round(w * k); cv.height = Math.round(h * k);
+      var cx = cv.getContext("2d");
+      cx.drawImage(im, 0, 0, cv.width, cv.height);
+      var fs = Math.max(12, Math.round(cv.width * sizePct));
+      cx.font = "800 " + fs + "px -apple-system,'Noto Sans KR',sans-serif";
+      cx.textBaseline = "middle";
+      var tw = cx.measureText(text).width, pad = Math.round(cv.width * 0.03);
+      var x, y;
+      var px = T7.pos[1], py = T7.pos[0];
+      if (px === "l") { cx.textAlign = "left"; x = pad; }
+      else if (px === "r") { cx.textAlign = "right"; x = cv.width - pad; }
+      else { cx.textAlign = "center"; x = cv.width / 2; }
+      if (py === "t") y = pad + fs / 2;
+      else if (py === "b") y = cv.height - pad - fs / 2;
+      else y = cv.height / 2;
+      cx.globalAlpha = op;
+      if (T7.color === "white") {
+        cx.fillStyle = "#ffffff";
+        cx.shadowColor = "rgba(0,0,0,.55)"; cx.shadowBlur = Math.max(4, fs * 0.18);
+        cx.shadowOffsetY = Math.max(1, fs * 0.04);
+      } else {
+        cx.fillStyle = "#111111";
+        cx.shadowColor = "rgba(255,255,255,.5)"; cx.shadowBlur = Math.max(4, fs * 0.18);
+      }
+      cx.fillText(text, x, y);
+      cx.globalAlpha = 1;
+      var blob = await canvasToBlob(cv, "image/jpeg", 0.92);
+      var name = baseName(T7.files[i].name, i) + "-wm.jpg";
+      T7.out.push({ blob: blob, name: name });
+      addListItem($("#t7out"), {
+        name: name, sub: cv.width + "×" + cv.height + " · " + fmtBytes(blob.size),
+        thumb: cv.toDataURL("image/jpeg", 0.4), blob: blob, fname: name
+      });
+    } catch (err) { toast("한 장을 건너뛰었어요: " + err.message); }
+  }
+  $("#t7zip").hidden = T7.out.length < 2;
+  st.textContent = "✅ " + T7.out.length + "장 완료 · \"" + text + "\" · " + Math.round(op * 100) + "% 투명도";
+});
+$("#t7zip").addEventListener("click", async function () {
+  var zip = await zipFromBlobs(T7.out);
+  downloadBlob(zip, "watermark-" + stamp() + ".zip");
+  toast("ZIP 저장했어요 · " + fmtBytes(zip.size));
+});
+
+/* ---------- 서비스 워커 (있으면 등록, 실패해도 앱은 그대로) ---------- */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./sw.js").catch(function () { });
+  });
+}
+/* 테스트용 노출 (동작 확인 스크립트가 씁니다) */
+window.PU = { cleanUrl: cleanUrl, makeZip: makeZip, crc32: crc32, fmtBytes: fmtBytes, exifInfo: exifInfo };
+</script>
+</body>
+</html>

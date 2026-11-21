@@ -294,6 +294,15 @@
   .eabtn:focus-visible{outline:2px solid #8ee8d1;outline-offset:2px}
   .eabtn .eashort{display:none}
   @media (max-width:480px){ .eabtn .eafull{display:none} .eabtn .eashort{display:inline} }
+  /* ---------- 🛠️ 유틸 7종 바로가기 ---------- */
+  .ubtn{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:4px;height:35px;
+    font:800 10.5px/1 inherit;color:#2a1f14;
+    background:linear-gradient(150deg,#f0e6da,#c8ae90);border:1px solid #e2d2bd;padding:0 9px;border-radius:999px;
+    text-decoration:none;white-space:nowrap;cursor:pointer;box-shadow:0 2px 10px rgba(200,174,144,.22)}
+  .ubtn:active{transform:scale(.96)}
+  .ubtn:focus-visible{outline:2px solid #8ee8d1;outline-offset:2px}
+  .ubtn .utshort{display:none}
+  @media (max-width:480px){ .ubtn .utfull{display:none} .ubtn .utshort{display:inline} }
   #tvModal{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;background:#0a0807}
   #tvModal[hidden]{display:none}
   .tvHead{flex:0 0 auto;display:flex;align-items:center;gap:8px;
@@ -481,6 +490,7 @@
     </div>
     <div id="phases"></div>
     <a id="eaBtn" class="eabtn" href="./event-assistant/" title="오늘 챙길 체험단·이벤트 D-day 비서 열기" aria-label="체험단 비서 열기">📋 <span class="eafull">체험단 비서</span><span class="eashort">체험단</span></a>
+    <a id="toolsBtn" class="ubtn" href="./tools.html" title="피클 유틸 7종 — 사진·PDF·링크 손질 도구 열기" aria-label="유틸 도구 열기">🛠️ <span class="utfull">유틸 도구</span><span class="utshort">유틸</span></a>
     <button id="tvBtn" class="tvbtn" aria-label="세계 무료 TV 열기">📺 <span class="tvfull">세계 무료 TV</span><span class="tvshort">TV</span></button>
   </header>
 
