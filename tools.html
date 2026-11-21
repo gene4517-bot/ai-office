@@ -376,6 +376,17 @@ function baseName(name, i) {
   var b = String(name || "file").replace(/\.[^.]+$/, "");
   return b + (i === undefined ? "" : "-" + (i + 1));
 }
+/* 여러 장을 다룰 때: 이름이 겹치는 것만 -2, -3을 붙입니다 */
+function uniqueNames(files) {
+  var counts = {}, seen = {}, out = [];
+  files.forEach(function (f) { var b = baseName(f.name); counts[b] = (counts[b] || 0) + 1; });
+  files.forEach(function (f) {
+    var b = baseName(f.name);
+    if (counts[b] > 1) { seen[b] = (seen[b] || 0) + 1; out.push(b + "-" + seen[b]); }
+    else out.push(b);
+  });
+  return out;
+}
 function downloadBlob(blob, name) {
   var a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
@@ -510,9 +521,11 @@ function exifInfo(buf) {
           if (tag === 0x8825) out.gps = true;
           if (tag === 0x010F || tag === 0x0110 || tag === 0x0132) {
             if (type === 2 && cnt > 0) {
-              var s = "", vlen = Math.min(cnt, 32);
+              var base = cnt > 4 ? tiff + g32(e + 8) : e + 8;
+              var s = "", vlen = Math.min(cnt, 40);
               for (var k = 0; k < vlen; k++) {
-                var c = dv.getUint8(e + 8 + k);
+                if (base + k >= dv.byteLength) break;
+                var c = dv.getUint8(base + k);
                 if (c === 0) break;
                 s += String.fromCharCode(c);
               }
@@ -855,8 +868,9 @@ $("#t3go").addEventListener("click", async function () {
         doc.addImage(data, "JPEG", (pw - iw) / 2, (ph - ih) / 2, iw, ih);
       } else {
         var pw2 = 210, ph2 = Math.min(1200, Math.max(40, 210 / ar));
-        if (!doc) doc = new JsPDF({ unit: "mm", format: [pw2, ph2], orientation: "p" });
-        else doc.addPage([pw2, ph2], "p");
+        var ori = ar >= 1 ? "l" : "p";
+        if (!doc) doc = new JsPDF({ unit: "mm", format: [pw2, ph2], orientation: ori });
+        else doc.addPage([pw2, ph2], ori);
         doc.addImage(data, "JPEG", 0, 0, pw2, ph2);
       }
       st.innerHTML = '<span class="spin"></span>' + (i + 1) + " / " + T3.imgs.length + "장 넣는 중…";
@@ -943,6 +957,7 @@ $("#t4go").addEventListener("click", async function () {
   var st = $("#t4st"), q = +$("#t4q").value / 100, maxW = +$("#t4w").value, type = $("#t4fmt").value;
   var ext = type === "image/png" ? "png" : type === "image/webp" ? "webp" : "jpg";
   T4.out = []; $("#t4out").innerHTML = ""; $("#t4zip").hidden = true;
+  var uniq4 = uniqueNames(T4.files);
   var savedTotal = 0, origTotal = 0;
   for (var i = 0; i < T4.files.length; i++) {
     st.innerHTML = '<span class="spin"></span>' + (i + 1) + " / " + T4.files.length + " 처리 중…";
@@ -957,7 +972,7 @@ $("#t4go").addEventListener("click", async function () {
       cx.imageSmoothingQuality = "high";
       cx.drawImage(im, 0, 0, cv.width, cv.height);
       var blob = await canvasToBlob(cv, type, type === "image/png" ? undefined : q);
-      var name = baseName(T4.files[i].name, i) + "-" + cv.width + "." + ext;
+      var name = uniq4[i] + "-" + cv.width + "." + ext;
       origTotal += T4.files[i].size; savedTotal += blob.size;
       T4.out.push({ blob: blob, name: name, w: cv.width, h: cv.height });
       addListItem($("#t4out"), {
@@ -1032,7 +1047,7 @@ function t5Make() {
     qr.addData(payload, "Byte");
     qr.make();
     var n = qr.getModuleCount();
-    var px = Math.max(2, Math.floor(size / (n + margin * 2)));
+    var px = Math.max(2, Math.round(size / (n + margin * 2)));
     var side = (n + margin * 2) * px;
     cv.width = side; cv.height = side;
     var cx = cv.getContext("2d");
@@ -1077,6 +1092,7 @@ $("#t6go").addEventListener("click", async function () {
   if (!T6.files.length) { toast("사진을 먼저 골라 주세요"); return; }
   var st = $("#t6st"), base = +$("#t6base").value, dim = ratioWH(T6.ratio, base);
   T6.out = []; $("#t6out").innerHTML = "";
+  var uniq6 = uniqueNames(T6.files);
   for (var i = 0; i < T6.files.length; i++) {
     st.innerHTML = '<span class="spin"></span>' + (i + 1) + " / " + T6.files.length + " 만드는 중…";
     try {
@@ -1101,7 +1117,7 @@ $("#t6go").addEventListener("click", async function () {
       cx.imageSmoothingQuality = "high";
       cx.drawImage(im, (dim.w - fw) / 2, (dim.h - fh) / 2, fw, fh);
       var blob = await canvasToBlob(cv, "image/jpeg", 0.92);
-      var name = baseName(T6.files[i].name, i) + "-" + T6.ratio.replace(":", "x") + ".jpg";
+      var name = uniq6[i] + "-" + T6.ratio.replace(":", "x") + ".jpg";
       T6.out.push({ blob: blob, name: name });
       addListItem($("#t6out"), {
         name: name, sub: dim.w + "×" + dim.h + " · " + fmtBytes(blob.size),
@@ -1137,6 +1153,7 @@ $("#t7go").addEventListener("click", async function () {
   var st = $("#t7st"), text = $("#t7text").value || "@ogenegun";
   var sizePct = +$("#t7size").value / 100, op = +$("#t7op").value / 100;
   T7.out = []; $("#t7out").innerHTML = "";
+  var uniq7 = uniqueNames(T7.files);
   for (var i = 0; i < T7.files.length; i++) {
     st.innerHTML = '<span class="spin"></span>' + (i + 1) + " / " + T7.files.length + " 넣는 중…";
     try {
@@ -1147,7 +1164,7 @@ $("#t7go").addEventListener("click", async function () {
       var cx = cv.getContext("2d");
       cx.drawImage(im, 0, 0, cv.width, cv.height);
       var fs = Math.max(12, Math.round(cv.width * sizePct));
-      cx.font = "800 " + fs + "px -apple-system,'Noto Sans KR',sans-serif";
+      cx.font = "800 " + fs + "px system-ui,-apple-system,'Noto Sans KR','Malgun Gothic',sans-serif";
       cx.textBaseline = "middle";
       var tw = cx.measureText(text).width, pad = Math.round(cv.width * 0.03);
       var x, y;
@@ -1170,7 +1187,7 @@ $("#t7go").addEventListener("click", async function () {
       cx.fillText(text, x, y);
       cx.globalAlpha = 1;
       var blob = await canvasToBlob(cv, "image/jpeg", 0.92);
-      var name = baseName(T7.files[i].name, i) + "-wm.jpg";
+      var name = uniq7[i] + "-wm.jpg";
       T7.out.push({ blob: blob, name: name });
       addListItem($("#t7out"), {
         name: name, sub: cv.width + "×" + cv.height + " · " + fmtBytes(blob.size),
