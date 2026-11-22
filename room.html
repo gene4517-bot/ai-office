@@ -824,6 +824,7 @@
       ['./event-assistant/', '📋 체험단 비서', '체험단·이벤트 D-day'],
       ['./tools.html', '🛠️ 7종 유틸', '사진·PDF·링크 손질'],
       ['./planner/', '📅 4X 플래너', '하루 4칸 계획'],
+      ['https://app.notion.com/p/gene-420dcae81cc08193a6cac99c41966f04', '🎯 올인원 하루 관리실', '노션 · 오늘 하루 한눈에'],
       ['https://app.notion.com/p/AI-41adcae81cc08104-863c-fe360f46b626', '🧠 노션 허브', '공용 기억 저장소'],
       ['https://github.com/gene4517-bot/ai-office/issues', '📌 GitHub 이슈', '이 회의실의 원본']
     ];
@@ -832,7 +833,7 @@
       `<div class="meta"><span class="nm">도구 모음</span><span class="bdg">한곳에 모아보기</span></div>` +
       `<div class="txt"><div class="tools">` +
       items.map(([u,t,s]) => `<a class="tool" href="${esc(u)}"${/^https?:/.test(u) ? ' target="_blank" rel="noopener"' : ''}><b>${t}</b><small>${s}</small></a>`).join('') +
-      `</div><div class="p" style="color:var(--dim);font-size:11.5px;margin-top:10px">노션 허브는 새 창에서 열립니다. 나머지는 이 앱 안에서 바로 이동해요.</div></div></div>`;
+      `</div><div class="p" style="color:var(--dim);font-size:11.5px;margin-top:10px">노션 페이지는 새 창에서 열립니다. 나머지는 이 앱 안에서 바로 이동해요.</div></div></div>`;
     box.appendChild(w);
   }
 
