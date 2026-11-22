@@ -433,7 +433,7 @@
   const REPO  = 'ai-office';
   const LABEL = 'team-room';
   const API    = `https://api.github.com/repos/${OWNER}/${REPO}`;
-  const ISSUES = `${API}/issues?labels=${LABEL}&state=open&per_page=50&sort=updated&direction=desc`;
+  const ISSUES = `${API}/issues?labels=${LABEL}&state=open&per_page=50&sort=created&direction=asc`;
   const REPO_URL = `https://github.com/${OWNER}/${REPO}`;
   const NEW_ISSUE = `${REPO_URL}/issues/new?labels=${LABEL}&title=${encodeURIComponent('[안건] ')}`;
 
@@ -692,9 +692,11 @@
     const d = el('div','daysep'); d.textContent = label; return d;
   }
 
-  function renderThread(number){
+  function renderThread(number, keep){
     const issue = S.byNumber[number];
     const box = $('#msgs');
+    const prevTop = box.scrollTop;
+    const atBottom = (box.scrollHeight - box.scrollTop - box.clientHeight) < 120;
     box.innerHTML = '';
 
     if (!issue){
@@ -745,8 +747,11 @@
     $('#ghReply').textContent = '✍️ GitHub에서 바로 답글';
     updateComposer();
 
-    // 마지막 위치로
-    requestAnimationFrame(() => { box.scrollTop = box.scrollHeight; });
+    // 읽던 위치 보존 (자동 갱신 때 튀지 않게)
+    requestAnimationFrame(() => {
+      if (keep && !atBottom) box.scrollTop = prevTop;
+      else box.scrollTop = box.scrollHeight;
+    });
   }
 
   /* [역할: 해이] 파싱 */
@@ -876,29 +881,40 @@
         $('#msgs').innerHTML = '<div class="empty"><span class="em">📌</span>아직 <b>team-room</b> 라벨 스레드가 없어요.<br><a href="' + NEW_ISSUE + '" target="_blank" rel="noopener">GitHub에서 첫 안건 만들기</a></div>';
         return;
       }
-      // 현재 보기 유지/선택
-      if (S.view.k === 'thread'){
-        if (!S.byNumber[S.view.n]) S.view.n = S.issues[0].number;
-      } else {
-        return;
-      }
-      go(S.view, false);
+      if (S.view.k !== 'thread') return;
+
+      if (!S.byNumber[S.view.n]) S.view.n = pickDefaultThread();
+      const cur = S.byNumber[S.view.n];
+      const known = S.comments[S.view.n];
+
+      if (!silent) { go(S.view, false); return; }
+
+      // 조용한 갱신: 목록·머리말만 갱신, 댓글 수가 바뀌었을 때만 다시 그립니다
+      const { tag, text } = threadLabel(cur);
+      $('#hdTitle').textContent = '#' + (tag ? ` ${tag} · ` : ' ') + text;
+      $('#hdSub').textContent = `${cur.state === 'open' ? '열림' : '닫힘'} · 댓글 ${cur.comments} · 갱신 ${relTime(cur.updated_at)}`;
+      if (!known || known.length !== cur.comments) loadComments(S.view.n, true);
     } catch (e){
       handleErr(e, silent);
     }
   }
 
-  async function loadComments(n){
+  function pickDefaultThread(){
+    const main = S.issues.find(x => /^\[안건\]/.test(x.title));
+    return (main || S.issues[0]).number;
+  }
+
+  async function loadComments(n, keep){
     try {
       const issue = S.byNumber[n];
       if (!issue) return;
       const url = `${API}/issues/${n}/comments?per_page=100&sort=created&direction=asc`;
       const list = await api(url);
       S.comments[n] = Array.isArray(list) ? list : [];
-      if (S.view.k === 'thread' && S.view.n === n) renderThread(n);
+      if (S.view.k === 'thread' && S.view.n === n) renderThread(n, !!keep);
     } catch (e){
       S.comments[n] = [];
-      if (S.view.k === 'thread' && S.view.n === n) renderThread(n);
+      if (S.view.k === 'thread' && S.view.n === n) renderThread(n, !!keep);
       handleErr(e, true);
     }
   }
@@ -1135,7 +1151,6 @@
       if (S.rate && S.rate.rem != null && S.rate.rem < 3) return;
       if (S.loading) return;
       loadIssues(true);
-      if (S.view.k === 'thread') loadComments(S.view.n);
     }, AUTO_MS);
 
     document.addEventListener('visibilitychange', () => {
@@ -1157,8 +1172,10 @@
   function manualRefresh(){
     S.loading = true;
     $('#refresh').textContent = '⏳';
-    loadIssues(true).finally(() => { S.loading = false; $('#refresh').textContent = '🔄'; S.lastLoad = Date.now(); });
-    if (S.view.k === 'thread') loadComments(S.view.n);
+    const p = loadIssues(true);
+    Promise.resolve(p).then(() => {
+      if (S.view.k === 'thread') return loadComments(S.view.n, true);
+    }).finally(() => { S.loading = false; $('#refresh').textContent = '🔄'; S.lastLoad = Date.now(); });
     toast('새로고침 중…');
   }
 
