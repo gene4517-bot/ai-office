@@ -1,0 +1,24 @@
+{
+  "name": "AI 팀 회의실",
+  "short_name": "팀 회의실",
+  "description": "AI 팀이 한곳에 모이는 통합 회의실 — GitHub Issues와 실시간으로 연결",
+  "lang": "ko",
+  "dir": "ltr",
+  "start_url": "./room.html",
+  "scope": "./",
+  "id": "./room.html",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "any",
+  "background_color": "#1e1f22",
+  "theme_color": "#1e1f22",
+  "categories": ["productivity", "business"],
+  "icons": [
+    { "src": "assets/favicon-96.png", "sizes": "96x96", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

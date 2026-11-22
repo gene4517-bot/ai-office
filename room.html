@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>🏢 AI 팀 회의실 · gene 대표</title>
+<meta name="description" content="AI 팀이 한곳에 모이는 통합 회의실 — GitHub Issues와 실시간으로 연결됩니다.">
+<meta name="theme-color" content="#1e1f22">
+<meta name="color-scheme" content="dark">
+<link rel="manifest" href="./room.webmanifest">
+<link rel="icon" href="./assets/favicon-96.png">
+<link rel="apple-touch-icon" href="./assets/icon-180.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+  :root{
+    --bg:#1e1f22; --side:#2b2d31; --panel:#313338; --panel2:#383a40;
+    --line:#3f4147; --line2:#4a4d55;
+    --txt:#dbdee1; --txt2:#c4c8cd; --dim:#949ba4; --dim2:#7a8189;
+    --brand:#5865f2; --brand2:#4752c4; --ok:#3ba55d; --warn:#f0b232; --bad:#ed4245;
+    --gold:#f2c14e;
+    --safe-top:env(safe-area-inset-top); --safe-bot:env(safe-area-inset-bottom);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--bg); color:var(--txt);
+    font-family:"Pretendard","Apple SD Gothic Neo","Noto Sans KR",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    font-size:14px; line-height:1.5; overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  button,select,textarea,input{font-family:inherit;color:inherit}
+  a{color:#00a8fc;text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  #app{display:flex;height:100dvh;height:100vh;overflow:hidden}
+
+  /* ================= 사이드바 ================= */
+  #side{
+    flex:0 0 248px;width:248px;background:var(--side);display:flex;flex-direction:column;
+    border-right:1px solid #232428;min-height:0;z-index:40;
+  }
+  .srv{
+    flex:0 0 auto;display:flex;align-items:center;gap:9px;padding:calc(10px + var(--safe-top)) 12px 10px;
+    border-bottom:1px solid #232428;box-shadow:0 1px 0 rgba(0,0,0,.2);
+  }
+  .srvlogo{
+    width:34px;height:34px;border-radius:11px;flex:0 0 auto;display:grid;place-items:center;font-size:17px;
+    background:linear-gradient(150deg,#5865f2,#3c45a8);box-shadow:0 3px 10px rgba(88,101,242,.35)
+  }
+  .srv b{display:block;font-size:13.5px;letter-spacing:-.2px;line-height:1.25}
+  .srv small{display:block;font-size:10px;color:var(--dim);letter-spacing:-.1px}
+  .srv .x{margin-left:auto;display:none;background:none;border:0;color:var(--dim);font-size:15px;padding:6px 4px}
+
+  .scroll{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;padding:10px 8px 12px;min-height:0;overscroll-behavior:contain}
+  .scroll::-webkit-scrollbar{width:6px}
+  .scroll::-webkit-scrollbar-thumb{background:#1a1b1e;border-radius:3px}
+
+  .cat{
+    display:flex;align-items:center;gap:6px;padding:10px 6px 5px;
+    font-size:11px;font-weight:800;color:var(--dim2);letter-spacing:.4px;text-transform:uppercase
+  }
+  .cat .cnt{margin-left:auto;font-weight:700;color:var(--dim2);font-size:10px}
+  .cat .add{
+    margin-left:auto;background:none;border:0;color:var(--dim);font-size:15px;line-height:1;
+    padding:2px 4px;border-radius:5px;cursor:pointer
+  }
+  .cat .add:hover{color:#fff;background:#3a3c42}
+
+  .ch{
+    display:flex;align-items:flex-start;gap:6px;width:100%;text-align:left;
+    padding:7px 8px;margin:1px 0;border-radius:6px;border:0;background:none;cursor:pointer;
+    color:var(--dim);font-size:13px;font-weight:600;line-height:1.35;letter-spacing:-.2px;
+    text-decoration:none;
+  }
+  .ch:hover{background:#35373c;color:var(--txt2);text-decoration:none}
+  .ch.on{background:#404249;color:#fff}
+  .ch .hash{color:var(--dim2);font-weight:800;flex:0 0 auto}
+  .ch.on .hash{color:#c9ccd1}
+  .ch .lbl{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ch .n{
+    flex:0 0 auto;font-size:10px;font-weight:800;color:#fff;background:#4e5058;
+    border-radius:999px;padding:1px 6px;margin-left:2px
+  }
+  .ch.on .n{background:#5865f2}
+  .ch .ico{flex:0 0 auto;width:18px;text-align:center;font-size:12px}
+  .ch.sm{font-size:12.5px;font-weight:600}
+
+  .me{
+    flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:8px 10px calc(8px + var(--safe-bot));
+    background:#232428;border-top:1px solid #1d1e21
+  }
+  .me .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:14px;background:#4e5058;position:relative}
+  .me .av i{position:absolute;right:-1px;bottom:-1px;width:9px;height:9px;border-radius:50%;background:var(--ok);border:2px solid #232428}
+  .me b{display:block;font-size:12.5px;line-height:1.2}
+  .me small{display:block;font-size:10px;color:var(--dim)}
+  .me .gear{margin-left:auto;background:none;border:0;color:var(--dim);font-size:14px;padding:5px;border-radius:6px;cursor:pointer}
+  .me .gear:hover{color:#fff;background:#35373c}
+
+  /* ================= 본문 ================= */
+  #main{flex:1 1 auto;display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--panel);position:relative}
+
+  #hd{
+    flex:0 0 auto;display:flex;align-items:center;gap:8px;
+    padding:calc(9px + var(--safe-top)) 12px 9px;min-height:52px;
+    border-bottom:1px solid #26272b;box-shadow:0 1px 2px rgba(0,0,0,.25);z-index:5;background:var(--panel)
+  }
+  .burger{display:none;background:none;border:0;color:var(--txt2);font-size:19px;padding:2px 4px;line-height:1;cursor:pointer}
+  #hd .h{min-width:0;flex:1 1 auto}
+  #hd .h .t{display:flex;align-items:center;gap:6px;font-size:14.5px;font-weight:800;letter-spacing:-.3px;line-height:1.25;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #hd .h .s{display:flex;align-items:center;gap:7px;font-size:10.5px;color:var(--dim);letter-spacing:-.1px;margin-top:2px;white-space:nowrap;overflow:hidden}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);flex:0 0 auto;box-shadow:0 0 0 2px rgba(59,165,93,.18)}
+  .dot.off{background:var(--dim2);box-shadow:none}
+  .hbtn{
+    flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;height:30px;padding:0 9px;border-radius:7px;
+    background:#42454c;border:1px solid #4a4d55;color:var(--txt2);font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap
+  }
+  .hbtn:hover{background:#4a4d55;color:#fff}
+  .hbtn.pri{background:var(--brand);border-color:#6b76ff;color:#fff}
+  .hbtn.pri:hover{background:#4752c4}
+  .hbtn.ic{width:30px;padding:0;justify-content:center;font-size:13px}
+
+  /* 배너 */
+  #banner{flex:0 0 auto;display:none;align-items:flex-start;gap:8px;padding:8px 12px;font-size:11.5px;line-height:1.45;
+    background:#3d2f13;color:#f5d08a;border-bottom:1px solid #5a451c}
+  #banner.on{display:flex}
+  #banner b{flex:0 0 auto}
+  #banner .bts{margin-left:auto;flex:0 0 auto;display:flex;gap:6px}
+  #banner button{background:#5a451c;border:0;color:#ffe6b8;font-size:10.5px;font-weight:700;padding:4px 8px;border-radius:5px;cursor:pointer}
+
+  /* 메시지 */
+  #msgs{flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain;padding:14px 0 8px;min-height:0;scroll-behavior:smooth}
+  #msgs::-webkit-scrollbar{width:8px}
+  #msgs::-webkit-scrollbar-thumb{background:#202225;border-radius:4px}
+
+  .daysep{display:flex;align-items:center;gap:10px;padding:8px 16px 12px;color:var(--dim2);font-size:10.5px;font-weight:700}
+  .daysep:before,.daysep:after{content:"";flex:1;height:1px;background:#3a3c42}
+
+  .msg{position:relative;display:flex;gap:12px;padding:3px 16px 3px}
+  .msg:hover{background:#2e3035}
+  .msg.first{margin-top:14px}
+  .msg .av{
+    flex:0 0 auto;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:19px;
+    background:color-mix(in srgb,var(--c) 26%,#232428);border:1px solid color-mix(in srgb,var(--c) 45%,#232428);
+    color:#fff;font-weight:900
+  }
+  .msg .bd{flex:1 1 auto;min-width:0}
+  .msg .meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.35}
+  .msg .nm{font-size:14px;font-weight:800;color:var(--c);letter-spacing:-.2px}
+  .msg .bdg{
+    font-size:9.5px;font-weight:800;letter-spacing:-.1px;padding:1.5px 6px;border-radius:4px;
+    background:color-mix(in srgb,var(--c) 22%,transparent);color:var(--c);
+    border:1px solid color-mix(in srgb,var(--c) 35%,transparent);white-space:nowrap
+  }
+  .msg .tm{font-size:10.5px;color:var(--dim2);font-variant-numeric:tabular-nums}
+  .msg .txt{margin-top:2px;font-size:13.5px;line-height:1.62;color:var(--txt2);word-break:break-word;overflow-wrap:anywhere}
+  .txt .p{margin:2px 0}
+  .txt .h3{font-size:14px;font-weight:800;color:#fff;margin:12px 0 4px;letter-spacing:-.2px}
+  .txt .li{margin:1px 0 1px 4px;padding-left:2px}
+  .txt .li.check{color:var(--dim)}
+  .txt blockquote{
+    margin:8px 0;padding:4px 0 4px 11px;border-left:3px solid #4e5058;color:var(--dim);font-size:13px
+  }
+  .txt pre{
+    margin:8px 0;padding:9px 11px;background:#1e1f22;border:1px solid #2b2d31;border-radius:6px;
+    overflow-x:auto;font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:#cfd3d8
+  }
+  .txt code{
+    background:#232428;border:1px solid #2f3136;border-radius:4px;padding:1px 4px;
+    font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:#ffd9a0
+  }
+  .txt .mention{
+    background:color-mix(in srgb,var(--c,#5865f2) 24%,transparent);
+    color:color-mix(in srgb,var(--c,#7289da) 82%,#fff);
+    border-radius:4px;padding:0 3px;font-weight:800;white-space:nowrap
+  }
+  .tblwrap{overflow-x:auto;margin:8px 0}
+  .txt table{border-collapse:collapse;font-size:12px;min-width:100%}
+  .txt th,.txt td{border:1px solid #3f4147;padding:5px 8px;text-align:left;vertical-align:top}
+  .txt th{background:#2b2d31;color:#fff;font-weight:800;white-space:nowrap}
+  .txt td{color:var(--txt2)}
+
+  /* 임베드 카드 */
+  .embed{
+    margin:6px 0 10px;border-radius:6px;border-left:3px solid var(--c,#5865f2);
+    background:#2b2d31;padding:9px 12px;max-width:560px
+  }
+  .embed .et{font-size:12.5px;font-weight:800;color:#fff;margin-bottom:5px}
+  .embed .er{display:flex;gap:8px;font-size:12px;color:var(--dim);padding:2px 0}
+  .embed .er b{color:var(--txt2);font-weight:700;min-width:66px;flex:0 0 auto}
+  .embed .er span{flex:1 1 auto;min-width:0}
+  .embed .kv{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+  .embed .kv i{
+    font-style:normal;font-size:11px;font-weight:800;padding:4px 9px;border-radius:6px;
+    background:#232428;color:var(--txt2);border:1px solid #3f4147
+  }
+  .embed .kv i b{color:var(--gold);margin-left:4px}
+
+  /* 도구 카드 */
+  .tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:9px;margin:8px 0;max-width:660px}
+  .tool{
+    display:block;padding:11px 12px;border-radius:9px;background:#2b2d31;border:1px solid #3f4147;
+    color:var(--txt);text-decoration:none;transition:transform .12s,border-color .12s
+  }
+  .tool:hover{text-decoration:none;border-color:var(--brand);transform:translateY(-1px)}
+  .tool b{display:block;font-size:12.5px;font-weight:800;letter-spacing:-.2px;margin-bottom:3px}
+  .tool small{display:block;font-size:10.5px;color:var(--dim);line-height:1.4}
+
+  /* 스레드 시작 안내 */
+  .thead{padding:22px 16px 4px}
+  .thead .big{font-size:20px;font-weight:900;letter-spacing:-.6px;color:#fff;line-height:1.3}
+  .thead .sub{margin-top:6px;font-size:12px;color:var(--dim);line-height:1.55;max-width:640px}
+  .thead .lnk{display:inline-flex;align-items:center;gap:5px;margin-top:9px;font-size:11.5px;font-weight:700;
+    background:#2b2d31;border:1px solid #3f4147;color:var(--txt2);padding:6px 10px;border-radius:7px}
+  .thead .lnk:hover{text-decoration:none;border-color:var(--brand);color:#fff}
+
+  .empty{padding:38px 18px;text-align:center;color:var(--dim);font-size:12.5px;line-height:1.7}
+  .empty .em{font-size:26px;display:block;margin-bottom:8px}
+  .empty a{font-weight:800}
+  .sk{padding:6px 16px;display:flex;gap:12px;margin-top:12px}
+  .sk .a{width:40px;height:40px;border-radius:50%;background:#3a3c42;flex:0 0 auto;animation:pulse 1.2s infinite}
+  .sk .b{flex:1;min-width:0}
+  .sk .l{height:11px;border-radius:4px;background:#3a3c42;margin:6px 0;animation:pulse 1.2s infinite}
+  .sk .l.w1{width:34%} .sk .l.w2{width:88%} .sk .l.w3{width:64%}
+  @keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
+
+  .typing{padding:0 16px 6px;font-size:10.5px;color:var(--dim2)}
+
+  /* ================= 입력창 ================= */
+  #comp{flex:0 0 auto;padding:0 12px calc(8px + var(--safe-bot));background:var(--panel);border-top:0}
+  .quick{display:flex;gap:6px;overflow-x:auto;padding:8px 0 6px;scrollbar-width:none}
+  .quick::-webkit-scrollbar{display:none}
+  .qbtn{
+    flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;height:32px;padding:0 11px;border-radius:8px;
+    background:#42454c;border:1px solid #4a4d55;color:#e3e5e8;font-size:11.5px;font-weight:800;cursor:pointer;white-space:nowrap
+  }
+  .qbtn:hover{background:#4a4d55}
+  .qbtn.gh{background:#2d7d46;border-color:#3ba55d;color:#fff}
+  .qbtn.gh:hover{background:#256b3b}
+  .qbtn.ai{background:#3a3f6e;border-color:#5865f2;color:#dfe2ff}
+  .qbtn.ai:hover{background:#444a86}
+  .qbtn.ghost{background:transparent;border-color:#4a4d55;color:var(--dim)}
+  .qbtn.ghost:hover{color:#fff;background:#42454c}
+
+  .inw{display:flex;align-items:flex-end;gap:6px;background:#383a40;border-radius:10px;padding:6px}
+  .inw select{
+    flex:0 0 auto;background:#2b2d31;border:1px solid #4a4d55;color:var(--txt);border-radius:7px;
+    height:32px;padding:0 4px;font-size:11px;font-weight:800;max-width:104px
+  }
+  #ta{
+    flex:1 1 auto;min-width:0;background:transparent;border:0;resize:none;outline:0;
+    color:var(--txt);font-size:13.5px;line-height:1.55;padding:7px 2px;max-height:132px;min-height:32px
+  }
+  #ta::placeholder{color:var(--dim2)}
+  #send{
+    flex:0 0 auto;width:32px;height:32px;border-radius:8px;border:0;background:var(--brand);color:#fff;
+    font-size:15px;cursor:pointer;display:grid;place-items:center
+  }
+  #send:disabled{background:#4a4d55;color:var(--dim2);cursor:not-allowed}
+  .hint{margin-top:5px;font-size:10px;color:var(--dim2);line-height:1.45;letter-spacing:-.1px}
+  .hint b{color:#b9bec6}
+
+  /* ================= 모달/토스트/드로어 ================= */
+  #back{display:none;position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:39}
+  #back.on{display:block}
+
+  .modal{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:16px}
+  .modal.on{display:flex}
+  .modal .card{
+    width:100%;max-width:420px;background:#313338;border-radius:14px;padding:18px 18px 16px;
+    box-shadow:0 20px 60px rgba(0,0,0,.6);max-height:86vh;overflow-y:auto
+  }
+  .modal h3{margin:0 0 4px;font-size:15px;font-weight:900;letter-spacing:-.3px}
+  .modal p{margin:0 0 12px;font-size:11.5px;color:var(--dim);line-height:1.6}
+  .modal label{display:block;font-size:10.5px;font-weight:800;color:var(--dim);margin:12px 0 5px}
+  .modal input{
+    width:100%;height:38px;background:#1e1f22;border:1px solid #4a4d55;border-radius:8px;
+    padding:0 10px;font-size:12.5px;letter-spacing:.2px
+  }
+  .modal input:focus{outline:2px solid var(--brand);border-color:var(--brand)}
+  .modal .row{display:flex;gap:7px;margin-top:14px}
+  .modal .row button{flex:1;height:38px;border-radius:8px;border:0;font-size:12.5px;font-weight:800;cursor:pointer}
+  .modal .row .ok{background:var(--brand);color:#fff}
+  .modal .row .ok:hover{background:var(--brand2)}
+  .modal .row .no{background:#42454c;color:var(--txt2)}
+  .modal .row .del{flex:0 0 92px;background:#4a2023;color:#ff9b9e;border:1px solid #7a2e33}
+  .modal ol{margin:6px 0 0 16px;padding:0;font-size:11.5px;color:var(--txt2);line-height:1.75}
+  .modal ol li{margin-bottom:3px}
+  .modal .note{margin-top:12px;padding:8px 10px;border-radius:8px;background:#3d2f13;color:#f5d08a;font-size:10.5px;line-height:1.55}
+
+  #toast{
+    position:fixed;left:50%;bottom:calc(104px + var(--safe-bot));transform:translate(-50%,8px);
+    background:#16171a;color:#fff;border:1px solid #4a4d55;font-size:11.5px;font-weight:800;
+    padding:9px 15px;border-radius:999px;z-index:90;opacity:0;pointer-events:none;
+    transition:opacity .18s,transform .18s;max-width:88vw;text-align:center;line-height:1.45
+  }
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+
+  /* ================= 반응형 ================= */
+  @media (max-width:860px){
+    #side{
+      position:fixed;left:0;top:0;bottom:0;transform:translateX(-102%);
+      transition:transform .22s ease;box-shadow:8px 0 30px rgba(0,0,0,.5)
+    }
+    body.nav #side{transform:translateX(0)}
+    .srv .x{display:block}
+    .burger{display:block}
+    #hd{padding-left:8px}
+    .msg{padding-left:12px;padding-right:12px;gap:10px}
+    .msg .av{width:36px;height:36px;font-size:17px}
+    .msg .txt{font-size:13px}
+    #comp{padding-left:8px;padding-right:8px}
+    .hbtn .lb{display:none}
+    .hbtn{padding:0 7px}
+    .hbtn.ic{width:30px}
+  }
+  @media (min-width:900px){
+    #main{max-width:100%}
+    #msgs{padding-top:16px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- ========== 사이드바 ========== -->
+  <aside id="side" aria-label="채널 목록">
+    <div class="srv">
+      <div class="srvlogo">🏢</div>
+      <div style="min-width:0">
+        <b>AI 팀 회의실</b>
+        <small>GitHub Issues 연동 · 실시간</small>
+      </div>
+      <button class="x" id="sideX" aria-label="채널 목록 닫기">✕</button>
+    </div>
+
+    <div class="scroll">
+      <div class="cat">📌 스레드 <button class="add" id="newThread" title="새 안건 만들기(GitHub)" aria-label="새 안건 만들기">＋</button></div>
+      <div id="threadList">
+        <div class="ch on" aria-hidden="true"><span class="hash">#</span><span class="lbl">불러오는 중…</span></div>
+      </div>
+
+      <div class="cat" style="margin-top:8px">🧭 한곳에 모아보기</div>
+      <button class="ch sm" data-ch="status"><span class="ico">📊</span><span class="lbl">지휘실-현황</span></button>
+      <button class="ch sm" data-ch="tools"><span class="ico">🧰</span><span class="lbl">모든-도구-모음</span></button>
+
+      <div class="cat" style="margin-top:8px">⚙️ 연결</div>
+      <button class="ch sm" id="tokBtn2"><span class="ico">🔑</span><span class="lbl">GitHub 토큰 설정</span></button>
+      <button class="ch sm" id="refresh2"><span class="ico">🔄</span><span class="lbl">새로고침</span></button>
+    </div>
+
+    <div class="me">
+      <div class="av">👔<i></i></div>
+      <div style="min-width:0">
+        <b>gene · 대표 (CEO)</b>
+        <small id="connState">연결 확인 중…</small>
+      </div>
+      <button class="gear" id="tokBtn" aria-label="GitHub 토큰 설정" title="GitHub 토큰 설정">⚙️</button>
+    </div>
+  </aside>
+
+  <!-- ========== 본문 ========== -->
+  <main id="main">
+    <header id="hd">
+      <button class="burger" id="burger" aria-label="채널 목록 열기">☰</button>
+      <div class="h">
+        <div class="t"><span id="hdIco"></span><span id="hdTitle"># 회의실</span></div>
+        <div class="s"><span class="dot" id="hdDot"></span><span id="hdSub">GitHub에 연결하는 중…</span></div>
+      </div>
+      <button class="hbtn ic" id="refresh" title="새로고침" aria-label="새로고침">🔄</button>
+      <a class="hbtn pri" id="ghOpen" href="https://github.com/gene4517-bot/ai-office/issues" target="_blank" rel="noopener" title="GitHub에서 이 스레드 열기">↗ <span class="lb">GitHub</span></a>
+    </header>
+
+    <div id="banner"><b>⚠️</b><span id="bannerTxt"></span><span class="bts"><button id="bannerAct">다시 시도</button><button id="bannerX">닫기</button></span></div>
+
+    <div id="msgs" role="log" aria-live="polite"></div>
+
+    <footer id="comp">
+      <div class="quick">
+        <a class="qbtn gh" id="ghReply" href="https://github.com/gene4517-bot/ai-office/issues" target="_blank" rel="noopener">✍️ GitHub에서 바로 답글</a>
+        <button class="qbtn ai" id="promptBtn">📋 다른 AI에게 넘길 프롬프트 복사</button>
+        <button class="qbtn ghost" id="copyLink">🔗 이 스레드 링크 복사</button>
+      </div>
+      <div class="inw">
+        <select id="roleSel" aria-label="발언 역할 선택">
+          <option value="해이">🥒 해이</option>
+          <option value="gene">👔 대표</option>
+          <option value="클로드">🧠 Claude</option>
+          <option value="뮤즈">🎨 Muse</option>
+          <option value="인스팅트">⚡ Instinct</option>
+          <option value="챗지피티">💬 ChatGPT</option>
+        </select>
+        <textarea id="ta" rows="1" placeholder="회의실에 남길 말을 적어 주세요 (토큰 없으면 GitHub로 넘어가 등록)"></textarea>
+        <button id="send" aria-label="댓글 등록">➤</button>
+      </div>
+      <div class="hint" id="hint">토큰을 넣으면 여기서 <b>바로 GitHub 댓글</b>로 등록됩니다 · 없어도 <b>GitHub에서 바로 답글</b>로 1탭 등록</div>
+    </footer>
+  </main>
+</div>
+
+<div id="back"></div>
+
+<!-- 토큰 설정 모달 -->
+<div class="modal" id="tokModal" role="dialog" aria-modal="true" aria-labelledby="tokTitle">
+  <div class="card">
+    <h3 id="tokTitle">🔑 GitHub 토큰 연결</h3>
+    <p>한 번만 넣으면 회의실 안에서 바로 댓글을 올릴 수 있어요. <b>이 기기(브라우저)에만</b> 저장되고 서버로 보내지 않습니다.</p>
+    <label for="tokInput">Personal access token (classic 또는 fine-grained)</label>
+    <input id="tokInput" type="password" inputmode="text" autocomplete="off" spellcheck="false" placeholder="ghp_… / github_pat_…">
+    <ol>
+      <li>GitHub → Settings → Developer settings → Personal access tokens</li>
+      <li>이 저장소(<b>ai-office</b>)에 <b>Issues: Read and write</b> 권한만 주면 충분해요</li>
+      <li>만든 토큰을 위에 붙여넣고 저장</li>
+    </ol>
+    <div class="note">공용 PC·다른 사람 폰에서는 쓰지 마세요. 토큰을 넣으면 읽기 한도도 함께 올라가서 새로고침이 넉넉해집니다.</div>
+    <div class="row">
+      <button class="no" id="tokCancel">닫기</button>
+      <button class="del" id="tokDelete">삭제</button>
+      <button class="ok" id="tokSave">저장</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ============ 설정 ============ */
+  const OWNER = 'gene4517-bot';
+  const REPO  = 'ai-office';
+  const LABEL = 'team-room';
+  const API    = `https://api.github.com/repos/${OWNER}/${REPO}`;
+  const ISSUES = `${API}/issues?labels=${LABEL}&state=open&per_page=50&sort=updated&direction=desc`;
+  const REPO_URL = `https://github.com/${OWNER}/${REPO}`;
+  const NEW_ISSUE = `${REPO_URL}/issues/new?labels=${LABEL}&title=${encodeURIComponent('[안건] ')}`;
+
+  const TOKEN_KEY = 'airoom.token.v1';
+  const ROLE_KEY  = 'airoom.role.v1';
+  const CACHE_KEY = 'airoom.cache.v1';
+  const AUTO_MS   = 90000;
+
+  /* ============ 역할 ============ */
+  const ROLES = {
+    '해이':     { name:'해이',        av:'🥒', c:'#ff9ec4', badge:'피클 · 총괄 지휘관', keys:['해이','haei','사단장','지휘관'] },
+    'gene':     { name:'gene · 대표', av:'👔', c:'#f2c14e', badge:'대표 (CEO)',       keys:['gene','대표','ceo','진근'] },
+    '클로드':   { name:'Claude',      av:'🧠', c:'#d97757', badge:'전략 · 코드',        keys:['클로드','claude','전략'] },
+    '뮤즈':     { name:'Muse',        av:'🎨', c:'#a78bfa', badge:'리서치 · 감성',      keys:['뮤즈','muse','리서치'] },
+    '인스팅트': { name:'Instinct',    av:'⚡', c:'#34d399', badge:'기동 비서',          keys:['인스팅트','instinct','기동'] },
+    '챗지피티': { name:'ChatGPT',     av:'💬', c:'#10a37f', badge:'기획 · 초안',        keys:['chatgpt','챗지피티','gpt'] }
+  };
+  const GUEST = { name:'팀원', av:'👤', c:'#8b95a5', badge:'게스트' };
+
+  function roleByKey(k){
+    if (!k) return null;
+    const t = String(k).trim().toLowerCase();
+    for (const id in ROLES){
+      const r = ROLES[id];
+      if (id.toLowerCase() === t) return r;
+      if (r.keys.some(x => x === t || t.includes(x))) return r;
+    }
+    return null;
+  }
+
+  /* ============ 유틸 ============ */
+  const $ = (s, r=document) => r.querySelector(s);
+  const el = (tag, cls, txt) => { const n = document.createElement(tag); if (cls) n.className = cls; if (txt != null) n.textContent = txt; return n; };
+  const esc = s => String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+  function relTime(iso){
+    if (!iso) return '';
+    const d = new Date(iso), now = Date.now(), diff = (now - d.getTime()) / 1000;
+    if (isNaN(d.getTime())) return '';
+    if (diff < 60) return '방금';
+    if (diff < 3600) return `${Math.floor(diff/60)}분 전`;
+    if (diff < 86400) return `${Math.floor(diff/3600)}시간 전`;
+    if (diff < 172800) return '어제';
+    if (diff < 604800) return `${Math.floor(diff/86400)}일 전`;
+    return `${d.getMonth()+1}월 ${d.getDate()}일`;
+  }
+  function stamp(iso){
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    const p = n => String(n).padStart(2,'0');
+    return `${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+  }
+  function dayKey(iso){ const d = new Date(iso); return isNaN(d.getTime()) ? '' : `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }
+  function dayLabel(iso){
+    const d = new Date(iso); if (isNaN(d.getTime())) return '';
+    const t0 = new Date(); t0.setHours(0,0,0,0);
+    const dd = new Date(d); dd.setHours(0,0,0,0);
+    const diff = Math.round((t0 - dd)/86400000);
+    if (diff === 0) return '오늘';
+    if (diff === 1) return '어제';
+    return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일`;
+  }
+
+  /* ============ 마크다운(가벼운) ============ */
+  function inline(src){
+    let s = esc(src);
+    const keep = [];
+    s = s.replace(/\[([^\]\n]+)\]\((https?:\/\/[^)\s]+)\)/g, (m, t, u) => {
+      keep.push(`<a href="${u}" target="_blank" rel="noopener">${t}</a>`);
+      return `\u0001${keep.length-1}\u0001`;
+    });
+    s = s.replace(/(^|[\s(])((?:https?:\/\/)[^\s<)\u0001]+)/g, (m, pre, u) => {
+      keep.push(`<a href="${u}" target="_blank" rel="noopener">${u}</a>`);
+      return `${pre}\u0001${keep.length-1}\u0001`;
+    });
+    s = s.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+    s = s.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/(^|[\s(>])@([가-힣A-Za-z0-9_.]+)/g, (m, pre, nm) => {
+      const r = roleByKey(nm);
+      const col = r ? r.c : '#7289da';
+      return `${pre}<span class="mention" style="--c:${col}">@${nm}</span>`;
+    });
+    s = s.replace(/\u0001(\d+)\u0001/g, (m, i) => keep[+i]);
+    return s;
+  }
+  const splitRow = l => l.trim().replace(/^\|/,'').replace(/\|$/,'').split('|').map(c => c.trim());
+
+  function md(src){
+    let t = String(src || '').replace(/\r/g,'');
+    const blocks = [];
+    t = t.replace(/```([\s\S]*?)```/g, (m, c) => {
+      blocks.push(c.replace(/^\n/,''));
+      return `\u0000B${blocks.length-1}\u0000`;
+    });
+    const lines = t.split('\n');
+    const out = [];
+    let i = 0;
+    while (i < lines.length){
+      const line = lines[i];
+      if (/^\s*\|.*\|\s*$/.test(line) && /^\s*\|[\s:|-]+\|\s*$/.test(lines[i+1] || '')){
+        const head = splitRow(line); i += 2;
+        const rows = [];
+        while (i < lines.length && /^\s*\|.*\|\s*$/.test(lines[i])) { rows.push(splitRow(lines[i])); i++; }
+        out.push('<div class="tblwrap"><table><thead><tr>' + head.map(c => `<th>${inline(c)}</th>`).join('') +
+          '</tr></thead><tbody>' + rows.map(r => '<tr>' + r.map(c => `<td>${inline(c)}</td>`).join('') + '</tr>').join('') +
+          '</tbody></table></div>');
+        continue;
+      }
+      if (/^#{1,4}\s+/.test(line)) { out.push(`<div class="h3">${inline(line.replace(/^#+\s+/,''))}</div>`); i++; continue; }
+      if (/^>\s?/.test(line)) {
+        const buf = [];
+        while (i < lines.length && /^>\s?/.test(lines[i])) { buf.push(lines[i].replace(/^>\s?/,'')); i++; }
+        out.push(`<blockquote>${buf.map(inline).join('<br>')}</blockquote>`); continue;
+      }
+      if (/^\s*[-*]\s+\[[ xX]\]\s*/.test(line)) {
+        out.push(`<div class="li">${/\[[xX]\]/.test(line.match(/^\s*[-*]\s+\[[ xX]\]/)[0]) ? '☑' : '☐'} ${inline(line.replace(/^\s*[-*]\s+\[[ xX]\]\s*/,''))}</div>`);
+        i++; continue;
+      }
+      if (/^\s*[-*]\s+/.test(line)) { out.push(`<div class="li">• ${inline(line.replace(/^\s*[-*]\s+/,''))}</div>`); i++; continue; }
+      if (/^\s*\d+\.\s+/.test(line)) { out.push(`<div class="li">${inline(line)}</div>`); i++; continue; }
+      if (/^\s*$/.test(line)) { out.push(''); i++; continue; }
+      out.push(`<div class="p">${inline(line)}</div>`); i++;
+    }
+    return out.join('').replace(/\u0000B(\d+)\u0000/g, (m, n) => `<pre>${esc(blocks[+n])}</pre>`);
+  }
+
+  /* ============ 저장소 ============ */
+  const store = {
+    get token(){ try { return localStorage.getItem(TOKEN_KEY) || ''; } catch(e){ return ''; } },
+    set token(v){ try { v ? localStorage.setItem(TOKEN_KEY, v) : localStorage.removeItem(TOKEN_KEY); } catch(e){} },
+    get role(){ try { return localStorage.getItem(ROLE_KEY) || '해이'; } catch(e){ return '해이'; } },
+    set role(v){ try { localStorage.setItem(ROLE_KEY, v); } catch(e){} },
+    read(){ try { return JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); } catch(e){ return null; } },
+    write(o){ try { localStorage.setItem(CACHE_KEY, JSON.stringify(o)); } catch(e){} }
+  };
+
+  /* ============ 상태 ============ */
+  const S = {
+    issues: [], byNumber: {}, comments: {}, view: { k:'thread', n:null },
+    loading: false, err: null, rate: null, timer: null
+  };
+
+  function setBanner(msg, act){
+    const b = $('#banner');
+    if (!msg){ b.classList.remove('on'); return; }
+    $('#bannerTxt').innerHTML = msg;
+    $('#bannerAct').style.display = act ? '' : 'none';
+    b.classList.add('on');
+  }
+  let toastT;
+  function toast(msg){
+    const t = $('#toast'); t.textContent = msg; t.classList.add('on');
+    clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2200);
+  }
+
+  function headers(){
+    const h = { 'Accept':'application/vnd.github+json' };
+    if (store.token) h['Authorization'] = 'Bearer ' + store.token;
+    return h;
+  }
+  function readRate(res){
+    const rem = res.headers.get('x-ratelimit-remaining');
+    const reset = res.headers.get('x-ratelimit-reset');
+    if (rem != null) S.rate = { rem:+rem, reset: reset ? +reset*1000 : null };
+  }
+
+  async function api(url, opts){
+    const res = await fetch(url, Object.assign({ headers: headers(), cache:'no-store' }, opts||{}));
+    readRate(res);
+    if (res.status === 401) throw new Error('TOKEN401');
+    if (res.status === 403 || res.status === 429){
+      const ra = res.headers.get('x-ratelimit-remaining');
+      if (ra === '0' || /rate limit/i.test(await res.text().catch(()=>''))) throw new Error('RATE');
+      throw new Error('FORBIDDEN');
+    }
+    if (res.status === 404) throw new Error('NOTFOUND');
+    if (!res.ok) throw new Error('HTTP' + res.status);
+    return res.json();
+  }
+
+  /* ============ 사이드바 스레드 목록 ============ */
+  function threadLabel(issue){
+    const m = String(issue.title).match(/^\[([^\]]+)\]\s*(.*)$/);
+    return m ? { tag:m[1], text:m[2] } : { tag:'', text:issue.title };
+  }
+  function shortLabel(issue){
+    const { tag, text } = threadLabel(issue);
+    const t = text.length > 17 ? text.slice(0,17) + '…' : text;
+    return tag ? `${tag} · ${t}` : t;
+  }
+
+  function renderThreadList(){
+    const box = $('#threadList');
+    box.innerHTML = '';
+    if (!S.issues.length){
+      const d = el('div', 'ch');
+      d.innerHTML = '<span class="hash">#</span><span class="lbl">아직 스레드가 없어요</span>';
+      box.appendChild(d);
+      return;
+    }
+    S.issues.forEach(it => {
+      const b = el('button', 'ch' + (S.view.k === 'thread' && S.view.n === it.number ? ' on' : ''));
+      b.type = 'button';
+      b.dataset.n = it.number;
+      b.innerHTML = `<span class="hash">#</span><span class="lbl">${esc(shortLabel(it))}</span>` +
+        (it.comments ? `<span class="n">${it.comments}</span>` : '');
+      b.title = it.title;
+      b.addEventListener('click', () => go({ k:'thread', n:it.number }));
+      box.appendChild(b);
+    });
+  }
+
+  /* ============ 스레드 보기 ============ */
+  function skeleton(n){
+    const box = $('#msgs');
+    box.innerHTML = '';
+    for (let i=0;i<(n||3);i++){
+      const d = el('div','sk');
+      d.innerHTML = '<div class="a"></div><div class="b"><div class="l w1"></div><div class="l w2"></div><div class="l w3"></div></div>';
+      box.appendChild(d);
+    }
+  }
+
+  function header(name, sub, ico, ghUrl, dotOn){
+    $('#hdIco').textContent = ico || '#';
+    $('#hdTitle').textContent = name;
+    $('#hdSub').textContent = sub;
+    $('#hdDot').className = 'dot' + (dotOn === false ? ' off' : '');
+    const gh = $('#ghOpen');
+    gh.href = ghUrl || REPO_URL + '/issues';
+    gh.style.display = '';
+  }
+
+  function msgNode(opts){
+    const { role, author, when, body, first } = opts;
+    const r = role || GUEST;
+    const wrap = el('div', 'msg' + (first ? ' first' : ''));
+    wrap.style.setProperty('--c', r.c);
+    const av = el('div','av'); av.textContent = r.av;
+    const bd = el('div','bd');
+    const meta = el('div','meta');
+    const nm = el('span','nm'); nm.textContent = r.name;
+    const bd2 = el('span','bdg'); bd2.textContent = r.badge;
+    const tm = el('span','tm');
+    tm.textContent = stamp(when) + (author ? ` · ${author}` : '');
+    meta.appendChild(nm); meta.appendChild(bd2); meta.appendChild(tm);
+    const tx = el('div','txt'); tx.innerHTML = md(body);
+    bd.appendChild(meta); bd.appendChild(tx);
+    wrap.appendChild(av); wrap.appendChild(bd);
+    return wrap;
+  }
+
+  function daySeparator(label){
+    const d = el('div','daysep'); d.textContent = label; return d;
+  }
+
+  function renderThread(number){
+    const issue = S.byNumber[number];
+    const box = $('#msgs');
+    box.innerHTML = '';
+
+    if (!issue){
+      box.innerHTML = '<div class="empty"><span class="em">🕳️</span>이 스레드를 찾을 수 없어요.<br>목록을 새로고침하거나 GitHub에서 직접 확인해 주세요.</div>';
+      return;
+    }
+
+    const { tag, text } = threadLabel(issue);
+    header('#' + (tag ? ` ${tag} · ` : ' ') + text,
+      `${issue.state === 'open' ? '열림' : '닫힘'} · 댓글 ${issue.comments} · 갱신 ${relTime(issue.updated_at)}`,
+      tag === '안건' ? '📋' : tag === '보고' ? '📑' : '#',
+      issue.html_url, issue.state === 'open');
+
+    // 스레드 머리
+    const head = el('div','thead');
+    head.innerHTML =
+      `<div class="big">${esc(text)}</div>` +
+      `<div class="sub">${tag ? `<b style="color:var(--gold)">[${esc(tag)}]</b> · ` : ''}` +
+      `#${number} · ${esc(relTime(issue.created_at))} 시작 · ${issue.comments}개 댓글 · 폰과 PC가 같은 스레드를 봅니다</div>` +
+      `<a class="lnk" href="${esc(issue.html_url)}" target="_blank" rel="noopener">↗ GitHub에서 원본 보기</a>`;
+    box.appendChild(head);
+
+    // 본문 + 댓글
+    let lastDay = '';
+    const push = (when, role, author, body, isFirst) => {
+      const dk = dayKey(when);
+      if (dk && dk !== lastDay){ box.appendChild(daySeparator(dayLabel(when))); lastDay = dk; }
+      box.appendChild(msgNode({ role, author, when, body, first:isFirst }));
+    };
+
+    push(issue.created_at, roleByKey('gene'), '', issue.body || '(본문 없음)', true);
+
+    const list = S.comments[number];
+    if (!list){
+      box.appendChild(el('div','typing','댓글을 불러오는 중…'));
+    } else if (!list.length){
+      box.appendChild(el('div','typing','아직 댓글이 없어요. 첫 답글을 남겨 보세요.'));
+    } else {
+      list.forEach(c => {
+        const parsed = parseRole(c.body || '');
+        const r = parsed.role || (c.user && c.user.login === OWNER ? roleByKey('gene') : null);
+        push(c.created_at, r, r ? '' : (c.user ? c.user.login : ''), parsed.body, false);
+      });
+    }
+
+    // 입력창 상태
+    $('#ghReply').href = issue.html_url;
+    $('#ghReply').textContent = '✍️ GitHub에서 바로 답글';
+    updateComposer();
+
+    // 마지막 위치로
+    requestAnimationFrame(() => { box.scrollTop = box.scrollHeight; });
+  }
+
+  /* [역할: 해이] 파싱 */
+  function parseRole(body){
+    const m = String(body || '').match(/^\s*\[?\s*역할\s*[:：]\s*([^\]\n]{1,20})\s*\]?\s*$/m);
+    if (!m) return { role:null, body:body };
+    const r = roleByKey(m[1]);
+    if (!r) return { role:null, body:body };
+    const cleaned = String(body).replace(m[0], '').replace(/^\s*\n/, '');
+    return { role:r, body:cleaned };
+  }
+
+  /* ============ 현황 채널 ============ */
+  async function renderStatus(){
+    header('📊 지휘실-현황', 'status.json · 업무 현황 요약', '📊', './', true);
+    const box = $('#msgs');
+    box.innerHTML = '';
+    const head = el('div','thead');
+    head.innerHTML = `<div class="big">지휘실 현황판</div><div class="sub">AI 지휘실의 <b>status.json</b>을 그대로 읽어 와서 요약합니다. 자세한 화면은 아래 버튼으로.</div>`;
+    box.appendChild(head);
+
+    let d = null;
+    try { d = await (await fetch('./status.json', { cache:'no-store' })).json(); } catch(e){ d = null; }
+
+    if (!d){
+      box.innerHTML += '<div class="empty"><span class="em">📭</span>현황 파일을 읽지 못했어요.<br><a href="./">AI 지휘실 열기</a></div>';
+      return;
+    }
+
+    const wrap = el('div','msg first'); wrap.style.setProperty('--c','#f2c14e');
+    wrap.innerHTML =
+      `<div class="av" style="--c:#f2c14e">📊</div><div class="bd">` +
+      `<div class="meta"><span class="nm">지휘실 현황판</span><span class="bdg">status.json</span>` +
+      `<span class="tm">갱신 ${esc(d.updated_at || '—')}</span></div>` +
+      `<div class="txt">` +
+        `<div class="embed" style="--c:#3ba55d">` +
+          `<div class="et">${esc((d.office && d.office.name) || 'AI 사무실 본부')}</div>` +
+          `<div class="er"><b>기록된 처리</b><span>${(d.stats && d.stats.done) || 0}건</span></div>` +
+          `<div class="er"><b>진행 중</b><span>${(d.stats && d.stats.progress) || 0}건</span></div>` +
+          `<div class="er"><b>대기</b><span>${(d.stats && d.stats.waiting) || 0}건</span></div>` +
+          ((d.board && d.board.rows) ? `<div class="kv">${d.board.rows.map(r =>
+            `<i>${esc(r.label)}<b>${esc(String(r.value))}${esc(r.unit || '')}</b></i>`).join('')}</div>` : '') +
+        `</div>` +
+        ((d.tasks && d.tasks.length) ? d.tasks.slice(0,6).map(t =>
+          `<div class="li">${t.state === 'done' ? '☑' : '▸'} <b>${esc(t.title)}</b> — ${esc(t.owner || '')}${t.progress != null ? ` · ${t.progress}%` : ''}</div>`).join('') : '') +
+        `<div class="tools">` +
+          `<a class="tool" href="./"><b>🏢 AI 지휘실</b><small>오피스·업무·직원 현황</small></a>` +
+          `<a class="tool" href="./?tab=voice"><b>🎤 음성 지휘</b><small>말로 지시하기</small></a>` +
+          `<a class="tool" href="./dashboard/"><b>🎛️ gene 덱</b><small>폰용 스트림덱</small></a>` +
+        `</div>` +
+      `</div></div>`;
+    box.appendChild(wrap);
+  }
+
+  /* ============ 도구 모음 채널 ============ */
+  function renderTools(){
+    header('🧰 모든-도구-모음', '흩어진 도구를 한곳에서', '🧰', './', true);
+    const box = $('#msgs');
+    box.innerHTML = '';
+    const head = el('div','thead');
+    head.innerHTML = `<div class="big">모든 도구 한곳에</div><div class="sub">따로 열던 화면을 여기서 바로 엽니다. 회의실을 나가지 않고 이동할 수 있어요.</div>`;
+    box.appendChild(head);
+
+    const items = [
+      ['./', '🏢 AI 지휘실', '오피스·업무·직원 현황'],
+      ['./?tab=chat', '💬 합동채팅', 'AI 역할별 의견 한 방에서'],
+      ['./?tab=voice', '🎤 음성 지휘', '말로 지시하고 실행'],
+      ['./dashboard/', '🎛️ gene 덱', '폰용 스트림덱'],
+      ['./event-assistant/', '📋 체험단 비서', '체험단·이벤트 D-day'],
+      ['./tools.html', '🛠️ 7종 유틸', '사진·PDF·링크 손질'],
+      ['./planner/', '📅 4X 플래너', '하루 4칸 계획'],
+      ['https://app.notion.com/p/AI-41adcae81cc08104-863c-fe360f46b626', '🧠 노션 허브', '공용 기억 저장소'],
+      ['https://github.com/gene4517-bot/ai-office/issues', '📌 GitHub 이슈', '이 회의실의 원본']
+    ];
+    const w = el('div','msg first'); w.style.setProperty('--c','#5865f2');
+    w.innerHTML = `<div class="av" style="--c:#5865f2">🧰</div><div class="bd">` +
+      `<div class="meta"><span class="nm">도구 모음</span><span class="bdg">한곳에 모아보기</span></div>` +
+      `<div class="txt"><div class="tools">` +
+      items.map(([u,t,s]) => `<a class="tool" href="${esc(u)}"${/^https?:/.test(u) ? ' target="_blank" rel="noopener"' : ''}><b>${t}</b><small>${s}</small></a>`).join('') +
+      `</div><div class="p" style="color:var(--dim);font-size:11.5px;margin-top:10px">노션 허브는 새 창에서 열립니다. 나머지는 이 앱 안에서 바로 이동해요.</div></div></div>`;
+    box.appendChild(w);
+  }
+
+  /* ============ 이동 ============ */
+  function go(view, push){
+    S.view = view;
+    document.querySelectorAll('.ch').forEach(c => c.classList.remove('on'));
+    $('#comp').style.display = '';
+    if (view.k === 'thread'){
+      const btn = document.querySelector(`.ch[data-n="${view.n}"]`);
+      if (btn) btn.classList.add('on');
+      skeleton(3);
+      renderThread(view.n);
+      loadComments(view.n);
+    } else if (view.k === 'status'){
+      document.querySelector('.ch[data-ch="status"]').classList.add('on');
+      $('#comp').style.display = 'none';
+      renderStatus();
+    } else if (view.k === 'tools'){
+      document.querySelector('.ch[data-ch="tools"]').classList.add('on');
+      $('#comp').style.display = 'none';
+      renderTools();
+    }
+    if (push !== false){
+      const h = view.k === 'thread' ? `#t=${view.n}` : `#c=${view.k}`;
+      history.replaceState(null, '', h);
+    }
+    closeNav();
+    $('#msgs').scrollTop = 0;
+  }
+
+  /* ============ GitHub 읽기 ============ */
+  async function loadIssues(silent){
+    if (!silent) skeleton(3);
+    try {
+      const list = await api(ISSUES);
+      S.issues = (Array.isArray(list) ? list : []).filter(x => !x.pull_request);
+      S.byNumber = {}; S.issues.forEach(x => S.byNumber[x.number] = x);
+      S.err = null;
+      setBanner('');
+      $('#connState').textContent = S.rate ? `GitHub 연결 · 읽기 ${S.rate.rem}회 남음` : 'GitHub 연결됨';
+      renderThreadList();
+      // 캐시
+      store.write({ at:Date.now(), issues:S.issues });
+
+      if (!S.issues.length){
+        $('#msgs').innerHTML = '<div class="empty"><span class="em">📌</span>아직 <b>team-room</b> 라벨 스레드가 없어요.<br><a href="' + NEW_ISSUE + '" target="_blank" rel="noopener">GitHub에서 첫 안건 만들기</a></div>';
+        return;
+      }
+      // 현재 보기 유지/선택
+      if (S.view.k === 'thread'){
+        if (!S.byNumber[S.view.n]) S.view.n = S.issues[0].number;
+      } else {
+        return;
+      }
+      go(S.view, false);
+    } catch (e){
+      handleErr(e, silent);
+    }
+  }
+
+  async function loadComments(n){
+    try {
+      const issue = S.byNumber[n];
+      if (!issue) return;
+      const url = `${API}/issues/${n}/comments?per_page=100&sort=created&direction=asc`;
+      const list = await api(url);
+      S.comments[n] = Array.isArray(list) ? list : [];
+      if (S.view.k === 'thread' && S.view.n === n) renderThread(n);
+    } catch (e){
+      S.comments[n] = [];
+      if (S.view.k === 'thread' && S.view.n === n) renderThread(n);
+      handleErr(e, true);
+    }
+  }
+
+  function handleErr(e, silent){
+    const m = e && e.message;
+    S.err = m;
+    $('#hdDot').className = 'dot off';
+    $('#connState').textContent = '연결 문제';
+    let msg = '';
+    if (m === 'RATE'){
+      const at = S.rate && S.rate.reset ? stamp(new Date(S.rate.reset).toISOString()) : '';
+      msg = `GitHub 읽기 한도(시간당 60회)를 다 썼어요.${at ? ` <b>${at}</b> 이후에 다시 됩니다.` : ''} 토큰을 넣으면 한도가 크게 늘어나요.`;
+      showCacheIfAny();
+    } else if (m === 'TOKEN401'){
+      msg = '저장된 토큰이 만료됐거나 잘못됐어요. ⚙️에서 다시 넣어 주세요.';
+    } else if (m === 'NOTFOUND'){
+      msg = '저장소·이슈를 찾지 못했어요(404). 주소나 공개 범위를 확인해 주세요.';
+    } else if (m === 'FORBIDDEN'){
+      msg = 'GitHub가 이 요청을 막았어요(403). 잠시 뒤 다시 시도해 주세요.';
+    } else {
+      msg = 'GitHub에 연결하지 못했어요. 네트워크를 확인하고 다시 시도해 주세요.';
+      showCacheIfAny();
+    }
+    setBanner(msg, true);
+    if (!silent && !S.issues.length){
+      $('#msgs').innerHTML = '<div class="empty"><span class="em">📡</span>' + msg + '<br><br><a href="' + REPO_URL + '/issues" target="_blank" rel="noopener">GitHub에서 직접 보기 ↗</a></div>';
+    }
+  }
+
+  function showCacheIfAny(){
+    const c = store.read();
+    if (!c || !Array.isArray(c.issues)) return;
+    S.issues = c.issues;
+    S.byNumber = {}; S.issues.forEach(x => S.byNumber[x.number] = x);
+    renderThreadList();
+    if (S.view.k === 'thread'){
+      if (!S.byNumber[S.view.n] && S.issues[0]) S.view.n = S.issues[0].number;
+      renderThread(S.view.n);
+      $('#msgs').insertAdjacentHTML('afterbegin',
+        `<div class="empty" style="padding:10px 16px 0;text-align:left;color:#c9a96a">저장해 둔 마지막 화면을 보여드리고 있어요 (댓글은 다시 연결되면 갱신).</div>`);
+    }
+  }
+
+  /* ============ 쓰기 ============ */
+  function updateComposer(){
+    const has = !!store.token;
+    const sel = $('#roleSel');
+    const r = roleByKey(sel.value) || ROLES['해이'];
+    $('#send').disabled = !has;
+    $('#hint').innerHTML = has
+      ? `✅ 토큰 연결됨 — <b>${esc(r.name)}</b> 이름으로 GitHub 댓글이 등록됩니다 · 첫 줄에 <b>[역할: ${esc(sel.value)}]</b>가 자동으로 붙어요`
+      : `토큰을 넣으면 여기서 <b>바로 GitHub 댓글</b>로 등록됩니다 · 없어도 <b>GitHub에서 바로 답글</b>로 1탭 등록`;
+  }
+
+  async function postComment(){
+    const ta = $('#ta'), text = ta.value.trim();
+    const roleKey = $('#roleSel').value;
+    if (!store.token){ openTok(); return; }
+    if (!text){ toast('내용을 적어 주세요'); return; }
+    const issue = S.byNumber[S.view.n];
+    if (!issue){ toast('스레드를 먼저 골라 주세요'); return; }
+
+    const btn = $('#send'); btn.disabled = true; btn.textContent = '…';
+    try {
+      const res = await fetch(`${API}/issues/${issue.number}/comments`, {
+        method:'POST',
+        headers: Object.assign(headers(), { 'Content-Type':'application/json' }),
+        body: JSON.stringify({ body: `[역할: ${roleKey}]\n\n${text}` })
+      });
+      if (!res.ok){
+        const t = await res.text().catch(()=> '');
+        throw new Error(res.status === 401 ? 'TOKEN401' : res.status === 403 ? 'FORBIDDEN' : 'HTTP' + res.status + (t ? '' : ''));
+      }
+      ta.value = ''; autoGrow();
+      toast('✅ GitHub 댓글로 등록됐어요');
+      await loadComments(issue.number);
+      await loadIssues(true);
+    } catch (e){
+      const m = e.message || '';
+      toast(m === 'TOKEN401' ? '토큰이 만료됐어요 — ⚙️에서 다시 넣어 주세요' : '등록 실패 — 잠시 뒤 다시 시도해 주세요');
+      if (m === 'TOKEN401') openTok();
+    } finally {
+      btn.disabled = false; btn.textContent = '➤';
+      updateComposer();
+    }
+  }
+
+  /* ============ 프롬프트 복사 ============ */
+  function buildPrompt(){
+    const issue = S.view.k === 'thread' ? S.byNumber[S.view.n] : null;
+    const roleKey = $('#roleSel').value;
+    const r = roleByKey(roleKey) || ROLES['해이'];
+    const lines = [];
+    lines.push(`# AI 팀 회의실 — 이어서 답해 주세요`);
+    lines.push('');
+    if (issue){
+      const { tag, text } = threadLabel(issue);
+      lines.push(`## 스레드: ${tag ? '[' + tag + '] ' : ''}${text}`);
+      lines.push(`- 주소: ${issue.html_url}`);
+      lines.push(`- 상태: ${issue.state === 'open' ? '열림' : '닫힘'} · 댓글 ${issue.comments}개`);
+      lines.push('');
+      lines.push('### 원래 안건');
+      lines.push((issue.body || '').trim());
+      lines.push('');
+      const list = S.comments[issue.number] || [];
+      if (list.length){
+        lines.push('### 지금까지 댓글');
+        list.forEach(c => {
+          const p = parseRole(c.body || '');
+          const who = p.role ? p.role.name : (c.user ? c.user.login : '팀원');
+          lines.push(`**${who}** (${stamp(c.created_at)}):`);
+          lines.push((p.body || '').trim());
+          lines.push('');
+        });
+      }
+      lines.push('---');
+      lines.push('');
+      lines.push(`너는 「${r.name}」 역할이야. 위 스레드를 읽고 아래 형식으로만 답해줘.`);
+    } else {
+      lines.push('## 지휘실 현황 요약을 이어서 봐 주세요');
+      lines.push('---');
+      lines.push('');
+      lines.push(`너는 「${r.name}」 역할이야.`);
+    }
+    lines.push('');
+    lines.push('1) 지금 상태 3줄 요약');
+    lines.push('2) 다음에 할 일 (담당·순서 포함)');
+    lines.push('3) 반대 의견 1개 — 안 했을 때 손해');
+    lines.push('');
+    lines.push(`답변 첫 줄에 반드시 \`[역할: ${roleKey}]\` 를 붙여줘. 그러면 회의실에 붙여넣었을 때 내 아바타로 표시돼.`);
+    return lines.join('\n');
+  }
+
+  async function copyText(t){
+    try {
+      if (navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(t); return true; }
+    } catch(e){}
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
+      return true;
+    } catch(e){ return false; }
+  }
+
+  /* ============ 토큰 모달 ============ */
+  function openTok(){
+    $('#tokInput').value = store.token ? '' : '';
+    $('#tokInput').placeholder = store.token ? '저장된 토큰이 있어요 (바꾸려면 새로 입력)' : 'ghp_… / github_pat_…';
+    $('#tokModal').classList.add('on');
+    setTimeout(() => $('#tokInput').focus(), 60);
+  }
+  function closeTok(){ $('#tokModal').classList.remove('on'); }
+
+  /* ============ 내비 ============ */
+  function openNav(){ document.body.classList.add('nav'); $('#back').classList.add('on'); }
+  function closeNav(){ document.body.classList.remove('nav'); $('#back').classList.remove('on'); }
+
+  /* ============ 오토그로우 ============ */
+  function autoGrow(){
+    const ta = $('#ta');
+    ta.style.height = 'auto';
+    ta.style.height = Math.min(ta.scrollHeight, 132) + 'px';
+  }
+
+  /* ============ 초기화 ============ */
+  function init(){
+    // 저장된 역할
+    const savedRole = store.role;
+    if (ROLE_RESTORE(savedRole)) $('#roleSel').value = savedRole;
+
+    $('#roleSel').addEventListener('change', () => { store.role = $('#roleSel').value; updateComposer(); });
+
+    $('#burger').addEventListener('click', openNav);
+    $('#sideX').addEventListener('click', closeNav);
+    $('#back').addEventListener('click', closeNav);
+
+    document.querySelectorAll('.ch[data-ch]').forEach(b => {
+      b.addEventListener('click', () => go({ k:b.dataset.ch }));
+    });
+
+    $('#refresh').addEventListener('click', () => { manualRefresh(); });
+    $('#refresh2').addEventListener('click', () => { manualRefresh(); closeNav(); });
+    $('#bannerAct').addEventListener('click', () => manualRefresh());
+    $('#bannerX').addEventListener('click', () => setBanner(''));
+
+    $('#newThread').addEventListener('click', () => window.open(NEW_ISSUE, '_blank', 'noopener'));
+
+    $('#tokBtn').addEventListener('click', openTok);
+    $('#tokBtn2').addEventListener('click', () => { openTok(); closeNav(); });
+    $('#tokSave').addEventListener('click', () => {
+      const v = $('#tokInput').value.trim();
+      if (!v){ toast('토큰을 입력해 주세요'); return; }
+      store.token = v; closeTok(); toast('🔑 토큰을 저장했어요');
+      updateComposer(); loadIssues(true);
+    });
+    $('#tokDelete').addEventListener('click', () => {
+      store.token = ''; $('#tokInput').value = ''; closeTok();
+      toast('토큰을 삭제했어요'); updateComposer();
+    });
+    $('#tokCancel').addEventListener('click', closeTok);
+    $('#tokModal').addEventListener('click', e => { if (e.target.id === 'tokModal') closeTok(); });
+
+    $('#send').addEventListener('click', postComment);
+    $('#ta').addEventListener('input', autoGrow);
+    $('#ta').addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey && !e.isComposing){ e.preventDefault(); postComment(); }
+    });
+
+    $('#promptBtn').addEventListener('click', async () => {
+      const ok = await copyText(buildPrompt());
+      toast(ok ? '📋 프롬프트를 복사했어요 — 무료 AI에 붙여넣고 답을 ©로 가져오세요' : '복사 실패 — 길게 눌러 직접 복사해 주세요');
+    });
+    $('#copyLink').addEventListener('click', async () => {
+      const h = S.view.k === 'thread' ? `#t=${S.view.n}` : `#c=${S.view.k}`;
+      const ok = await copyText(location.origin + location.pathname + h);
+      toast(ok ? '🔗 스레드 링크를 복사했어요' : '복사 실패');
+    });
+
+    // 해시로 들어온 경우
+    const m = location.hash.match(/^#t=(\d+)/);
+    const c = location.hash.match(/^#c=(status|tools)/);
+    if (m) S.view = { k:'thread', n:+m[1] };
+    else if (c) S.view = { k:c[1] };
+
+    updateComposer();
+    loadIssues();
+
+    // 자동 갱신 (화면 보일 때만)
+    S.timer = setInterval(() => {
+      if (document.hidden) return;
+      if (S.err === 'RATE') return;
+      if (S.rate && S.rate.rem != null && S.rate.rem < 3) return;
+      if (S.loading) return;
+      loadIssues(true);
+      if (S.view.k === 'thread') loadComments(S.view.n);
+    }, AUTO_MS);
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && Date.now() - (S.lastLoad || 0) > AUTO_MS) loadIssues(true);
+    });
+
+    window.addEventListener('hashchange', () => {
+      const mm = location.hash.match(/^#t=(\d+)/), cc = location.hash.match(/^#c=(status|tools)/);
+      if (mm) go({ k:'thread', n:+mm[1] }, false);
+      else if (cc) go({ k:cc[1] }, false);
+    });
+
+    if ('serviceWorker' in navigator){
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+  }
+  function ROLE_RESTORE(k){ return !!(k && ROLES[k]); }
+
+  function manualRefresh(){
+    S.loading = true;
+    $('#refresh').textContent = '⏳';
+    loadIssues(true).finally(() => { S.loading = false; $('#refresh').textContent = '🔄'; S.lastLoad = Date.now(); });
+    if (S.view.k === 'thread') loadComments(S.view.n);
+    toast('새로고침 중…');
+  }
+
+  // 로딩 표시
+  S.lastLoad = Date.now();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+</body>
+</html>
