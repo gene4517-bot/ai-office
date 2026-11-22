@@ -146,7 +146,7 @@
     background:color-mix(in srgb,var(--c) 26%,#232428);border:1px solid color-mix(in srgb,var(--c) 45%,#232428);
     color:#fff;font-weight:900
   }
-  .msg .bd{flex:1 1 auto;min-width:0}
+  .msg .bd{flex:1 1 auto;min-width:0;max-width:940px}
   .msg .meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.35}
   .msg .nm{font-size:14px;font-weight:800;color:var(--c);letter-spacing:-.2px}
   .msg .bdg{
@@ -1128,7 +1128,7 @@
 
     $('#promptBtn').addEventListener('click', async () => {
       const ok = await copyText(buildPrompt());
-      toast(ok ? '📋 프롬프트를 복사했어요 — 무료 AI에 붙여넣고 답을 ©로 가져오세요' : '복사 실패 — 길게 눌러 직접 복사해 주세요');
+      toast(ok ? '📋 프롬프트를 복사했어요 — 무료 AI에 붙여넣고, 받은 답을 회의실에 다시 붙여넣으세요' : '복사 실패 — 길게 눌러 직접 복사해 주세요');
     });
     $('#copyLink').addEventListener('click', async () => {
       const h = S.view.k === 'thread' ? `#t=${S.view.n}` : `#c=${S.view.k}`;
