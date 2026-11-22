@@ -965,10 +965,16 @@
     const has = !!store.token;
     const sel = $('#roleSel');
     const r = roleByKey(sel.value) || ROLES['해이'];
+    const narrow = window.innerWidth <= 560;
     $('#send').disabled = !has;
-    $('#hint').innerHTML = has
-      ? `✅ 토큰 연결됨 — <b>${esc(r.name)}</b> 이름으로 GitHub 댓글이 등록됩니다 · 첫 줄에 <b>[역할: ${esc(sel.value)}]</b>가 자동으로 붙어요`
-      : `토큰을 넣으면 여기서 <b>바로 GitHub 댓글</b>로 등록됩니다 · 없어도 <b>GitHub에서 바로 답글</b>로 1탭 등록`;
+    if (has){
+      $('#hint').innerHTML = `✅ 토큰 연결됨 — <b>${esc(r.name)}</b> 이름으로 GitHub 댓글이 등록됩니다` +
+        (narrow ? '' : ` · 첫 줄에 <b>[역할: ${esc(sel.value)}]</b>가 자동으로 붙어요`);
+    } else {
+      $('#hint').innerHTML = narrow
+        ? `토큰 없이도 <b>GitHub에서 바로 답글</b>로 등록돼요`
+        : `토큰을 넣으면 여기서 <b>바로 GitHub 댓글</b>로 등록됩니다 · 없어도 <b>GitHub에서 바로 답글</b>로 1탭 등록`;
+    }
   }
 
   async function postComment(){
