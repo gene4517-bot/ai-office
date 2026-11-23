@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>데일리 트렌드 뷰어 · AI 지휘실</title>
+<meta name="description" content="유튜브·구글 트렌드·뉴스·커뮤니티에서 매일 모은 오늘의 트렌드를 한 화면에서 봅니다.">
+<meta name="theme-color" content="#f6f7fb">
+<link rel="icon" href="./assets/favicon-96.png">
+<link rel="apple-touch-icon" href="./assets/icon-180.png">
+<link rel="manifest" href="./trends.webmanifest">
+<style>
+  :root{
+    --bg:#f4f6fa; --card:#ffffff; --line:#e6e9f0; --line2:#eef1f6;
+    --tx:#1b2333; --tx2:#5b6577; --tx3:#8a93a5;
+    --accent:#2f6bff; --accent-soft:#eaf0ff;
+    --yt:#ff3b30; --gt:#1a73e8; --nw:#0f9d58; --cb:#7c4dff;
+    --shadow:0 1px 2px rgba(20,30,60,.05), 0 8px 24px rgba(20,30,60,.06);
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0f1319; --card:#161b23; --line:#252c37; --line2:#1e242e;
+      --tx:#eef2f8; --tx2:#a7b1c2; --tx3:#7b8698;
+      --accent:#6f9bff; --accent-soft:#1b2740;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px rgba(0,0,0,.35);
+    }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--tx);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Malgun Gothic","Segoe UI",Roboto,sans-serif;
+    -webkit-text-size-adjust:100%;
+    line-height:1.45;
+  }
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 14px 60px}
+
+  /* ── 상단 바 ── */
+  header.top{
+    position:sticky;top:0;z-index:30;
+    background:var(--bg);
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:saturate(160%) blur(12px);
+    -webkit-backdrop-filter:saturate(160%) blur(12px);
+    border-bottom:1px solid var(--line2);
+  }
+  .topin{max-width:1180px;margin:0 auto;padding:11px 14px 10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16.5px;letter-spacing:-.2px;min-width:0}
+  .brand .ico{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:15px;
+    background:linear-gradient(160deg,#3b7bff,#7a5cff);color:#fff;flex:0 0 auto}
+  .brand b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .stamp{font-size:11.5px;color:var(--tx2);background:var(--card);border:1px solid var(--line);
+    padding:4px 9px;border-radius:999px;white-space:nowrap}
+  .topbtns{margin-left:auto;display:flex;gap:6px}
+  .tbtn{font-size:11.5px;font-weight:700;color:var(--tx2);background:var(--card);border:1px solid var(--line);
+    border-radius:999px;padding:5px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+  .tbtn:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* ── 검색 ── */
+  .search{margin:14px 0 10px;position:relative}
+  .search .mag{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--tx3);font-size:14px;pointer-events:none}
+  .search input{
+    width:100%;padding:13px 44px 13px 38px;font-size:14px;color:var(--tx);
+    background:var(--card);border:1px solid var(--line);border-radius:999px;outline:none;
+    box-shadow:var(--shadow); font-family:inherit;
+  }
+  .search input::placeholder{color:var(--tx3)}
+  .search input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+  .search .clr{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:transparent;
+    color:var(--tx3);font-size:16px;cursor:pointer;padding:6px 9px;border-radius:999px;display:none}
+  .search.has .clr{display:block}
+
+  .qrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+  .qlabel{font-size:11.5px;color:var(--tx3);font-weight:700;margin-right:2px}
+  .chip{
+    font-size:12px;font-weight:700;color:var(--tx2);background:var(--card);border:1px solid var(--line);
+    border-radius:999px;padding:6px 12px;cursor:pointer;white-space:nowrap;line-height:1
+  }
+  .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(47,107,255,.25)}
+  .chip .n{font-weight:600;opacity:.7;margin-left:4px;font-size:10.5px}
+
+  .tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 4px;margin:0 0 8px;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{
+    display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:800;color:var(--tx2);
+    background:var(--card);border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;white-space:nowrap;
+  }
+  .tab[aria-selected="true"]{color:#fff;background:linear-gradient(160deg,#2f6bff,#5a53ff);border-color:transparent;
+    box-shadow:0 6px 16px rgba(47,107,255,.28)}
+  .tab .dot{width:7px;height:7px;border-radius:50%;background:var(--tx3);display:inline-block}
+  .tab[data-p="youtube"] .dot{background:var(--yt)}
+  .tab[data-p="google_trends"] .dot{background:var(--gt)}
+  .tab[data-p="news"] .dot{background:var(--nw)}
+
+  .meta{display:flex;align-items:center;gap:8px;margin:2px 2px 12px;color:var(--tx3);font-size:12px;font-weight:600}
+  .meta .cnt{color:var(--tx);font-weight:800}
+
+  /* ── 카드 ── */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:14px}
+  @media (max-width:520px){
+    .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  }
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+    display:flex;flex-direction:column;box-shadow:var(--shadow);
+    transition:transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+  }
+  .card:hover{transform:translateY(-2px);border-color:var(--accent);
+    box-shadow:0 10px 30px rgba(20,30,60,.12)}
+  .thumb{position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,#dfe6f5,#eef2fa);overflow:hidden}
+  @media (prefers-color-scheme: dark){.thumb{background:linear-gradient(135deg,#1d2532,#222b3a)}}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .thumb .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:26px;font-weight:900;color:#fff;letter-spacing:-1px}
+  .thumb .ph.yt{background:linear-gradient(140deg,#ff5f56,#c3271e)}
+  .thumb .ph.google_trends{background:linear-gradient(140deg,#4c8dff,#1558c4)}
+  .thumb .ph.news{background:linear-gradient(140deg,#22b573,#0a7a45)}
+  .thumb .ph.community{background:linear-gradient(140deg,#9b6bff,#5c33c9)}
+  .badge{
+    position:absolute;top:7px;left:7px;font-size:10.5px;font-weight:900;color:#fff;
+    background:rgba(12,18,30,.82);padding:3px 7px;border-radius:6px;letter-spacing:-.2px;
+    backdrop-filter:blur(4px)
+  }
+  .pbadge{
+    position:absolute;top:7px;right:7px;font-size:10px;font-weight:900;color:#fff;
+    padding:3px 7px;border-radius:6px;letter-spacing:-.2px
+  }
+  .pbadge.youtube{background:var(--yt)}
+  .pbadge.google_trends{background:var(--gt)}
+  .pbadge.news{background:var(--nw)}
+  .pbadge.community{background:var(--cb)}
+  .dur{position:absolute;bottom:7px;right:7px;font-size:10px;font-weight:800;color:#fff;background:rgba(12,18,30,.82);
+    padding:2px 5px;border-radius:4px}
+  .cbody{padding:10px 11px 11px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .ctitle{font-size:13px;font-weight:800;line-height:1.38;letter-spacing:-.2px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.76em}
+  .cmeta{font-size:11px;color:var(--tx2);font-weight:600;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+  .cfoot{margin-top:auto;display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--tx3);font-weight:600;
+    border-top:1px dashed var(--line2);padding-top:7px}
+  .cfoot .cat{margin-left:auto;background:var(--accent-soft);color:var(--accent);font-weight:800;
+    padding:2px 7px;border-radius:999px;white-space:nowrap}
+  .stale{font-size:9.5px;font-weight:800;color:#b25b00;background:#fff2dc;padding:1px 5px;border-radius:4px}
+
+  /* ── 상태 ── */
+  .skeleton{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .skeleton .sk{background:linear-gradient(90deg,var(--line2) 25%,var(--line) 37%,var(--line2) 63%);
+    background-size:400% 100%;animation:sh 1.3s ease infinite}
+  .skeleton .sk.t{aspect-ratio:16/9}
+  .skeleton .sk.l{height:12px;margin:10px 11px;border-radius:5px}
+  .skeleton .sk.l2{width:60%}
+  @keyframes sh{0%{background-position:100% 50%}100%{background-position:0 50%}}
+  .empty,.err{text-align:center;padding:52px 18px;color:var(--tx2);font-weight:600;font-size:13.5px}
+  .empty .big,.err .big{font-size:30px;display:block;margin-bottom:8px}
+  .err button{margin-top:14px;font-weight:800;font-size:12.5px;color:#fff;background:var(--accent);border:0;
+    border-radius:999px;padding:9px 18px;cursor:pointer}
+  footer.foot{margin:26px 2px 0;color:var(--tx3);font-size:11px;line-height:1.65;font-weight:600;text-align:center}
+  footer.foot b{color:var(--tx2)}
+
+  /* ── 모달 ── */
+  .sheet{position:fixed;inset:0;z-index:60;display:none;align-items:flex-end;justify-content:center;
+    background:rgba(12,18,30,.45);padding:0}
+  .sheet.on{display:flex}
+  @media (min-width:640px){.sheet{align-items:center;padding:24px}}
+  .sheetbox{width:100%;max-width:520px;max-height:86vh;overflow:auto;background:var(--card);color:var(--tx);
+    border-radius:18px 18px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(0,0,0,.3)}
+  @media (min-width:640px){.sheetbox{border-radius:18px}}
+  .sheetbox h3{margin:0 0 4px;font-size:16px}
+  .sheetbox p.lead{margin:0 0 14px;color:var(--tx2);font-size:12px;font-weight:600}
+  .srcrow{display:flex;gap:9px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--line2)}
+  .srcrow:last-of-type{border-bottom:0}
+  .srcrow .st{font-size:14px;flex:0 0 auto}
+  .srcrow .nm{font-size:12.5px;font-weight:800;display:block}
+  .srcrow .ds{font-size:11px;color:var(--tx2);font-weight:600}
+  .sheetbox ul{margin:6px 0 0;padding-left:18px;font-size:12.5px;color:var(--tx2);font-weight:600;line-height:1.7}
+  .sheetbox .close{margin-top:16px;width:100%;border:0;background:var(--accent);color:#fff;font-weight:800;
+    font-size:13px;padding:12px;border-radius:12px;cursor:pointer}
+  .note{font-size:11px;color:var(--tx3);font-weight:600;margin-top:10px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="topin">
+    <div class="brand"><span class="ico">📊</span><b>데일리 트렌드 뷰어</b></div>
+    <span class="stamp" id="stamp">불러오는 중…</span>
+    <div class="topbtns">
+      <button class="tbtn" id="btnSrc" type="button">수집 소스</button>
+      <button class="tbtn" id="btnHelp" type="button">기준·사용법</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="search" id="searchBox">
+    <span class="mag">🔍</span>
+    <input id="q" type="search" autocomplete="off" enterkeyhint="search"
+           placeholder="키워드로 검색 — 예: 살림, 가전, AI, 핫딜, 속보…" aria-label="트렌드 검색">
+    <button class="clr" id="qClear" type="button" aria-label="검색어 지우기">✕</button>
+  </div>
+
+  <div class="qrow" id="chips" role="group" aria-label="빠른 키워드 필터">
+    <span class="qlabel">빠른 검색</span>
+  </div>
+
+  <div class="tabs" id="tabs" role="tablist" aria-label="플랫폼">
+    <button class="tab" data-p="all" aria-selected="true" role="tab">✨ 전체</button>
+    <button class="tab" data-p="youtube" aria-selected="false" role="tab"><span class="dot"></span>유튜브</button>
+    <button class="tab" data-p="google_trends" aria-selected="false" role="tab"><span class="dot"></span>구글트렌드</button>
+    <button class="tab" data-p="news" aria-selected="false" role="tab"><span class="dot"></span>뉴스/커뮤니티</button>
+  </div>
+
+  <div class="meta"><span id="count" class="cnt">0건</span><span id="metaNote">· 오늘 모은 트렌드</span></div>
+
+  <div class="grid" id="grid" aria-live="polite"></div>
+  <div id="state"></div>
+
+  <footer class="foot">
+    무료 공개 피드(구글 트렌드 · 유튜브 · 구글 뉴스 · 뽐뿌)만 모아 만든 화면입니다 · 매일 아침 자동 갱신<br>
+    <b>gene4517-bot.github.io/ai-office/trends.html</b>
+  </footer>
+</div>
+
+<div class="sheet" id="sheetSrc" role="dialog" aria-modal="true" aria-labelledby="srcTitle">
+  <div class="sheetbox">
+    <h3 id="srcTitle">수집 소스</h3>
+    <p class="lead" id="srcLead">마지막 수집 결과입니다.</p>
+    <div id="srcList"></div>
+    <div class="note">유료 API·키·로그인 없이 공개 피드만 사용합니다. 한 소스가 막히면 그 소스는 직전 수집분을 그대로 보여줍니다.</div>
+    <button class="close" type="button" data-close>닫기</button>
+  </div>
+</div>
+
+<div class="sheet" id="sheetHelp" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="sheetbox">
+    <h3 id="helpTitle">기준·사용법</h3>
+    <p class="lead">숫자와 날짜가 무엇을 뜻하는지 짧게 정리했어요.</p>
+    <ul>
+      <li><b>갱신</b> — 매일 06:10(한국시간) 자동 수집. 화면 위 <b>기준</b> 표시가 마지막 수집 시각입니다.</li>
+      <li><b>순위</b> — 카드 왼쪽 위 숫자는 그 플랫폼 안에서의 순서(구글 트렌드 1~10위, 유튜브는 키워드별 순위)입니다.</li>
+      <li><b>조회수·검색량</b> — 유튜브는 공개 조회수, 구글 트렌드는 급상승 검색량 구간(예: 2,000+)입니다.</li>
+      <li><b>날짜</b> — 영상·기사가 올라온 시점(예: 3일 전)과 분류 태그를 함께 보여줍니다.</li>
+      <li><b>검색</b> — 제목·채널·분류를 한 번에 찾습니다. 빠른 검색 칩과 플랫폼 탭은 같이 쓸 수 있어요.</li>
+      <li><b>카드 누르기</b> — 원문(유튜브 영상·뉴스·핫딜 글)이 새 창에서 열립니다.</li>
+    </ul>
+    <div class="note">개인 계정·주소·금액 같은 개인정보는 담지 않습니다. 공개된 피드 내용만 보여줍니다.</div>
+    <button class="close" type="button" data-close>닫기</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var DATA_URL = "./trends-data.json";
+  var PAGE = 36;
+  var state = { data:null, q:"", cat:"전체", platform:"all", shown:PAGE, list:[] };
+
+  var $ = function(s){ return document.querySelector(s); };
+  var grid = $("#grid"), stateBox = $("#state"), countEl = $("#count"),
+      stampEl = $("#stamp"), metaNote = $("#metaNote"),
+      chipsEl = $("#chips"), tabsEl = $("#tabs"),
+      qEl = $("#q"), searchBox = $("#searchBox");
+
+  var PLATFORM_LABEL = { youtube:"유튜브", google_trends:"구글트렌드", news:"뉴스", community:"커뮤니티" };
+  var PLATFORM_ICON  = { youtube:"▶", google_trends:"📈", news:"📰", community:"💬" };
+
+  function esc(s){
+    return String(s==null?"":s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+  function num(n){ return (n==null?"":Number(n).toLocaleString("ko-KR")); }
+
+  /* ── 데이터 불러오기 ── */
+  function load(){
+    stateBox.innerHTML = "";
+    grid.innerHTML = skeleton(8);
+    fetch(DATA_URL, {cache:"no-store"})
+      .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
+      .then(function(d){
+        if(!d || !Array.isArray(d.items) || !d.items.length) throw new Error("empty");
+        state.data = d;
+        state.shown = PAGE;
+        stampEl.textContent = d.updated_label || "기준 시각 없음";
+        buildChips();
+        applyHash();
+        render();
+      })
+      .catch(function(e){
+        grid.innerHTML = "";
+        stateBox.innerHTML =
+          '<div class="err"><span class="big">📡</span>트렌드 데이터를 못 불러왔어요.<br>잠시 뒤 다시 시도해 주세요.'
+          + '<br><button type="button" id="retry">다시 불러오기</button>'
+          + '<div class="note">' + esc(e && e.message ? e.message : "") + '</div></div>';
+        var b = $("#retry"); if(b) b.onclick = load;
+        countEl.textContent = "0건";
+        stampEl.textContent = "연결 실패";
+      });
+  }
+
+  function skeleton(n){
+    var out = "";
+    for(var i=0;i<n;i++) out += '<div class="skeleton"><div class="sk t"></div><div class="sk l"></div><div class="sk l l2"></div></div>';
+    return out;
+  }
+
+  function buildChips(){
+    var cats = ["전체"].concat((state.data.categories||[]).filter(function(c){ return c!=="전체"; }));
+    var counts = state.data.counts_by_category || {};
+    chipsEl.innerHTML = '<span class="qlabel">빠른 검색</span>' + cats.map(function(c){
+      var n = c==="전체" ? state.data.total : (counts[c]||0);
+      return '<button class="chip" type="button" data-cat="'+esc(c)+'" aria-pressed="'+(c===state.cat)+'">'
+        + (c==="전체" ? "#전체" : "#"+esc(c)) + '<span class="n">'+num(n)+'</span></button>';
+    }).join("");
+  }
+
+  /* ── 필터 ── */
+  function matches(it){
+    if(state.platform !== "all"){
+      if(state.platform === "news"){ if(it.platform !== "news" && it.platform !== "community") return false; }
+      else if(it.platform !== state.platform) return false;
+    }
+    if(state.cat !== "전체" && it.category !== state.cat) return false;
+    if(state.q){
+      var hay = (it.title + " " + (it.desc||"") + " " + (it.source||"") + " " + (it.category||"") + " " + (it.query||"")).toLowerCase();
+      var words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
+      for(var i=0;i<words.length;i++){ if(hay.indexOf(words[i]) < 0) return false; }
+    }
+    return true;
+  }
+
+  /* 뜨는 순: 최신일수록·플랫폼 가중치·플랫폼 내 순위를 합쳐 정렬 */
+  function score(it){
+    var t = it.published ? new Date(it.published).getTime() : 0;
+    var ageH = t ? (Date.now() - t)/3600000 : 9999;
+    var fresh = ageH<=6 ? 100 : ageH<=24 ? 82 : ageH<=72 ? 62 : ageH<=168 ? 46 : ageH<=720 ? 28 : 10;
+    var pw = {google_trends:16, youtube:12, news:9, community:5}[it.platform] || 0;
+    return fresh + pw - (it.rank||0)*0.7;
+  }
+
+  function render(){
+    var all = state.data.items.filter(matches);
+    all.sort(function(a,b){ return score(b)-score(a); });
+    state.list = all;
+    countEl.textContent = num(all.length) + "건";
+    metaNote.textContent = state.platform==="news" ? "· 뉴스 + 커뮤니티" : "· 오늘 모은 트렌드";
+
+    grid.innerHTML = all.slice(0, state.shown).map(card).join("");
+    stateBox.innerHTML = "";
+    if(!all.length){
+      grid.innerHTML = "";
+      stateBox.innerHTML = '<div class="empty"><span class="big">🔎</span>조건에 맞는 트렌드가 없어요.<br>검색어를 줄이거나 다른 필터를 골라 보세요.</div>';
+      return;
+    }
+    if(all.length > state.shown){
+      stateBox.innerHTML = '<div style="text-align:center;margin:18px 0 0">'
+        + '<button type="button" id="more" style="border:1px solid var(--line);background:var(--card);color:var(--tx2);'
+        + 'font-weight:800;font-size:12.5px;padding:11px 22px;border-radius:999px;cursor:pointer">더 보기 ('
+        + num(all.length - state.shown) + '건)</button></div>';
+      var m = $("#more");
+      if(m) m.onclick = function(){ state.shown += PAGE; render(); };
+    }
+  }
+
+  function card(it){
+    var thumb = it.thumb
+      ? '<img src="'+esc(it.thumb)+'" alt="" loading="lazy" referrerpolicy="no-referrer"'
+        + ' onerror="this.style.display=\'none\';this.parentNode.querySelector(\'.ph\').style.display=\'flex\'">'
+        + '<div class="ph '+esc(it.platform)+'" style="display:none">'+PLATFORM_ICON[it.platform]+'</div>'
+      : '<div class="ph '+esc(it.platform)+'">'+PLATFORM_ICON[it.platform]+'</div>';
+    var dur = "";
+    if(it.desc && /^\d{1,2}:\d{2}(:\d{2})?$/.test((it.desc.split(" · ")[1]||""))){
+      dur = '<span class="dur">'+esc(it.desc.split(" · ")[1])+'</span>';
+    }
+    var statLine = [];
+    if(it.stat) statLine.push(esc(it.stat));
+    if(it.source && it.platform !== "news") statLine.push(esc(it.source));
+    else if(it.source && it.platform === "news") statLine.push(esc(it.source));
+    return '<a class="card" href="'+esc(it.url)+'" target="_blank" rel="noopener noreferrer">'
+      + '<div class="thumb">'+thumb
+      +   (it.rank ? '<span class="badge">'+it.rank+'위</span>' : '')
+      +   '<span class="pbadge '+esc(it.platform)+'">'+PLATFORM_LABEL[it.platform]+'</span>'
+      +   dur
+      + '</div>'
+      + '<div class="cbody">'
+      +   '<div class="ctitle">'+esc(it.title)+'</div>'
+      +   '<div class="cmeta">'+(statLine.length?statLine.join(" · "):"&nbsp;")+'</div>'
+      +   '<div class="cfoot">'
+      +     '<span>'+esc(it.date_label || "")+'</span>'
+      +     (it.stale ? '<span class="stale">이전 수집분</span>' : '')
+      +     '<span class="cat">'+esc(it.category||"이슈")+'</span>'
+      +   '</div>'
+      + '</div></a>';
+  }
+
+  function applyHash(){
+    var h = (location.hash || "").toLowerCase();
+    var p = h.indexOf("youtube")>=0 ? "youtube" : h.indexOf("google")>=0 ? "google_trends" : null;
+    if(!p) return;
+    state.platform = p;
+    Array.prototype.forEach.call(tabsEl.querySelectorAll(".tab"), function(x){
+      x.setAttribute("aria-selected", String(x.getAttribute("data-p") === p));
+    });
+  }
+
+  /* ── 이벤트 ── */
+  var deb;
+  qEl.addEventListener("input", function(){
+    searchBox.classList.toggle("has", !!qEl.value);
+    clearTimeout(deb);
+    deb = setTimeout(function(){ state.q = qEl.value.trim(); state.shown = PAGE; render(); }, 140);
+  });
+  $("#qClear").onclick = function(){ qEl.value=""; state.q=""; searchBox.classList.remove("has"); state.shown=PAGE; render(); qEl.focus(); };
+
+  chipsEl.addEventListener("click", function(e){
+    var b = e.target.closest(".chip"); if(!b) return;
+    state.cat = b.getAttribute("data-cat"); state.shown = PAGE;
+    Array.prototype.forEach.call(chipsEl.querySelectorAll(".chip"), function(x){
+      x.setAttribute("aria-pressed", String(x === b));
+    });
+    render();
+  });
+
+  tabsEl.addEventListener("click", function(e){
+    var b = e.target.closest(".tab"); if(!b) return;
+    state.platform = b.getAttribute("data-p"); state.shown = PAGE;
+    Array.prototype.forEach.call(tabsEl.querySelectorAll(".tab"), function(x){
+      x.setAttribute("aria-selected", String(x === b));
+    });
+    render();
+  });
+
+  /* 모달 */
+  function openSheet(id){ $("#"+id).classList.add("on"); document.body.style.overflow="hidden"; }
+  function closeSheets(){
+    Array.prototype.forEach.call(document.querySelectorAll(".sheet.on"), function(s){ s.classList.remove("on"); });
+    document.body.style.overflow="";
+  }
+  $("#btnSrc").onclick = function(){
+    if(state.data){
+      var d = state.data;
+      $("#srcLead").textContent = (d.updated_label||"") + " · 총 " + num(d.total) + "건";
+      $("#srcList").innerHTML = (d.sources||[]).map(function(s){
+        return '<div class="srcrow"><span class="st">'+(s.ok?"✅":"⚠️")+'</span><div>'
+          + '<span class="nm">'+esc(s.name)+'</span>'
+          + '<span class="ds">'+num(s.count)+'건'+(s.note?" · "+esc(s.note):"")+'</span></div></div>';
+      }).join("") + (d.queries && d.queries.length
+          ? '<div class="srcrow"><span class="st">🔑</span><div><span class="nm">유튜브 수집 키워드</span>'
+            + '<span class="ds">'+d.queries.map(esc).join(" · ")+'</span></div></div>' : "");
+    }
+    openSheet("sheetSrc");
+  };
+  $("#btnHelp").onclick = function(){ openSheet("sheetHelp"); };
+  document.addEventListener("click", function(e){
+    if(e.target.hasAttribute && e.target.hasAttribute("data-close")) closeSheets();
+    if(e.target.classList && e.target.classList.contains("sheet")) closeSheets();
+  });
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape") closeSheets(); });
+
+  load();
+
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", function(){ navigator.serviceWorker.register("./sw.js").catch(function(){}); });
+  }
+})();
+</script>
+</body>
+</html>

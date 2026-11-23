@@ -31,6 +31,11 @@ ai-office/
 ├─ tools.webmanifest       유틸 7종 홈 화면 추가용(PWA) 정보
 ├─ room.html               🏢 AI 팀 통합 회의실 (GitHub Issues 실시간 연동 · 디스코드 스타일)
 ├─ room.webmanifest        회의실 홈 화면 추가용(PWA) 정보
+├─ trends.html             📊 데일리 트렌드 뷰어 (유튜브·구글 트렌드·뉴스·핫딜 카드)
+├─ trends-data.json        트렌드 수집 결과 (매일 06:10 GitHub Actions가 갱신)
+├─ trends.webmanifest      트렌드 뷰어 홈 화면 추가용(PWA) 정보
+├─ scripts/collect_trends.py  공개 피드 수집기 (표준 라이브러리만 · 인증 불필요)
+├─ .github/workflows/update-trends.yml  매일 자동 수집 워크플로
 ├─ manifest.json           설치형 앱(PWA) 정보 · 아이콘 · 테마 색
 ├─ sw.js                   서비스 워커 (네트워크 우선 · 최신 status.json 유지)
 ├─ assets/
@@ -143,6 +148,28 @@ gh issue comment <번호> -R gene4517-bot/ai-office --body-file comment.md   # �
 ```
 
 - 서비스 워커 `ai-office-v15` 가 `room.html` 을 프리캐시합니다. 기존에 앱을 설치해 썼다면 새 버전은 자동으로 갱신됩니다.
+
+## 📊 데일리 트렌드 뷰어 (`trends.html`) — 2026-11-24 추가
+
+주소: **https://gene4517-bot.github.io/ai-office/trends.html**
+(회의실 `🧰 모든-도구-모음` · 지휘실 오피스 탭 `📊 데일리 트렌드 뷰어` 카드로도 열립니다)
+
+유튜브·구글 트렌드·뉴스·커뮤니티에서 매일 모은 트렌드를 카드로 보는 화면입니다.
+
+- **수집(무료 공개 피드만 · 키·로그인·유료 API 없음)**
+  1. 구글 트렌드 한국 일일 급상승 검색어 RSS — `trends.google.com/trending/rss?geo=KR`
+  2. 유튜브 공개 검색 결과 — 키워드 `살림 꿀팁`·`주방 정리 수납`·`가전 추천`·`AI 활용 방법`·`핫딜 특가`·`속보 이슈`
+     (이번 주 업로드분 + 인기 영상을 최신 가중치로 섞어 정렬)
+  3. 구글 뉴스 한국 주요 뉴스 RSS — `news.google.com/rss?hl=ko&gl=KR&ceid=KR:ko`
+  4. 뽐뿌 게시판 RSS — 커뮤니티 핫딜
+- **자동 갱신**: `.github/workflows/update-trends.yml` 이 매일 **06:10(한국시간)** 에 `scripts/collect_trends.py` 를 돌려
+  `trends-data.json` 을 커밋하고 `main`·`gh-pages` 두 브랜치에 함께 올립니다(Pages 자동 반영). `workflow_dispatch` 로 직접 실행도 됩니다.
+- **한 소스가 막히면** 그 소스는 직전 수집분을 `이전 수집분` 표시와 함께 그대로 보여줍니다(화면이 비지 않음).
+- **화면**: 상단 검색창 + 빠른 키워드 칩(`#전체` `#생활살림` `#AI·테크` `#이슈` `#쇼핑·특가`) + 플랫폼 탭(`전체`·`유튜브`·`구글트렌드`·`뉴스/커뮤니티`),
+  카드에는 썸네일·순위 배지·플랫폼 배지·제목·조회수/검색량·날짜·분류 태그가 붙고 누르면 원문이 새 창에서 열립니다.
+  `수집 소스` 버튼에서 소스별 성공/건수, `기준·사용법` 버튼에서 숫자·날짜 의미를 확인합니다.
+- 개인정보(이름·전화·주소·계정·금액)는 넣지 않고 공개 피드 내용만 담습니다.
+- `sw.js` v17 이 `trends.html` 을 프리캐시합니다.
 
 ## 화면 사용법
 

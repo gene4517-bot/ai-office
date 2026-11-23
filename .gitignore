@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+
+# GitHub App(GitHub 연결)에 workflows 권한이 없어 이 파일은 푸시할 수 없습니다.
+# 저장소 웹 화면에서 직접 추가하거나, 연결 앱에 workflows 권한을 준 뒤 올리세요.
+.github/workflows/update-trends.yml

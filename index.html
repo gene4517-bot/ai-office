@@ -365,6 +365,9 @@
   .tvc .tvt span{display:block;font-size:9.5px;color:var(--dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .tvc button{margin-left:auto;flex:0 0 auto;font:800 10.5px/1 inherit;padding:8px 10px;border-radius:9px;
     background:linear-gradient(150deg,#ffe0a8,#f0a24c);border:0;color:#20150a;cursor:pointer}
+  .tvc a.tvcgo{margin-left:auto;flex:0 0 auto;font:800 10.5px/1 inherit;padding:8px 10px;border-radius:9px;
+    background:linear-gradient(150deg,#9ec6ff,#5b8dfa);color:#04122b;text-decoration:none;white-space:nowrap}
+  .tvc.trend{background:linear-gradient(120deg,#101c2e,#0e1622);border-color:#25395a}
 
   /* ---------- 💬 AI 합동 채팅방 (셋톡 스타일) ---------- */
   #panel.chatmode{height:84vh;max-height:84vh}
@@ -2351,6 +2354,9 @@ function renderOffice() {
     '<div class="tvc"><span class="tvci">📺</span>' +
       '<div class="tvt"><b>세계 무료 TV · 원터치</b><span>Famelack · 한국 72채널부터 세계 방송까지</span></div>' +
       '<button data-tv-open="tv/kr">바로 보기</button></div>' +
+    '<div class="tvc trend"><span class="tvci">📊</span>' +
+      '<div class="tvt"><b>데일리 트렌드 뷰어</b><span>유튜브·구글 트렌드·뉴스·핫딜 매일 자동 수집</span></div>' +
+      '<a class="tvcgo" href="./trends.html">열기</a></div>' +
     '<div class="toolchips">' + TOOLS.map((T, i) => '<button data-otool="' + i + '">' + T.i + ' ' + T.t + '</button>').join('') + '</div>' +
     '<div class="mini">' + ((d.office && d.office.greeting) || '오늘도 함께 일하고 있어요') + '</div>' +
     rows +
