@@ -342,9 +342,33 @@
     return fresh + pw - (it.rank||0)*0.7;
   }
 
+  /* 플랫폼을 번갈아 놓아 한 화면에 여러 플랫폼이 섞여 보이게 합니다 */
+  function arrange(list){
+    if(state.q){ return list.slice().sort(function(a,b){ return score(b)-score(a); }); }
+    var buckets = {};
+    list.forEach(function(it){ (buckets[it.platform] = buckets[it.platform] || []).push(it); });
+    Object.keys(buckets).forEach(function(k){
+      if(k === "youtube") return; /* 수집 순서(키워드별)를 그대로 씁니다 */
+      buckets[k].sort(function(a,b){ return (a.rank||0) - (b.rank||0); });
+    });
+    var order = ["youtube","google_trends","news","community"].filter(function(k){ return buckets[k]; });
+    var out = [], i = 0, guard = 0;
+    while(guard++ < 5000){
+      var added = false;
+      for(var j=0;j<order.length;j++){
+        var b = buckets[order[j]];
+        if(b && b[i]){ out.push(b[i]); added = true; }
+      }
+      if(!added) break;
+      i++;
+    }
+    return out;
+  }
+
   function render(){
     var all = state.data.items.filter(matches);
     all.sort(function(a,b){ return score(b)-score(a); });
+    all = arrange(all);
     state.list = all;
     countEl.textContent = num(all.length) + "건";
     metaNote.textContent = state.platform==="news" ? "· 뉴스 + 커뮤니티" : "· 오늘 모은 트렌드";
