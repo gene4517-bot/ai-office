@@ -162,8 +162,10 @@ gh issue comment <번호> -R gene4517-bot/ai-office --body-file comment.md   # �
      (이번 주 업로드분 + 인기 영상을 최신 가중치로 섞어 정렬)
   3. 구글 뉴스 한국 주요 뉴스 RSS — `news.google.com/rss?hl=ko&gl=KR&ceid=KR:ko`
   4. 뽐뿌 게시판 RSS — 커뮤니티 핫딜
-- **자동 갱신**: `.github/workflows/update-trends.yml` 이 매일 **06:10(한국시간)** 에 `scripts/collect_trends.py` 를 돌려
-  `trends-data.json` 을 커밋하고 `main`·`gh-pages` 두 브랜치에 함께 올립니다(Pages 자동 반영). `workflow_dispatch` 로 직접 실행도 됩니다.
+- **자동 갱신**: 피클 예약 작업(`scheduled-actions/데일리-트렌드-자동-갱신`)이 매일 **06:10(한국시간)** 에 `scripts/collect_trends.py` 를 돌려
+  `trends-data.json` 을 커밋하고 `main`·`gh-pages` 두 브랜치에 함께 올립니다(Pages 자동 반영).
+  GitHub Actions 용 파일(`.github/workflows/update-trends.yml`)도 준비되어 있지만, 현재 GitHub 연결 앱에 `workflows` 권한이 없어
+  저장소에 올릴 수 없습니다(웹 화면에서 직접 추가하면 그대로 동작). 그전까지는 위 예약 작업이 맡습니다.
 - **한 소스가 막히면** 그 소스는 직전 수집분을 `이전 수집분` 표시와 함께 그대로 보여줍니다(화면이 비지 않음).
 - **화면**: 상단 검색창 + 빠른 키워드 칩(`#전체` `#생활살림` `#AI·테크` `#이슈` `#쇼핑·특가`) + 플랫폼 탭(`전체`·`유튜브`·`구글트렌드`·`뉴스/커뮤니티`),
   카드에는 썸네일·순위 배지·플랫폼 배지·제목·조회수/검색량·날짜·분류 태그가 붙고 누르면 원문이 새 창에서 열립니다.
