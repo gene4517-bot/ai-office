@@ -367,7 +367,6 @@
 
   function render(){
     var all = state.data.items.filter(matches);
-    all.sort(function(a,b){ return score(b)-score(a); });
     all = arrange(all);
     state.list = all;
     countEl.textContent = num(all.length) + "건";
