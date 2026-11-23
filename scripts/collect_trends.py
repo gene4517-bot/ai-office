@@ -359,6 +359,11 @@ def collect_youtube(now):
     for c in items:
         if not c["published"]:
             c["published"] = (now - timedelta(days=c.get("days", 0) or 0)).isoformat()
+    # 유튜브 전체에서 ‘뜨는 순서’로 1위부터 매깁니다
+    items.sort(key=lambda c: c.get("_score", 0), reverse=True)
+    for i, c in enumerate(items, 1):
+        c["rank"] = i
+        c.pop("_score", None)
     return items, used_queries
 
 
