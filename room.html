@@ -298,6 +298,106 @@
   }
   #toast.on{opacity:1;transform:translate(-50%,0)}
 
+  /* ================= 비서 사용량 현황판 ================= */
+  #ubar{
+    flex:0 0 auto;display:flex;align-items:center;gap:10px;width:100%;
+    padding:7px 12px;border:0;border-bottom:1px solid #dde4de;
+    background:#f4f7f4;color:#23272f;font-size:11.5px;font-weight:800;
+    letter-spacing:-.2px;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden
+  }
+  #ubar:hover{background:#eaf0ea}
+  #ubar:active{background:#e4ebe4}
+  #ubar .ubt{flex:0 0 auto;font-size:12px;letter-spacing:-.3px}
+  #ubar .ub{display:inline-flex;align-items:center;gap:4px;flex:0 0 auto;font-size:10.5px;font-weight:800}
+  #ubar .ub b{font-weight:900;font-variant-numeric:tabular-nums}
+  #ubar .ub.bad{color:#d33a3f} #ubar .ub.warn{color:#b87700}
+  #ubar .ub.ok{color:#178a4b}  #ubar .ub.unk{color:#6b7280}
+  #ubar .sp{flex:1 1 auto;min-width:4px}
+  #ubar .tm{flex:0 0 auto;font-size:10px;font-weight:700;color:#7b848c}
+  #ubar .car{flex:0 0 auto;font-size:9px;color:#8a9299}
+
+  #upanel{
+    flex:0 0 auto;max-height:min(62vh,560px);overflow-y:auto;overscroll-behavior:contain;
+    background:#f7f9f7;color:#1f2328;border-bottom:1px solid #dde4de;padding:12px 12px 14px
+  }
+  #upanel[hidden]{display:none}
+  #upanel::-webkit-scrollbar{width:6px}
+  #upanel::-webkit-scrollbar-thumb{background:#cfd8d0;border-radius:3px}
+  .up-hd{display:flex;align-items:flex-start;gap:8px}
+  .up-hd .t{font-size:15px;font-weight:900;letter-spacing:-.4px;color:#111827;line-height:1.3}
+  .up-hd .s{font-size:10.5px;color:#6b7280;margin-top:3px;line-height:1.5;letter-spacing:-.1px}
+  .up-hd .btns{margin-left:auto;display:flex;gap:6px;flex:0 0 auto}
+  .up-hd .btns button{
+    width:34px;height:34px;border-radius:11px;border:1px solid #dde3dd;background:#fff;
+    color:#4b5563;font-size:14px;cursor:pointer;display:grid;place-items:center;line-height:1
+  }
+  .up-hd .btns button:hover{background:#eef2ee;color:#111827}
+  .up-note{
+    display:none;margin-top:10px;padding:8px 10px;border-radius:9px;
+    background:#eef6ef;border:1px solid #cfe6d5;color:#2b6b45;font-size:10.5px;font-weight:700;line-height:1.55
+  }
+  .up-note.on{display:block}
+  .up-note b{color:#1c5133}
+  .up-grp{display:flex;align-items:center;gap:7px;margin:15px 0 8px}
+  .up-grp b{font-size:12px;font-weight:900;color:#111827;letter-spacing:-.3px}
+  .up-grp .cnt{font-size:10.5px;font-weight:800;color:#8a949c}
+  .up-grp:after{content:"";flex:1 1 auto;height:1px;background:#e3e9e3}
+  .up-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(156px,1fr));gap:8px}
+  .ucard{
+    background:#fff;border:1px solid #e3e8e3;border-radius:13px;padding:10px 11px 11px;
+    display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 2px rgba(16,24,40,.04)
+  }
+  .ucard .top{display:flex;align-items:center;gap:5px;min-width:0}
+  .ucard .top .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto;background:#9aa2ab}
+  .ucard .nm{font-size:12px;font-weight:800;color:#111827;letter-spacing:-.3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ucard .mode{
+    margin-left:auto;flex:0 0 auto;font-size:9px;font-weight:800;color:#178a4b;
+    background:#e9f7ee;border:1px solid #c9ecd5;border-radius:999px;padding:1.5px 7px
+  }
+  .ucard .mode.manual{color:#6b7280;background:#f1f3f1;border-color:#e3e7e3}
+  .ucard .pct{display:flex;align-items:flex-end;gap:3px;line-height:1}
+  .ucard .pct b{font-size:27px;font-weight:900;letter-spacing:-1.4px;font-variant-numeric:tabular-nums;color:#111827}
+  .ucard .pct i{font-style:normal;font-size:11px;font-weight:800;color:#6b7280;padding-bottom:3px}
+  .ucard .pct .rem{margin-left:auto;font-size:9.5px;font-weight:700;color:#a2a9b1;padding-bottom:3px}
+  .ucard .gauge{height:9px;border-radius:99px;background:#edf0ed;overflow:hidden}
+  .ucard .gauge i{display:block;height:100%;border-radius:99px;transition:width .35s ease,background .2s}
+  .ucard .st{display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:800;color:#6b7280}
+  .ucard .st .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto;background:#9aa2ab}
+  .ucard .meta{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:#8a929b;line-height:1.35}
+  .ucard .meta.stale{color:#b87700}
+  .ucard .btn{
+    margin-top:1px;align-self:flex-start;height:27px;padding:0 10px;border-radius:9px;
+    border:1px solid #dbe2db;background:#fff;color:#374151;font-size:11px;font-weight:800;cursor:pointer
+  }
+  .ucard .btn:hover{background:#f3f7f3;border-color:#c3d3c6;color:#111827}
+  .ucard.ok .top .dot,.ucard.ok .st .dot{background:#22c55e}
+  .ucard.ok .st{color:#178a4b}
+  .ucard.warn .top .dot,.ucard.warn .st .dot{background:#f0a020}
+  .ucard.warn .st{color:#b87700}
+  .ucard.danger .top .dot,.ucard.danger .st .dot{background:#e5484d}
+  .ucard.danger .st{color:#d33a3f}
+  .ucard.unknown .st{color:#8a929b}
+
+  .presets{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+  .presets button{
+    height:27px;padding:0 9px;border-radius:7px;border:1px solid #4a4d55;background:#3a3c42;
+    color:var(--txt2);font-size:10.5px;font-weight:800;cursor:pointer
+  }
+  .presets button:hover{background:#4a4d55;color:#fff}
+
+  /* 멘션 칩 */
+  .quick.qm{gap:7px;padding:0 0 7px;align-items:center}
+  .mchip{
+    flex:0 0 auto;height:34px;padding:0 15px;border-radius:999px;border:1px solid #4a4d55;
+    background:#2f3136;color:#d7dade;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;
+    letter-spacing:-.2px
+  }
+  .mchip:hover{background:#3a3c42;color:#fff;border-color:#5865f2}
+  .mchip.all{background:#3a3a1f;border-color:#6b6430;color:#f2c14e}
+  .mchip.all:hover{background:#4a4a26;color:#ffe08a}
+  .qbtn.ac{background:#2f3136;border-style:dashed;border-color:#5b5f68;color:#cfd4da}
+  .qbtn.ac:hover{background:#3a3c42;border-color:#8b95a5;color:#fff}
+
   /* ================= 반응형 ================= */
   @media (max-width:860px){
     #side{
@@ -312,6 +412,10 @@
     .msg .av{width:36px;height:36px;font-size:17px}
     .msg .txt{font-size:13px}
     #comp{padding-left:8px;padding-right:8px}
+    #ubar{padding:7px 9px;gap:8px}
+    #ubar .tm{display:none}
+    #upanel{max-height:60vh;padding:11px 10px 13px}
+    .up-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
     .hbtn .lb{display:none}
     .hbtn{padding:0 7px}
     .hbtn.ic{width:30px}
@@ -373,15 +477,53 @@
       <a class="hbtn pri" id="ghOpen" href="https://github.com/gene4517-bot/ai-office/issues" target="_blank" rel="noopener" title="GitHub에서 이 스레드 열기">↗ <span class="lb">GitHub</span></a>
     </header>
 
+    <!-- 비서 사용량 요약 바 (누르면 패널 펼침/접힘) -->
+    <button type="button" id="ubar" aria-expanded="false" aria-controls="upanel" title="비서 사용량 현황판 열기/닫기">
+      <span class="ubt">📊 사용량</span>
+      <span class="ub bad">🔴 위험 <b id="ubDanger">0</b></span>
+      <span class="ub warn">🟡 임박 <b id="ubWarn">0</b></span>
+      <span class="ub ok">🟢 정상 <b id="ubOk">0</b></span>
+      <span class="ub unk">⚫ 미확인 <b id="ubUnknown">0</b></span>
+      <span class="sp"></span>
+      <span class="tm" id="ubarTime">방금 갱신</span>
+      <span class="car" id="ubarCar">▾</span>
+    </button>
+
+    <section id="upanel" hidden aria-label="비서 사용량 현황판">
+      <div class="up-hd">
+        <div>
+          <div class="t">📊 비서 사용량</div>
+          <div class="s" id="upSub">불러오는 중…</div>
+        </div>
+        <div class="btns">
+          <button type="button" id="upRefresh" title="새로고침" aria-label="사용량 새로고침">↻</button>
+          <button type="button" id="upClose" title="닫기" aria-label="사용량 패널 닫기">✕</button>
+        </div>
+      </div>
+      <div class="up-note" id="upNote">지금 보이는 건 <b>예시 값</b>이에요 — 각 카드의 <b>잔여 입력</b>으로 실제 잔여량을 넣으면 이 안내는 사라집니다.</div>
+      <div id="upBody"></div>
+    </section>
+
     <div id="banner"><b>⚠️</b><span id="bannerTxt"></span><span class="bts"><button id="bannerAct">다시 시도</button><button id="bannerX">닫기</button></span></div>
 
     <div id="msgs" role="log" aria-live="polite"></div>
 
     <footer id="comp">
       <div class="quick">
+        <button class="qbtn ac" type="button" data-qa="sum">🗂 회의 정리</button>
+        <button class="qbtn ac" type="button" data-qa="todo">✅ 할 일 뽑기</button>
+        <button class="qbtn ac" type="button" data-qa="draft">✍️ 초안 쓰기</button>
         <a class="qbtn gh" id="ghReply" href="https://github.com/gene4517-bot/ai-office/issues" target="_blank" rel="noopener">✍️ GitHub에서 바로 답글</a>
         <button class="qbtn ai" id="promptBtn">📋 다른 AI에게 넘길 프롬프트 복사</button>
         <button class="qbtn ghost" id="copyLink">🔗 이 스레드 링크 복사</button>
+      </div>
+      <div class="quick qm" aria-label="멘션 칩">
+        <button class="mchip all" type="button" data-mention="@전체">@전체</button>
+        <button class="mchip" type="button" data-mention="@해이">@해이</button>
+        <button class="mchip" type="button" data-mention="@클로드">@클로드</button>
+        <button class="mchip" type="button" data-mention="@뮤즈">@뮤즈</button>
+        <button class="mchip" type="button" data-mention="@인스팅트">@인스팅트</button>
+        <button class="mchip" type="button" data-mention="@챗지피티">@ChatGPT</button>
       </div>
       <div class="inw">
         <select id="roleSel" aria-label="발언 역할 선택">
@@ -424,6 +566,31 @@
 </div>
 
 <div id="toast"></div>
+
+<!-- 잔여 입력 모달 -->
+<div class="modal" id="useModal" role="dialog" aria-modal="true" aria-labelledby="useTitle">
+  <div class="card">
+    <h3 id="useTitle">📊 잔여 입력</h3>
+    <p id="useDesc">남은 크레딧을 %로 넣어 주세요. <b>이 기기(브라우저)에만</b> 저장되고 새로고침해도 남습니다.</p>
+    <label for="usePct">잔여 % (0~100)</label>
+    <input id="usePct" type="number" min="0" max="100" step="0.1" inputmode="decimal" placeholder="예: 62">
+    <label for="useResetAt">리셋 예정 시각 (선택)</label>
+    <input id="useResetAt" type="datetime-local">
+    <div class="presets" id="usePresets">
+      <button type="button" data-preset="1h">+1시간</button>
+      <button type="button" data-preset="12h">+12시간</button>
+      <button type="button" data-preset="24h">+1일</button>
+      <button type="button" data-preset="72h">+3일</button>
+      <button type="button" data-preset="168h">+7일</button>
+      <button type="button" data-preset="none">리셋 지우기</button>
+    </div>
+    <div class="row">
+      <button class="no" type="button" id="useCancel">닫기</button>
+      <button class="del" type="button" id="useClear">값 삭제</button>
+      <button class="ok" type="button" id="useSave">저장</button>
+    </div>
+  </div>
+</div>
 
 <script>
 (() => {
@@ -962,6 +1129,198 @@
     }
   }
 
+  /* ============ 비서 사용량 현황판 ============ */
+  const USE_KEY = 'airoom.usage.v1';
+  const USE_ITEMS = [
+    { id:'haei',     name:'해이 (피클)', group:'일일', mode:'자동' },
+    { id:'instinct', name:'인스팅트',    group:'일일', mode:'자동' },
+    { id:'chatgpt',  name:'ChatGPT',    group:'일일', mode:'수동' },
+    { id:'muse',     name:'Muse',       group:'주간', mode:'자동' },
+    { id:'claude',   name:'Claude',     group:'주간', mode:'수동' }
+  ];
+  const USE_SEED = {
+    haei:     { rem:78,   resetIn: 22*3600e3 },
+    instinct: { rem:95,   resetIn: 46*3600e3 },
+    muse:     { rem:24,   resetIn: (3*24+23)*3600e3 },
+    claude:   { rem:46.9, resetIn: (5*24+8)*3600e3 }
+  };
+  const USE_ST = {
+    ok:      { label:'정상',   c:'#22c55e' },
+    warn:    { label:'임박',   c:'#f0a020' },
+    danger:  { label:'위험',   c:'#e5484d' },
+    unknown: { label:'미확인', c:'#9aa2ab' }
+  };
+  const USE = { items:{}, edited:false, at:0, edit:null };
+
+  function useLoad(){
+    let d = null;
+    try { d = JSON.parse(localStorage.getItem(USE_KEY) || 'null'); } catch(e){}
+    if (!d || typeof d !== 'object' || !d.items) d = { items:{}, edited:false, seeded:false };
+    USE.items = d.items || {};
+    USE.edited = !!d.edited;
+    if (!d.seeded && !USE.edited){
+      const now = Date.now();
+      for (const it of USE_ITEMS){
+        const s = USE_SEED[it.id]; if (!s) continue;
+        USE.items[it.id] = { rem:s.rem, at:now, resetAt: now + s.resetIn };
+      }
+      useSave();
+    }
+    USE.at = Date.now();
+  }
+  function useSave(){
+    try {
+      localStorage.setItem(USE_KEY, JSON.stringify({ items:USE.items, edited:USE.edited, seeded:true }));
+    } catch(e){}
+  }
+  function useRem(id){
+    const d = USE.items[id];
+    return d && typeof d.rem === 'number' && isFinite(d.rem) ? d.rem : null;
+  }
+  function useStatus(rem){ return rem == null ? 'unknown' : (rem < 10 ? 'danger' : rem < 30 ? 'warn' : 'ok'); }
+  function useNum(v){ return String(Math.round(v * 10) / 10); }
+  function useCounts(){
+    const c = { ok:0, warn:0, danger:0, unknown:0 };
+    USE_ITEMS.forEach(it => { c[useStatus(useRem(it.id))]++; });
+    return c;
+  }
+  function useRenderBar(){
+    const c = useCounts();
+    $('#ubDanger').textContent = c.danger;
+    $('#ubWarn').textContent = c.warn;
+    $('#ubOk').textContent = c.ok;
+    $('#ubUnknown').textContent = c.unknown;
+    const m = Math.floor((Date.now() - USE.at) / 60000);
+    $('#ubarTime').textContent = m < 1 ? '방금 갱신' : `${m}분 전 갱신`;
+  }
+  function useResetLeft(ts){
+    const d = ts - Date.now();
+    if (d <= 0) return '리셋 지남 · 새 값 입력';
+    const h = Math.floor(d / 3600e3), dd = Math.floor(h / 24), hh = h % 24, mm = Math.floor((d % 3600e3) / 60e3);
+    if (dd > 0) return `리셋 ${dd}일 ${hh}시간 후`;
+    if (hh > 0) return `리셋 ${hh}시간 ${mm}분 후`;
+    return `리셋 ${Math.max(1, mm)}분 후`;
+  }
+  function useCard(it){
+    const d = USE.items[it.id] || {};
+    const rem = useRem(it.id);
+    const st = useStatus(rem);
+    const col = USE_ST[st].c;
+    const stale = !!d.at && (Date.now() - d.at) > 6 * 3600e3;
+    const reset = d.resetAt ? useResetLeft(d.resetAt) : '';
+    const reported = d.at ? relTime(new Date(d.at).toISOString()) : '보고 없음';
+    return `<article class="ucard ${st}" data-id="${esc(it.id)}">`+
+      `<div class="top"><span class="dot"></span><span class="nm">${esc(it.name)}</span>`+
+        `<span class="mode${it.mode === '자동' ? '' : ' manual'}">${esc(it.mode)}</span></div>`+
+      `<div class="pct"><b style="color:${col}">${rem == null ? '—' : useNum(rem)}</b>`+
+        `${rem == null ? '' : '<i>%</i>'}<span class="rem">${rem == null ? '기록 없음' : '남음'}</span></div>`+
+      `<div class="gauge"><i style="width:${rem == null ? 0 : Math.max(2, Math.min(100, rem))}%;background:${col}"></i></div>`+
+      `<div class="st"><span class="dot"></span>${USE_ST[st].label}</div>`+
+      (reset ? `<div class="meta">⏱ ${esc(reset)}</div>` : '')+
+      `<div class="meta${stale ? ' stale' : ''}">🕘 ${esc(reported)}${stale ? ' · 갱신 필요' : ''}</div>`+
+      `<button class="btn" type="button" data-use="${esc(it.id)}">잔여 입력</button>`+
+      `</article>`;
+  }
+  function useRenderPanel(){
+    useRenderBar();
+    const total = USE_ITEMS.length;
+    const reported = USE_ITEMS.filter(it => useRem(it.id) != null).length;
+    $('#upSub').textContent = `${total}명 · ${reported}명 보고 · 위험 <10% · 임박 <30% · 6시간 지나면 갱신 필요`;
+    $('#upNote').classList.toggle('on', !USE.edited);
+    const body = $('#upBody');
+    body.innerHTML = '';
+    ['일일','주간'].forEach(g => {
+      const list = USE_ITEMS.filter(it => it.group === g);
+      if (!list.length) return;
+      const h = document.createElement('div');
+      h.className = 'up-grp';
+      h.innerHTML = `<b>${esc(g)}</b><span class="cnt">${list.length}명</span>`;
+      body.appendChild(h);
+      const grid = document.createElement('div');
+      grid.className = 'up-grid';
+      list.forEach(it => { const w = document.createElement('div'); w.innerHTML = useCard(it); grid.appendChild(w.firstElementChild); });
+      body.appendChild(grid);
+    });
+  }
+  function useSetOpen(v){
+    const p = $('#upanel');
+    if (v == null) v = p.hidden;
+    p.hidden = !v;
+    $('#ubar').setAttribute('aria-expanded', v ? 'true' : 'false');
+    $('#ubarCar').textContent = v ? '▴' : '▾';
+    if (v) useRenderPanel();
+  }
+  function toLocalInput(ts){
+    const d = new Date(ts), p = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+  }
+  function useOpenModal(id){
+    const it = USE_ITEMS.find(x => x.id === id);
+    if (!it) return;
+    USE.edit = id;
+    const d = USE.items[id] || {};
+    $('#useTitle').textContent = `📊 ${it.name} · 잔여 입력`;
+    $('#useDesc').innerHTML = `${esc(it.group)} · ${esc(it.mode)} — 남은 크레딧을 %로 넣어 주세요. <b>이 기기(브라우저)에만</b> 저장되고 새로고침해도 남습니다.`;
+    $('#usePct').value = (typeof d.rem === 'number') ? useNum(d.rem) : '';
+    $('#useResetAt').value = d.resetAt ? toLocalInput(d.resetAt) : '';
+    $('#useModal').classList.add('on');
+    setTimeout(() => { try { $('#usePct').focus(); } catch(e){} }, 60);
+  }
+  function useCloseModal(){ $('#useModal').classList.remove('on'); USE.edit = null; }
+  function useCommit(rem, resetAt){
+    const id = USE.edit;
+    if (!id) { useCloseModal(); return; }
+    USE.items[id] = { rem: rem, at: Date.now(), resetAt: resetAt || null };
+    USE.edited = true;
+    useSave();
+    USE.at = Date.now();
+    useCloseModal();
+    useRenderPanel();
+  }
+  function useSaveModal(){
+    const raw = $('#usePct').value.trim();
+    const rem = raw === '' ? null : parseFloat(raw);
+    if (rem != null && (isNaN(rem) || rem < 0 || rem > 100)){ toast('0~100 사이 숫자로 넣어 주세요'); return; }
+    const rs = $('#useResetAt').value;
+    const resetAt = rs ? new Date(rs).getTime() : null;
+    if (rem == null && !resetAt){ toast('남은 %를 넣어 주세요'); return; }
+    useCommit(rem, resetAt);
+    toast(resetAt && rem == null ? '리셋 시각만 저장했어요' : '📊 잔여 사용량을 저장했어요');
+  }
+  function useDeleteVal(){
+    const id = USE.edit;
+    if (!id) { useCloseModal(); return; }
+    delete USE.items[id];
+    USE.edited = true;
+    useSave();
+    USE.at = Date.now();
+    useCloseModal();
+    useRenderPanel();
+    toast('기록을 지웠어요');
+  }
+
+  /* 퀵 액션 · 멘션 칩 */
+  const QA = {
+    sum:   '이 스레드 내용을 3줄로 핵심 정리하고, 결정된 것과 남은 것(다음 할 일)을 나눠 주세요.',
+    todo:  '이 스레드에서 할 일을 뽑아 담당 · 기한 · 순서 순으로 목록으로 정리해 주세요.',
+    draft: '이 안건으로 공유할 초안을 써 주세요 — 제목 1줄 + 본문 3문단 + 마지막에 확인할 점 1줄.'
+  };
+  function useQuickAction(k){
+    const t = QA[k]; if (!t) return;
+    const ta = $('#ta'), cur = ta.value.trim();
+    ta.value = cur ? cur + '\n' + t : t;
+    autoGrow(); ta.focus();
+    try { ta.setSelectionRange(ta.value.length, ta.value.length); } catch(e){}
+    toast('📝 입력창에 넣었어요 — 고쳐서 보내면 됩니다');
+  }
+  function useMention(m){
+    const ta = $('#ta'), cur = ta.value;
+    const sep = cur && !/\s$/.test(cur) ? ' ' : '';
+    ta.value = cur + sep + m + ' ';
+    autoGrow(); ta.focus();
+    try { ta.setSelectionRange(ta.value.length, ta.value.length); } catch(e){}
+  }
+
   /* ============ 쓰기 ============ */
   function updateComposer(){
     const has = !!store.token;
@@ -1132,6 +1491,44 @@
     $('#ta').addEventListener('input', autoGrow);
     $('#ta').addEventListener('keydown', e => {
       if (e.key === 'Enter' && !e.shiftKey && !e.isComposing){ e.preventDefault(); postComment(); }
+    });
+
+    // 비서 사용량 현황판
+    useLoad();
+    useRenderBar();
+    $('#ubar').addEventListener('click', () => useSetOpen());
+    $('#upClose').addEventListener('click', () => useSetOpen(false));
+    $('#upRefresh').addEventListener('click', () => {
+      USE.items = Object.assign({}, USE.items);
+      USE.at = Date.now(); useRenderPanel(); toast('📊 사용량을 다시 계산했어요');
+    });
+    $('#upBody').addEventListener('click', e => {
+      const b = e.target.closest('[data-use]');
+      if (b) useOpenModal(b.dataset.use);
+    });
+    $('#useSave').addEventListener('click', useSaveModal);
+    $('#useClear').addEventListener('click', useDeleteVal);
+    $('#useCancel').addEventListener('click', useCloseModal);
+    $('#useModal').addEventListener('click', e => { if (e.target.id === 'useModal') useCloseModal(); });
+    $('#usePct').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) useSaveModal(); });
+    $('#usePresets').addEventListener('click', e => {
+      const b = e.target.closest('button[data-preset]'); if (!b) return;
+      const k = b.dataset.preset;
+      if (k === 'none'){ $('#useResetAt').value = ''; return; }
+      const h = parseFloat(k) || 0;
+      $('#useResetAt').value = toLocalInput(Date.now() + h * 3600e3);
+    });
+    setInterval(() => {
+      useRenderBar();
+      if (!$('#upanel').hidden) useRenderPanel();
+    }, 60000);
+
+    // 퀵 액션 · 멘션 칩
+    document.querySelectorAll('.qbtn[data-qa]').forEach(b => {
+      b.addEventListener('click', () => useQuickAction(b.dataset.qa));
+    });
+    document.querySelectorAll('.mchip[data-mention]').forEach(b => {
+      b.addEventListener('click', () => useMention(b.dataset.mention));
     });
 
     $('#promptBtn').addEventListener('click', async () => {
