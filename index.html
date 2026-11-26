@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
 <meta name="theme-color" content="#15120f" />
 <meta name="description" content="1인 기업 AI 지휘실 · 실사 오피스에서 gene 대표와 AI 역할·도구 19개가 움직이는 업무 대시보드" />
 <link rel="manifest" href="manifest.json" />
@@ -29,7 +29,7 @@
     font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic','Segoe UI',sans-serif;
     -webkit-font-smoothing:antialiased}
   body{overflow:hidden}
-  #app{display:flex;flex-direction:column;height:100vh;height:100dvh;width:100%;min-height:0}
+  #app{display:flex;flex-direction:column;height:100vh;height:100dvh;width:100%;min-height:0;overflow:hidden}
   #body{display:flex;flex-direction:column;flex:1 1 auto;min-height:0}
 
   /* ---------- top bar ---------- */
@@ -61,7 +61,7 @@
   .zoomctl .fit{font-size:11px;font-weight:800;letter-spacing:-.4px}
 
   /* ---------- panel ---------- */
-  #panel{flex:0 0 auto;max-height:48vh;display:flex;flex-direction:column;background:var(--panel);border-top:1px solid var(--line);z-index:5}
+  #panel{flex:0 0 auto;max-height:48vh;max-height:48dvh;display:flex;flex-direction:column;background:var(--panel);border-top:1px solid var(--line);z-index:5;min-height:0}
   .phead{flex:0 0 auto;padding:9px 12px 8px;border-bottom:1px solid var(--line)}
   .prow{display:flex;align-items:center;gap:9px}
   .prow .av{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-weight:900;font-size:12px;
@@ -261,7 +261,7 @@
 
   /* 전체 화면(사진만 크게) 모드: ?full=1 */
   body.full #topbar, body.full #panel{display:none}
-  body.full #stage{flex:1 1 100vh}
+  body.full #stage{flex:1 1 auto}
   body.full .zoomctl{display:none}
   @media (min-width:900px) and (min-aspect-ratio:1/1){
     #body{flex-direction:row}
@@ -370,7 +370,14 @@
   .tvc.trend{background:linear-gradient(120deg,#101c2e,#0e1622);border-color:#25395a}
 
   /* ---------- 💬 AI 합동 채팅방 (셋톡 스타일) ---------- */
-  #panel.chatmode{height:84vh;max-height:84vh}
+  /* 채팅 모드: 화면 높이를 vh(브라우저 툴바를 뺀 큰 뷰포트)로 잡으면 안드로이드 크롬 하단 바 뒤로 넘칩니다.
+     #app(100dvh) 안에서 남는 높이를 flex 로 그대로 채워, 입력창·빠른버튼이 항상 화면 안에 들어오게 합니다. */
+  #panel.chatmode{height:auto;max-height:none;min-height:0}
+  /* 폰(세로 배치)에서는 오피스 화면을 접고 대화에 높이를 몰아줍니다. PC(가로 배치)는 그대로 둡니다. */
+  @media (max-width:899px), (max-aspect-ratio:1/1){
+    #panel.chatmode{flex:1 1 auto}
+    body.chatting #stage{display:none}
+  }
   /* 채팅 모드에서는 대시보드용 통계·안내줄을 접어 대화 공간을 넓힙니다 */
   #panel.chatmode .stats{display:none}
   #panel.chatmode .notice{display:none}
@@ -459,7 +466,8 @@
     background-position:calc(100% - 9px) 50%,calc(100% - 6px) 50%;background-size:3px 3px,3px 3px;background-repeat:no-repeat}
   .sk-tools button:active{transform:scale(.96)}
   /* 입력 */
-  .sk-in{flex:0 0 auto;display:flex;gap:6px;align-items:flex-end;padding:7px 9px calc(9px + env(safe-area-inset-bottom));
+  .sk-in{flex:0 0 auto;display:flex;gap:6px;align-items:flex-end;
+    padding:7px 9px calc(10px + env(safe-area-inset-bottom) + var(--vv-gap,0px));
     background:#fff;border-top:1px solid #e3edf6}
   .sk-in .sk-tw{flex:1 1 auto;position:relative;min-width:0}
   .sk-in textarea{display:block;width:100%;box-sizing:border-box;min-height:38px;max-height:96px;resize:none;
@@ -496,7 +504,7 @@
     border:1px solid #cfdff0;background:#f1f7fd;color:#25435e;cursor:pointer}
   .sk-sc .sk-row button.pri{background:linear-gradient(160deg,#ffe98f,#ffd43b);border-color:#f0c81f;color:#3a2c00}
   /* 토스트 */
-  .sk-toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,6px);z-index:95;max-width:88vw;
+  .sk-toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom) + var(--vv-gap,0px));transform:translate(-50%,6px);z-index:95;max-width:88vw;
     background:#17293a;color:#fff;font-weight:800;font-size:11px;line-height:1.4;font-family:inherit;padding:9px 14px;border-radius:999px;
     box-shadow:0 8px 24px rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;text-align:center}
   .sk-toast.on{opacity:1;transform:translate(-50%,0)}
@@ -1530,6 +1538,23 @@ function resize() {
 window.addEventListener('resize', resize);
 if (window.ResizeObserver) new ResizeObserver(resize).observe(stageEl);
 
+/* 안드로이드 크롬 하단 툴바·키보드가 실제로 화면을 덮는 높이를 --vv-gap 으로 넘겨
+   입력창이 그 뒤로 숨지 않게 위로 띄웁니다. (겹치지 않으면 0px) */
+function syncViewportGap() {
+  const vv = window.visualViewport;
+  if (vv && vv.scale > 1.01) { document.documentElement.style.setProperty('--vv-gap', '0px'); return; }
+  const visible = vv ? (vv.height + vv.offsetTop) : window.innerHeight;
+  const gap = Math.max(0, Math.round(window.innerHeight - visible));
+  document.documentElement.style.setProperty('--vv-gap', (gap > 8 ? gap : 0) + 'px');
+}
+syncViewportGap();
+window.addEventListener('resize', syncViewportGap);
+window.addEventListener('orientationchange', syncViewportGap);
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', syncViewportGap);
+  window.visualViewport.addEventListener('scroll', syncViewportGap);
+}
+
 function project(wx, wy) {
   return {
     x: (wx - (cam.x + camDrift.x)) * cam.zoom * camDrift.z + vw / 2,
@@ -2248,6 +2273,9 @@ function frame(now) {
   const dt = Math.min(0.05, lastT ? Math.abs(tRaw - lastT) : 0.016);
   lastT = tRaw;
 
+  // 채팅 탭처럼 오피스 화면(#stage)이 숨겨져 있을 때는 그리지 않습니다 (배터리 절약)
+  if (!stageEl.offsetParent) { requestAnimationFrame(frame); return; }
+
   const k = 1 - Math.exp(-9 * dt);
   cam.x = lerp(cam.x, camT.x, k);
   cam.y = lerp(cam.y, camT.y, k);
@@ -2554,6 +2582,7 @@ function switchTab(name) {
   });
   const panelEl = document.getElementById('panel');
   if (panelEl) panelEl.classList.toggle('chatmode', name === 'chat');
+  document.body.classList.toggle('chatting', name === 'chat');
   if (name === 'chat') { chatGreet(); renderChat(); }
   if (name === 'voice') renderVoice();
   if (name === 'advisor') renderAdvisors();

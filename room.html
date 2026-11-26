@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
 <title>🏢 AI 팀 회의실 · gene 대표</title>
 <meta name="description" content="AI 팀이 한곳에 모이는 통합 회의실 — GitHub Issues와 실시간으로 연결됩니다.">
 <meta name="theme-color" content="#1e1f22">
@@ -33,7 +33,7 @@
   a{color:#00a8fc;text-decoration:none}
   a:hover{text-decoration:underline}
 
-  #app{display:flex;height:100dvh;height:100vh;overflow:hidden}
+  #app{display:flex;height:100vh;height:100dvh;overflow:hidden}
 
   /* ================= 사이드바 ================= */
   #side{
@@ -229,7 +229,7 @@
   .typing{padding:0 16px 6px;font-size:10.5px;color:var(--dim2)}
 
   /* ================= 입력창 ================= */
-  #comp{flex:0 0 auto;padding:0 12px calc(8px + var(--safe-bot));background:var(--panel);border-top:0}
+  #comp{flex:0 0 auto;padding:0 12px calc(8px + var(--safe-bot) + var(--vv-gap,0px));background:var(--panel);border-top:0}
   .quick{display:flex;gap:6px;overflow-x:auto;padding:8px 0 6px;scrollbar-width:none}
   .quick::-webkit-scrollbar{display:none}
   .qbtn{
@@ -317,7 +317,7 @@
   #ubar .car{flex:0 0 auto;font-size:9px;color:#8a9299}
 
   #upanel{
-    flex:0 0 auto;max-height:min(62vh,560px);overflow-y:auto;overscroll-behavior:contain;
+    flex:0 0 auto;max-height:min(62vh,560px);max-height:min(62dvh,560px);overflow-y:auto;overscroll-behavior:contain;
     background:#f7f9f7;color:#1f2328;border-bottom:1px solid #dde4de;padding:12px 12px 14px
   }
   #upanel[hidden]{display:none}
@@ -415,7 +415,7 @@
     #ubar{padding:6px 9px;gap:6px}
     #ubar .ub{font-size:10px}
     #ubar .tm{font-size:9.5px}
-    #upanel{max-height:60vh;padding:11px 10px 13px}
+    #upanel{max-height:60vh;max-height:60dvh;padding:11px 10px 13px}
     .up-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
     .hbtn .lb{display:none}
     .hbtn{padding:0 7px}
@@ -1591,6 +1591,23 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
+
+/* 안드로이드 크롬 하단 툴바·키보드가 실제로 화면을 덮는 높이를 --vv-gap 으로 넘겨
+   입력창(#comp)이 그 뒤로 숨지 않게 위로 띄웁니다. (겹치지 않으면 0px) */
+function syncViewportGap() {
+  const vv = window.visualViewport;
+  if (vv && vv.scale > 1.01) { document.documentElement.style.setProperty('--vv-gap', '0px'); return; }
+  const visible = vv ? (vv.height + vv.offsetTop) : window.innerHeight;
+  const gap = Math.max(0, Math.round(window.innerHeight - visible));
+  document.documentElement.style.setProperty('--vv-gap', (gap > 8 ? gap : 0) + 'px');
+}
+syncViewportGap();
+window.addEventListener('resize', syncViewportGap);
+window.addEventListener('orientationchange', syncViewportGap);
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', syncViewportGap);
+  window.visualViewport.addEventListener('scroll', syncViewportGap);
+}
 </script>
 </body>
 </html>
