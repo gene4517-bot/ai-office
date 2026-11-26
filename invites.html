@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=5">
+<title>🥒 피클 초대장 공유 센터 · gene</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#12100e">
+<meta name="description" content="지금 열려 있는 피클 초대장을 한곳에 모았습니다. 카드를 눌러 바로 시작하세요.">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="피클 초대장">
+<meta name="format-detection" content="telephone=no">
+<meta name="referrer" content="no-referrer">
+<style>
+  :root{
+    --bg:#12100e; --bg2:#17140f; --card:#1c1814; --card2:#221d17; --line:#33291f; --line2:#43362a;
+    --txt:#f7f1e6; --dim:#ab9a85; --dim2:#7f6f5c;
+    --pickle:#8ed36b; --pickle2:#c6f2a8; --gold:#f0b064; --mint:#57cbaf;
+    --safe-t:env(safe-area-inset-top,0px); --safe-b:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(120% 60% at 50% -10%, #23301c 0%, rgba(35,48,28,0) 58%),
+      radial-gradient(90% 50% at 110% 10%, #2a2114 0%, rgba(42,33,20,0) 60%),
+      var(--bg);
+    color:var(--txt);
+    font:500 14px/1.5 -apple-system,BlinkMacSystemFont,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    min-height:100vh;-webkit-text-size-adjust:100%;
+  }
+  a{color:var(--pickle2)}
+  header{position:sticky;top:0;z-index:30;padding:calc(10px + var(--safe-t)) 14px 10px;
+    background:linear-gradient(180deg,rgba(18,16,14,.97),rgba(18,16,14,.86));
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:9px}
+  .brand .ico{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:19px;
+    background:linear-gradient(155deg,#2c3a22,#1c2417);border:1px solid #3d4f2d}
+  .brand h1{margin:0;font-size:15.5px;letter-spacing:-.4px;font-weight:800}
+  .brand .who{font-size:10.5px;color:var(--dim2);margin-top:1px}
+  .brand .who b{color:var(--gold)}
+  .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+  .chip{font:700 10.5px/1 inherit;padding:6px 9px;border-radius:999px;border:1px solid var(--line2);
+    background:#1d1915;color:var(--dim);display:inline-flex;align-items:center;gap:4px}
+  .chip.live{color:#0d2412;background:linear-gradient(150deg,var(--pickle2),var(--pickle));border-color:#a8e88c}
+  main{padding:12px 12px calc(22px + var(--safe-b))}
+  .notice{display:flex;gap:8px;align-items:flex-start;margin:2px 0 12px;padding:10px 12px;border-radius:13px;
+    background:linear-gradient(160deg,#1e2419,#191b14);border:1px solid #2e3a22;color:#d9e7c9;font-size:12px;line-height:1.5}
+  .notice b{color:var(--pickle2)}
+  .list{display:grid;grid-template-columns:1fr;gap:10px}
+  @media(min-width:640px){.list{grid-template-columns:1fr 1fr}}
+  .card{background:linear-gradient(165deg,var(--card2),var(--card));border:1px solid var(--line);
+    border-radius:16px;padding:12px 13px 11px;box-shadow:0 6px 18px rgba(0,0,0,.28)}
+  .top{display:flex;align-items:center;gap:8px}
+  .num{font:800 11px/1 inherit;color:#0f150b;background:linear-gradient(150deg,var(--gold),#d99045);
+    border-radius:8px;padding:5px 7px;letter-spacing:.2px}
+  .badge{font:800 9.5px/1 inherit;letter-spacing:.3px;color:#0d2412;
+    background:linear-gradient(150deg,var(--pickle2),var(--pickle));border:1px solid #a8e88c;
+    border-radius:999px;padding:5px 8px}
+  .src{margin-left:auto;font-size:10.5px;color:var(--dim2)}
+  .code{margin:9px 0 10px;font:800 19px/1.15 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    letter-spacing:2.2px;color:#fff;word-break:break-all}
+  .code small{display:block;font:500 10px/1.3 inherit;letter-spacing:0;color:var(--dim2);margin-top:5px}
+  .acts{display:flex;gap:7px}
+  button{font:inherit;cursor:pointer;border:0}
+  .btn{flex:1 1 0;min-height:42px;border-radius:11px;display:inline-flex;align-items:center;justify-content:center;
+    gap:5px;font:800 12px/1.2 inherit;text-decoration:none;padding:0 10px;transition:transform .08s,filter .15s}
+  .btn:active{transform:scale(.975)}
+  .btn.copy{background:#262019;border:1px solid var(--line2);color:#f1e3cc}
+  .btn.go{background:linear-gradient(150deg,var(--pickle2),var(--pickle));color:#0c210f;border:1px solid #a8e88c;flex:1.55 1 0}
+  .btn.go:after{content:"→";font-weight:800}
+  footer{margin:18px 2px 0;padding:14px 14px 16px;border-radius:15px;
+    background:linear-gradient(165deg,#1a1712,#161310);border:1px solid var(--line)}
+  footer h2{margin:0 0 7px;font-size:13px;letter-spacing:-.2px}
+  footer p{margin:6px 0;font-size:12px;color:#cfc0ab;line-height:1.6}
+  footer .threads{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:9px 12px;border-radius:11px;
+    background:#221d17;border:1px solid var(--line2);color:#f3e6d2;text-decoration:none;font-weight:800;font-size:12px}
+  .fine{margin:12px 4px 0;font-size:10.5px;color:var(--dim2);line-height:1.6}
+  #toast{position:fixed;left:50%;bottom:calc(22px + var(--safe-b));transform:translate(-50%,18px);
+    background:#0e1c0d;color:#d9f5c6;border:1px solid #3a5a2c;border-radius:12px;padding:10px 14px;
+    font:800 12px/1.3 inherit;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:60;
+    box-shadow:0 10px 26px rgba(0,0,0,.45);max-width:86vw;text-align:center}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span class="ico" aria-hidden="true">🥒</span>
+    <div>
+      <h1>피클 초대장 공유 센터</h1>
+      <div class="who"><b>gene</b> · <a href="https://www.threads.com/@ogenegun" target="_blank" rel="noopener noreferrer">@ogenegun</a></div>
+    </div>
+  </div>
+  <div class="meta">
+    <span class="chip">🕒 동기화 2026-11-26 20:44 KST</span>
+    <span class="chip live">✅ 노출 15개</span>
+    <span class="chip">🔍 전부 직접 접속 확인</span>
+  </div>
+</header>
+<main>
+  <div class="notice">
+    <span aria-hidden="true">💡</span>
+    <div>초대장은 <b>선착순</b>이라 먼저 소진될 수 있어요. 한 장이 마감됐으면 다음 카드를 눌러 주세요.
+    연속으로 안 되면 잠시 뒤 새로고침하면 목록이 갱신됩니다.</div>
+  </div>
+  <section class="list" aria-label="피클 초대장 목록">
+      <article class="card">
+        <div class="top">
+          <span class="num">#01</span>
+          <span class="badge">실측 유효</span>
+          <span class="src">출처 @zz***</span>
+        </div>
+        <div class="code">KXHSLN8QRMLT<small>2026-11-25 공개 게시</small></div>
+        <div class="acts">
+          <button class="btn copy" type="button" data-copy="https://pickle.com/i/KXHSLN8QRMLT" data-code="KXHSLN8QRMLT">링크 복사</button>
+          <a class="btn go" href="https://pickle.com/i/KXHSLN8QRMLT" target="_blank" rel="noopener noreferrer">피클 초대 수락 및 앱 열기</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="top">
+          <span class="num">#02</span>
+          <span class="badge">실측 유효</span>
+          <span class="src">출처 @ki***</span>
+        </div>
+        <div class="code">36P2ZMLJYVWC<small>2026-11-25 공개 게시</small></div>
+        <div class="acts">
+          <button class="btn copy" type="button" data-copy="https://pickle.com/i/36P2ZMLJYVWC" data-code="36P2ZMLJYVWC">링크 복사</button>
+          <a class="btn go" href="https://pickle.com/i/36P2ZMLJYVWC" target="_blank" rel="noopener noreferrer">피클 초대 수락 및 앱 열기</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="top">
+          <span class="num">#03</span>
+          <span class="badge">실측 유효</span>
+          <span class="src">출처 @jj***</span>
+        </div>
+        <div class="code">7R58PZRJHSKJ<small>2026-11-21 공개 게시</small></div>
+        <div class="acts">
+          <button class="btn copy" type="button" data-copy="https://pickle.com/i/7R58PZRJHSKJ" data-code="7R58PZRJHSKJ">링크 복사</button>
+          <a class="btn go" href="https://pickle.com/i/7R58PZRJHSKJ" target="_blank" rel="noopener noreferrer">피클 초대 수락 및 앱 열기</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="top">
+          <span class="num">#04</span>
+          <span class="badge">실측 유효</span>
+          <span class="src">출처 @we***</span>
+        </div>
+        <div class="code">bfTC26FQ<small>2026-11-20 공개 게시</small></div>
+        <div class="acts">
+          <button class="btn copy" type="button" data-copy="https://pickle.com/i/bfTC26FQ" data-code="bfTC26FQ">링크 복사</button>
+          <a class="btn go" href="https://pickle.com/i/bfTC26FQ" target="_blank" rel="noopener noreferrer">피클 초대 수락 및 앱 열기</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="top">
+          <span class="num">#05</span>
+          <span class="badge">실측 유효</span>
+          <span class="src">출처 @kr***</span>
+        </div>
+        <div class="code">W73JPM47<small>2026-11-18 공개 게시</small></div>
+        <div class="acts">
+          <button class="btn copy" type="button" data-copy="https://pickle.com/i/W73JPM47" data-code="W73JPM47">링크 복사</button>
+          <a class="btn go" href="https://pickle.com/i/W73JPM47" target="_blank" rel="noopener noreferrer">피클 초대 수락 및 앱 열기</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="top">
+          <span class="num">#06</span>
+          <span class="badge">실측 유효</span>
+          <span class="src">출처 @an***</span>
+        </div>
+        <div class="code">WYG67JK95X7W<small>2026-11-18 공개 게시</small></div>
+        <div class="acts">
+          <button class="btn copy" type="button" data-copy="https://pickle.com/i/WYG67JK95X7W" data-code="WYG67JK95X7W">링크 복사</button>
+          <a class="btn go" href="https://pickle.com/i/WYG67JK95X7W" target="_blank" rel="noopener noreferrer">피클 초대 수락 및 앱 열기</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="top">
+          <span class="num">#07</span>
+          <span class="badge">실측 유효</span>
+          <span class="src">출처 @tr***</span>
+        </div>
+        <div class="code">SYKXDCSD45QY<small>2026-11-17 공개 게시</small></div>
+        <div class="acts">
+          <button class="btn copy" type="button" data-copy="https://pickle.com/i/SYKXDCSD45QY" data-code="SYKXDCSD45QY">링크 복사</button>
+          <a class="btn go" href="https://pickle.com/i/SYKXDCSD45QY" target="_blank" rel="noopener noreferrer">피클 초대 수락 및 앱 열기</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="top">
+          <span class="num">#08</span>
+          <span class="badge">실측 유효</span>
+          <span class="src">출처 @he***</span>
+        </div>
+        <div class="code">78NQ6DTXT9QY<small>2026-11-15 공개 게시</small></div>
+        <div class="acts">
+          <button class="btn copy" type="button" data-copy="https://pickle.com/i/78NQ6DTXT9QY" data-code="78NQ6DTXT9QY">링크 복사</button>
+          <a class="btn go" href="https://pickle.com/i/78NQ6DTXT9QY" target="_blank" rel="noopener noreferrer">피클 초대 수락 및 앱 열기</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="top">
+          <span class="num">#09</span>
+          <span class="badge">실측 유효</span>
+          <span class="src">출처 @li***</span>
+        </div>
+        <div class="code">FMF4P3XLYWG3<small>2026-11-14 공개 게시</small></div>
+        <div class="acts">
+          <button class="btn copy" type="button" data-copy="https://pickle.com/i/FMF4P3XLYWG3" data-code="FMF4P3XLYWG3">링크 복사</button>
+          <a class="btn go" href="https://pickle.com/i/FMF4P3XLYWG3" target="_blank" rel="noopener noreferrer">피클 초대 수락 및 앱 열기</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="top">
+          <span class="num">#10</span>
+          <span class="badge">실측 유효</span>
+          <span class="src">출처 @li***</span>
+        </div>
+        <div class="code">6GK3W2MK5F65<small>2026-11-14 공개 게시</small></div>
+        <div class="acts">
+          <button class="btn copy" type="button" data-copy="https://pickle.com/i/6GK3W2MK5F65" data-code="6GK3W2MK5F65">링크 복사</button>
+          <a class="btn go" href="https://pickle.com/i/6GK3W2MK5F65" target="_blank" rel="noopener noreferrer">피클 초대 수락 및 앱 열기</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="top">
+          <span class="num">#11</span>
+          <span class="badge">실측 유효</span>
+          <span class="src">출처 @am***</span>
+        </div>
+        <div class="code">68L4MDVDN2H6<small>2026-11-14 공개 게시</small></div>
+        <div class="acts">
+          <button class="btn copy" type="button" data-copy="https://pickle.com/i/68L4MDVDN2H6" data-code="68L4MDVDN2H6">링크 복사</button>
+          <a class="btn go" href="https://pickle.com/i/68L4MDVDN2H6" target="_blank" rel="noopener noreferrer">피클 초대 수락 및 앱 열기</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="top">
+          <span class="num">#12</span>
+          <span class="badge">실측 유효</span>
+          <span class="src">출처 @tr***</span>
+        </div>
+        <div class="code">NFGNSG4RNYPJ<small>2026-11-12 공개 게시</small></div>
+        <div class="acts">
+          <button class="btn copy" type="button" data-copy="https://pickle.com/i/NFGNSG4RNYPJ" data-code="NFGNSG4RNYPJ">링크 복사</button>
+          <a class="btn go" href="https://pickle.com/i/NFGNSG4RNYPJ" target="_blank" rel="noopener noreferrer">피클 초대 수락 및 앱 열기</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="top">
+          <span class="num">#13</span>
+          <span class="badge">실측 유효</span>
+          <span class="src">출처 @sh***</span>
+        </div>
+        <div class="code">L3V4KJM9<small>2026-11-10 공개 게시</small></div>
+        <div class="acts">
+          <button class="btn copy" type="button" data-copy="https://pickle.com/i/L3V4KJM9" data-code="L3V4KJM9">링크 복사</button>
+          <a class="btn go" href="https://pickle.com/i/L3V4KJM9" target="_blank" rel="noopener noreferrer">피클 초대 수락 및 앱 열기</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="top">
+          <span class="num">#14</span>
+          <span class="badge">실측 유효</span>
+          <span class="src">출처 @yb***</span>
+        </div>
+        <div class="code">WN2RFS66C3DY<small>2026-11-10 공개 게시</small></div>
+        <div class="acts">
+          <button class="btn copy" type="button" data-copy="https://pickle.com/i/WN2RFS66C3DY" data-code="WN2RFS66C3DY">링크 복사</button>
+          <a class="btn go" href="https://pickle.com/i/WN2RFS66C3DY" target="_blank" rel="noopener noreferrer">피클 초대 수락 및 앱 열기</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="top">
+          <span class="num">#15</span>
+          <span class="badge">실측 유효</span>
+          <span class="src">출처 @_w***</span>
+        </div>
+        <div class="code">WPZDH8ZK2RD7<small>2026-11-10 공개 게시</small></div>
+        <div class="acts">
+          <button class="btn copy" type="button" data-copy="https://pickle.com/i/WPZDH8ZK2RD7" data-code="WPZDH8ZK2RD7">링크 복사</button>
+          <a class="btn go" href="https://pickle.com/i/WPZDH8ZK2RD7" target="_blank" rel="noopener noreferrer">피클 초대 수락 및 앱 열기</a>
+        </div>
+      </article>
+  </section>
+
+  <footer>
+    <h2>내 초대장도 올리고 싶다면</h2>
+    <p>스레드 댓글로 본인 초대 링크(<code>pickle.com/i/…</code>)를 남겨 주세요. 확인한 뒤 이 페이지에 순차 반영합니다.</p>
+    <p>반영된 링크는 작성자 핸들 앞 두 글자만 남기고 표시하고, 마감된 링크는 목록에서 뺍니다.</p>
+    <a class="threads" href="https://www.threads.com/@ogenegun" target="_blank" rel="noopener noreferrer">🧵 @ogenegun 스레드에서 댓글 남기기</a>
+  </footer>
+
+  <p class="fine">이 페이지는 공개 게시된 피클 초대 링크를 모아 보여 주는 안내용 페이지입니다. 초대장의 유효 여부와 사용 조건은 피클(pickle.com) 쪽 사정에 따라 달라질 수 있고, 링크를 연다고 가입이 자동으로 되지는 않습니다. 검색 노출 방지(noindex) 설정.</p>
+</main>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  var toast=document.getElementById('toast'),t=0;
+  function say(msg){toast.textContent=msg;toast.classList.add('on');
+    clearTimeout(t);t=setTimeout(function(){toast.classList.remove('on')},1800);}
+  function copyText(txt){
+    if(navigator.clipboard && window.isSecureContext){
+      return navigator.clipboard.writeText(txt);
+    }
+    return new Promise(function(res,rej){
+      try{
+        var ta=document.createElement('textarea');
+        ta.value=txt;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.top='-1000px';
+        document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,txt.length);
+        var ok=document.execCommand('copy');document.body.removeChild(ta);
+        ok?res():rej(new Error('execCommand'));
+      }catch(e){rej(e)}
+    });
+  }
+  document.addEventListener('click',function(ev){
+    var b=ev.target.closest('[data-copy]');
+    if(!b) return;
+    var url=b.getAttribute('data-copy'),code=b.getAttribute('data-code')||'';
+    copyText(url).then(function(){say('초대 링크를 복사했어요 · '+code);})
+      .catch(function(){say('복사가 안 되면 코드를 길게 눌러 직접 복사해 주세요');});
+  });
+})();
+</script>
+</body>
+</html>
