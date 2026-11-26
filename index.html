@@ -1495,8 +1495,8 @@
         if (state.zone !== zone) return;
         showTyping(id);
         var t2 = setTimeout(function () {
-          if (state.zone !== zone || typingWho !== id) return;
-          hideTyping();
+          if (state.zone !== zone) return;
+          if (typingWho === id) hideTyping();
           appendMsg(zone, { who: id, text: replyText(id, text), ts: Date.now() });
         }, 850 + Math.random() * 750);
         replyTimers.push(t2);
