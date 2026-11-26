@@ -1828,10 +1828,7 @@
     else if (tab === 'tools') initial = 'tools';
     else if (tab === 'dashboard' || tab === 'dash') initial = 'dash';
     else if (tab === 'voice' || tab === 'advisor') initial = 'home';
-    else {
-      var last = readLS(LS.last, 'home');
-      if (viewIds[last]) initial = last;
-    }
+    // 첫 화면은 항상 홈(지휘실) — 구역·맵은 카드와 하단 버튼으로 들어갑니다.
     go(initial);
     loadStatus(false);
     setInterval(function () {
