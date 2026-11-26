@@ -11,6 +11,8 @@
   });
 
   var KEY = 'event-assistant.v1';
+  var VER_KEY = 'event-assistant.seedVersion';
+  var DATA_VER = window.EA_SEED_VERSION || '1';
   var NOTI_KEY = 'event-assistant.notified';
   var SEED = (window.EA_SEED || []).map(function (o) { return Object.assign({}, o); });
   var STATUS = { wait: '대기', win: '당첨', lost: '미당첨', done: '완료' };
@@ -48,14 +50,36 @@
   function load() {
     var raw = null;
     try { raw = localStorage.getItem(KEY); } catch (e) {}
-    if (!raw) { state.items = SEED.map(clean); return; }
+    if (!raw) { state.items = SEED.map(clean); saveVersion(); return; }
     try {
       var arr = JSON.parse(raw);
       if (!Array.isArray(arr)) throw new Error('bad');
       state.items = arr.map(clean).filter(function (it) { return it.title; });
+      syncSeed();
     } catch (e) {
       state.items = SEED.map(clean);
+      saveVersion();
     }
+  }
+
+  /* 기본 목록(data.js)이 갱신되면 저장된 목록에도 반영합니다.
+     - EA_SEED_VERSION 이 바뀐 경우에만 실행 (같은 버전에서는 고친 내용을 건드리지 않음)
+     - 기본 목록에 있는 항목: 발표일·상태·메모 등이 최신 내용으로 갱신
+     - 직접 추가한 항목(id 가 기본 목록에 없음): 그대로 유지 */
+  function syncSeed() {
+    var storedVer = null;
+    try { storedVer = localStorage.getItem(VER_KEY); } catch (e) {}
+    if (storedVer === DATA_VER) return;
+    var seedIds = {};
+    SEED.forEach(function (s) { seedIds[s.id] = 1; });
+    var own = state.items.filter(function (it) { return !seedIds[it.id]; });
+    state.items = SEED.map(clean).concat(own);
+    persist();
+    saveVersion();
+  }
+
+  function saveVersion() {
+    try { localStorage.setItem(VER_KEY, DATA_VER); } catch (e) {}
   }
   function clean(o) {
     o = o || {};
@@ -76,8 +100,10 @@
     };
   }
   function persist() {
-    try { localStorage.setItem(KEY, JSON.stringify(state.items)); }
-    catch (e) { toast('저장 공간이 부족해 저장하지 못했어요'); }
+    try {
+      localStorage.setItem(KEY, JSON.stringify(state.items));
+      saveVersion();
+    } catch (e) { toast('저장 공간이 부족해 저장하지 못했어요'); }
   }
 
   /* ---------- D-day ---------- */

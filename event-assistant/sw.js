@@ -1,7 +1,7 @@
 /* 체험단 · 이벤트 비서 서비스 워커
    - 네트워크 우선: 항상 최신 파일을 먼저 시도하고, 실패했을 때만 캐시로 대체
    - 앱은 localStorage 로 동작하므로 오프라인에서도 목록·수정이 그대로 됩니다 */
-const CACHE = 'event-assistant-v1';
+const CACHE = 'event-assistant-v2';
 const PRECACHE = [
   './',
   './index.html',
