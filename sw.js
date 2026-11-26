@@ -2,7 +2,7 @@
    - 설치 요건 충족용 최소 구현
    - 네트워크 우선: 항상 최신 파일을 먼저 시도하고, 실패했을 때만 캐시로 대체
    - status.json 은 캐시에 저장하지 않아 화면이 항상 최신 상태를 읽습니다 */
-const CACHE = 'ai-office-v22';
+const CACHE = 'ai-office-v23';
 const PRECACHE = [
   './',
   './index.html',
@@ -21,6 +21,7 @@ const PRECACHE = [
   './assets/icon-512.png',
   './assets/icon-maskable-192.png',
   './assets/icon-maskable-512.png',
+  './assets/office-topdown-map.png',
   './assets/office-real-day.jpg',
   './assets/office-real-night.jpg'
 ];
