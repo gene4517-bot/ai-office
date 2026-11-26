@@ -197,7 +197,7 @@
   .mapv .maphead .mz .zchip em{display:none}
   #mapWrap{
     position:relative;flex:1 1 auto;min-height:0;border-radius:22px;overflow:hidden;
-    background:radial-gradient(120% 100% at 50% 50%,#251b12 0%,#15100b 72%);
+    background:#120e09;
     box-shadow:var(--shadow);touch-action:none;user-select:none;border:1px solid rgba(120,90,50,.25);
   }
   #stage{
@@ -932,7 +932,7 @@
       el.style.left = z.x + '%';
       el.style.top = z.y + '%';
       el.innerHTML = '<span>' + z.label + '</span>' +
-        '<span style="font-size:.62em;opacity:.7;font-weight:700">' + z.sub + '</span>';
+        '<span class="zsub" style="font-size:.62em;opacity:.7;font-weight:700">' + z.sub + '</span>';
       frag.appendChild(el);
     });
 
