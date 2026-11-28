@@ -97,6 +97,7 @@
     gap:.5rem;
     flex:1 1 auto;
     min-height:0;
+    overflow:hidden;
     padding:.1rem 0 .15rem;
   }
   .cond{
@@ -201,7 +202,7 @@
   <div class="head">
     <div class="brand">
       <div class="title">SOUTH KOREA WEATHER</div>
-      <div class="sub" id="sub">GYEONGGI · ANSEONG</div>
+      <div class="sub" id="sub">경기 안성 · GYEONGGI</div>
     </div>
     <div class="tabs">
       <button class="tab on" data-city="anseong" type="button">안성</button>
@@ -211,7 +212,7 @@
 
   <div class="now">
     <div class="cond">
-      <div class="cond-label" id="loc">경기 안성</div>
+      <div class="cond-label" id="loc">지금</div>
       <div class="cond-text" id="cond">불러오는 중…</div>
     </div>
     <div class="temp-wrap">
@@ -230,8 +231,8 @@
 <script>
 (function(){
   var CITIES = {
-    anseong:  {name:'안성', loc:'경기 안성', sub:'GYEONGGI · ANSEONG',  lat:37.0080, lon:127.2797},
-    changwon: {name:'창원', loc:'경남 창원', sub:'GYEONGNAM · CHANGWON', lat:35.2280, lon:128.6811}
+    anseong:  {name:'안성', loc:'지금', sub:'경기 안성 · GYEONGGI',  lat:37.0080, lon:127.2797},
+    changwon: {name:'창원', loc:'지금', sub:'경남 창원 · GYEONGNAM', lat:35.2280, lon:128.6811}
   };
   var WEEK = ['일','월','화','수','목','금','토'];
   var CODE_KO = {
@@ -419,7 +420,7 @@
   /* ---------- 임베드 크기에 맞춘 글자 크기 ---------- */
   function layout(){
     var W = Math.min(window.innerWidth, 1088), H = window.innerHeight;
-    var base = Math.min(W / 23, H / 12.2);
+    var base = Math.min(W / 23, H / 16);
     base = Math.max(9, Math.min(base, 44));
     document.documentElement.style.fontSize = base.toFixed(2) + 'px';
   }
