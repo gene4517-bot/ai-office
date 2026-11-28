@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#f7f3ec">
+<title>📋 업무별 작업 일지 · gene</title>
+<link rel="icon" href="./favicon.ico">
+<style>
+  :root{
+    --bg:#f7f3ec; --bg2:#efe8dc; --card:#fffdf8; --ink:#2b2620; --dim:#7c7367;
+    --line:#e6dccd; --wood:#8a6a44; --wood2:#6f5436;
+    --done:#2f7d4f; --done-bg:#e4f2e8; --done-line:#bfe0c9;
+    --wait:#a06a10; --wait-bg:#fdf0d6; --wait-line:#f0d9a6;
+    --self:#35507a; --self-bg:#e7edf7; --self-line:#c3d2e8;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"NanumSquareRound","Apple SD Gothic Neo","Pretendard",-apple-system,BlinkMacSystemFont,"Malgun Gothic",sans-serif;
+    line-height:1.5; font-size:15px;
+    padding-bottom:calc(28px + env(safe-area-inset-bottom));
+  }
+  a{color:var(--wood2)}
+  .wrap{max-width:860px;margin:0 auto;padding:0 14px}
+
+  /* ===== 상단 ===== */
+  header.top{
+    position:sticky; top:0; z-index:20;
+    background:linear-gradient(180deg,#fbf7f0 70%,rgba(251,247,240,.92));
+    border-bottom:1px solid var(--line);
+    padding:10px 14px 9px;
+    backdrop-filter:saturate(140%) blur(8px);
+  }
+  .topin{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:10px}
+  .back{
+    flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;
+    text-decoration:none;font-size:12.5px;font-weight:700;color:var(--wood2);
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 10px;
+  }
+  .ttl{min-width:0;flex:1}
+  .ttl h1{margin:0;font-size:16px;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ttl .sub{font-size:11.5px;color:var(--dim);margin-top:1px}
+  .icon-btn{
+    flex:0 0 auto;width:34px;height:34px;border-radius:10px;border:1px solid var(--line);
+    background:#fff;color:var(--wood2);font-size:15px;cursor:pointer;display:grid;place-items:center;
+  }
+  .icon-btn:active{transform:scale(.96)}
+
+  /* ===== 요약 ===== */
+  .sum{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 10px}
+  .sum .box{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:9px 8px;text-align:center;box-shadow:0 1px 0 #fff inset;
+  }
+  .sum b{display:block;font-size:19px;line-height:1.1;letter-spacing:-.5px}
+  .sum small{display:block;font-size:10.5px;color:var(--dim);margin-top:3px}
+  .sum .box.done b{color:var(--done)}
+  .sum .box.wait b{color:var(--wait)}
+  .sum .box.self b{color:var(--self)}
+
+  /* ===== 필터 ===== */
+  .filters{display:flex;gap:7px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
+  .filters::-webkit-scrollbar{display:none}
+  .f{
+    flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--dim);
+    border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:700;cursor:pointer;
+    display:inline-flex;align-items:center;gap:5px;white-space:nowrap;
+  }
+  .f .n{font-size:11px;background:var(--bg2);border-radius:999px;padding:1px 6px;color:#6b6257}
+  .f[aria-pressed="true"]{background:var(--wood);border-color:var(--wood);color:#fff}
+  .f[aria-pressed="true"] .n{background:rgba(255,255,255,.22);color:#fff}
+
+  /* ===== 영역 ===== */
+  .area{margin:0 0 20px}
+  .area-hd{display:flex;align-items:baseline;gap:8px;margin:0 2px 9px}
+  .area-hd h2{margin:0;font-size:14.5px;letter-spacing:-.2px}
+  .area-hd .d{font-size:11.5px;color:var(--dim)}
+  .area-hd .c{margin-left:auto;font-size:11.5px;color:var(--wood2);font-weight:700}
+  .cards{display:grid;grid-template-columns:1fr;gap:9px}
+  @media(min-width:700px){.cards{grid-template-columns:1fr 1fr}}
+
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:12px 13px 11px;box-shadow:0 1px 2px rgba(90,70,40,.05),0 1px 0 #fff inset;
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .card.hide,.area.hide{display:none}
+  .c-top{display:flex;align-items:flex-start;gap:8px}
+  .c-top h3{margin:0;font-size:14px;line-height:1.35;letter-spacing:-.2px;flex:1;min-width:0}
+  .badge{
+    flex:0 0 auto;font-size:11px;font-weight:800;border-radius:999px;padding:3px 9px;
+    border:1px solid transparent;letter-spacing:-.1px;
+  }
+  .badge.done{color:var(--done);background:var(--done-bg);border-color:var(--done-line)}
+  .badge.wait{color:var(--wait);background:var(--wait-bg);border-color:var(--wait-line)}
+  .badge.self{color:var(--self);background:var(--self-bg);border-color:var(--self-line)}
+
+  .metrics{display:flex;flex-wrap:wrap;gap:5px}
+  .metrics span{
+    font-size:11.5px;font-weight:700;color:#5f5648;background:var(--bg2);
+    border-radius:8px;padding:3px 8px;letter-spacing:-.1px;
+  }
+  .memo{margin:0;font-size:12.5px;color:#544c41;line-height:1.55}
+  .nxt{
+    margin:0;font-size:12px;color:var(--wood2);background:#fbf5ea;
+    border-left:3px solid #d9c4a3;border-radius:0 8px 8px 0;padding:6px 9px;
+  }
+  .nxt b{color:var(--wood2)}
+  .links{display:flex;flex-wrap:wrap;gap:6px;margin-top:1px}
+  .links a{
+    font-size:12px;font-weight:700;text-decoration:none;color:#fff;background:var(--wood);
+    border-radius:9px;padding:6px 11px;
+  }
+  .links a:active{background:var(--wood2)}
+  .links a.ghost{background:#fff;color:var(--wood2);border:1px solid var(--line)}
+
+  .empty{
+    background:var(--card);border:1px dashed var(--line);border-radius:16px;
+    padding:22px 16px;text-align:center;color:var(--dim);font-size:13px;
+  }
+  .empty button{
+    margin-top:10px;border:1px solid var(--line);background:#fff;color:var(--wood2);
+    font-weight:700;font-size:12.5px;border-radius:10px;padding:7px 13px;cursor:pointer;
+  }
+  footer.note{margin:8px 2px 0;font-size:11.5px;color:var(--dim);line-height:1.6}
+  footer.note b{color:#6b6257}
+  .skel{height:96px;border-radius:16px;background:linear-gradient(90deg,#f2ecdf 25%,#f8f3e8 50%,#f2ecdf 75%);background-size:200% 100%;animation:sh 1.2s infinite}
+  @keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="topin">
+    <a class="back" href="./room.html">← 회의실</a>
+    <div class="ttl">
+      <h1>📋 업무별 작업 일지</h1>
+      <div class="sub" id="upd">불러오는 중…</div>
+    </div>
+    <button class="icon-btn" id="reload" title="새로고침" aria-label="새로고침">↻</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="sum" id="sum">
+    <div class="box"><b id="sAll">–</b><small>전체 업무</small></div>
+    <div class="box done"><b id="sDone">–</b><small>완료</small></div>
+    <div class="box wait"><b id="sWait">–</b><small>대기</small></div>
+    <div class="box self"><b id="sSelf">–</b><small>직접처리</small></div>
+  </div>
+
+  <div class="filters" id="filters" role="group" aria-label="상태 필터">
+    <button class="f" data-k="전체" aria-pressed="true">전체 <span class="n" id="fAll">–</span></button>
+    <button class="f" data-k="완료" aria-pressed="false">✅ 완료 <span class="n" id="fDone">–</span></button>
+    <button class="f" data-k="대기" aria-pressed="false">⏳ 대기 <span class="n" id="fWait">–</span></button>
+    <button class="f" data-k="직접처리" aria-pressed="false">🙋 직접처리 <span class="n" id="fSelf">–</span></button>
+  </div>
+
+  <main id="board" aria-live="polite">
+    <div class="skel"></div>
+    <div class="skel" style="margin-top:9px"></div>
+    <div class="skel" style="margin-top:9px"></div>
+  </main>
+
+  <footer class="note" id="foot">
+    <b>기록 원칙</b> · 완료·대기·직접처리 세 가지 상태와 공개 링크만 적습니다.
+    계정·연락처·금액 세부는 공개 페이지라 싣지 않고, 수치는 처리 결과만 표시합니다.
+  </footer>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var DATA_URL = './work-log-data.json';
+  var board = document.getElementById('board');
+  var state = { data:null, filter:'전체' };
+
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function isExternal(u){ return /^https?:/i.test(u); }
+  function badgeCls(s){ return s === '완료' ? 'done' : (s === '대기' ? 'wait' : 'self'); }
+
+  function cardHTML(t){
+    var m = (t.metrics || []).map(function(x){ return '<span>'+esc(x)+'</span>'; }).join('');
+    var links = (t.links || []).map(function(l){
+      return '<a href="'+esc(l.url)+'"'+(isExternal(l.url) ? ' target="_blank" rel="noopener"' : '')+'>'+esc(l.label)+'</a>';
+    }).join('');
+    return '' +
+      '<article class="card" data-status="'+esc(t.status)+'">' +
+        '<div class="c-top">' +
+          '<h3>'+esc(t.title)+'</h3>' +
+          '<span class="badge '+badgeCls(t.status)+'">'+esc(t.status)+'</span>' +
+        '</div>' +
+        (m ? '<div class="metrics">'+m+'</div>' : '') +
+        (t.memo ? '<p class="memo">'+esc(t.memo)+'</p>' : '') +
+        (t.next ? '<p class="nxt"><b>다음</b> · '+esc(t.next)+'</p>' : '') +
+        (links ? '<div class="links">'+links+'</div>' : '') +
+      '</article>';
+  }
+
+  function render(){
+    var d = state.data;
+    if (!d || !d.areas){ return; }
+    var all = [], html = '';
+    d.areas.forEach(function(a){
+      a.tasks.forEach(function(t){ all.push(t); });
+      html += '' +
+        '<section class="area" data-area="'+esc(a.id)+'">' +
+          '<div class="area-hd">' +
+            '<h2>'+esc(a.icon ? a.icon+' ' : '')+esc(a.name)+'</h2>' +
+            (a.desc ? '<span class="d">'+esc(a.desc)+'</span>' : '') +
+            '<span class="c">'+a.tasks.length+'개</span>' +
+          '</div>' +
+          '<div class="cards">'+ a.tasks.map(cardHTML).join('') +'</div>' +
+        '</section>';
+    });
+    board.innerHTML = html;
+
+    var n = { '전체':all.length, '완료':0, '대기':0, '직접처리':0 };
+    all.forEach(function(t){ if (n[t.status] != null) n[t.status]++; });
+    document.getElementById('sAll').textContent  = n['전체'];
+    document.getElementById('sDone').textContent = n['완료'];
+    document.getElementById('sWait').textContent = n['대기'];
+    document.getElementById('sSelf').textContent = n['직접처리'];
+    document.getElementById('fAll').textContent  = n['전체'];
+    document.getElementById('fDone').textContent = n['완료'];
+    document.getElementById('fWait').textContent = n['대기'];
+    document.getElementById('fSelf').textContent = n['직접처리'];
+
+    var label = d.updated_label || (d.updated_at ? String(d.updated_at).replace('T',' ').slice(0,16) : '');
+    document.getElementById('upd').textContent = label ? ('최근 기록 ' + label + ' · ' + d.owner) : d.owner || '';
+    if (d.note){
+      document.getElementById('foot').innerHTML =
+        '<b>기록 원칙</b> · ' + esc(d.note);
+    }
+    applyFilter(state.filter);
+  }
+
+  function applyFilter(k){
+    state.filter = k;
+    var cards = board.querySelectorAll('.card');
+    cards.forEach(function(c){
+      var show = (k === '전체') || (c.getAttribute('data-status') === k);
+      c.classList.toggle('hide', !show);
+    });
+    board.querySelectorAll('.area').forEach(function(sec){
+      var left = sec.querySelectorAll('.card:not(.hide)').length;
+      sec.classList.toggle('hide', left === 0);
+    });
+    document.querySelectorAll('.f').forEach(function(b){
+      b.setAttribute('aria-pressed', b.getAttribute('data-k') === k ? 'true' : 'false');
+    });
+  }
+
+  function fail(msg){
+    board.innerHTML =
+      '<div class="empty"><div style="font-size:22px">📭</div>' +
+      '<div style="margin-top:6px">' + esc(msg) + '</div>' +
+      '<button id="retry" type="button">다시 불러오기</button></div>';
+    var r = document.getElementById('retry');
+    if (r) r.addEventListener('click', load);
+  }
+
+  function load(){
+    board.innerHTML = '<div class="skel"></div><div class="skel" style="margin-top:9px"></div>';
+    fetch(DATA_URL + '?t=' + Date.now(), { cache:'no-store' })
+      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(d){ state.data = d; render(); })
+      .catch(function(){ fail('작업 일지 데이터를 읽지 못했어요. 잠시 뒤 다시 시도해 주세요.'); });
+  }
+
+  document.getElementById('filters').addEventListener('click', function(e){
+    var b = e.target.closest('.f');
+    if (!b) return;
+    applyFilter(b.getAttribute('data-k'));
+  });
+  document.getElementById('reload').addEventListener('click', load);
+
+  load();
+})();
+</script>
+</body>
+</html>

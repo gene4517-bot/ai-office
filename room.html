@@ -450,6 +450,7 @@
       <div class="cat" style="margin-top:8px">🧭 한곳에 모아보기</div>
       <button class="ch sm" data-ch="status"><span class="ico">📊</span><span class="lbl">지휘실-현황</span></button>
       <button class="ch sm" data-ch="tools"><span class="ico">🧰</span><span class="lbl">모든-도구-모음</span></button>
+      <a class="ch sm" href="./work-log.html"><span class="ico">📋</span><span class="lbl">업무별-작업-일지</span></a>
 
       <div class="cat" style="margin-top:8px">⚙️ 연결</div>
       <button class="ch sm" id="tokBtn2"><span class="ico">🔑</span><span class="lbl">GitHub 토큰 설정</span></button>
@@ -474,6 +475,7 @@
         <div class="t"><span id="hdIco"></span><span id="hdTitle"># 회의실</span></div>
         <div class="s"><span class="dot" id="hdDot"></span><span id="hdSub">GitHub에 연결하는 중…</span></div>
       </div>
+      <a class="hbtn" href="./work-log.html" title="업무별 작업 일지" aria-label="업무별 작업 일지">📋 <span class="lb">작업 일지</span></a>
       <button class="hbtn ic" id="refresh" title="새로고침" aria-label="새로고침">🔄</button>
       <a class="hbtn pri" id="ghOpen" href="https://github.com/gene4517-bot/ai-office/issues" target="_blank" rel="noopener" title="GitHub에서 이 스레드 열기">↗ <span class="lb">GitHub</span></a>
     </header>
@@ -969,6 +971,7 @@
         `<div class="tools">` +
           `<a class="tool" href="./"><b>🏢 AI 지휘실</b><small>오피스·업무·직원 현황</small></a>` +
           `<a class="tool" href="./?tab=voice"><b>🎤 음성 지휘</b><small>말로 지시하기</small></a>` +
+          `<a class="tool" href="./work-log.html"><b>📋 업무별 작업 일지</b><small>완료·대기·결과 링크 한눈에</small></a>` +
           `<a class="tool" href="./dashboard/"><b>🎛️ gene 덱</b><small>폰용 스트림덱</small></a>` +
         `</div>` +
       `</div></div>`;
@@ -986,6 +989,7 @@
 
     const items = [
       ['./', '🏢 AI 지휘실', '오피스·업무·직원 현황'],
+      ['./work-log.html', '📋 업무별 작업 일지', '완료·대기·결과 링크 한눈에'],
       ['./?tab=chat', '💬 합동채팅', 'AI 역할별 의견 한 방에서'],
       ['./?tab=voice', '🎤 음성 지휘', '말로 지시하고 실행'],
       ['./dashboard/', '🎛️ gene 덱', '폰용 스트림덱'],

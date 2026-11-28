@@ -2,7 +2,7 @@
    - 설치 요건 충족용 최소 구현
    - 네트워크 우선: 항상 최신 파일을 먼저 시도하고, 실패했을 때만 캐시로 대체
    - status.json 은 캐시에 저장하지 않아 화면이 항상 최신 상태를 읽습니다 */
-const CACHE = 'ai-office-v23';
+const CACHE = 'ai-office-v24';
 const PRECACHE = [
   './',
   './index.html',
@@ -12,6 +12,7 @@ const PRECACHE = [
   './tools.webmanifest',
   './trends.html',
   './trends.webmanifest',
+  './work-log.html',
   './invites.html',
   './manifest.json',
   './favicon.ico',
@@ -52,7 +53,7 @@ self.addEventListener('fetch', (e) => {
   e.respondWith(
     fetch(req, { cache: 'no-store' })
       .then((res) => {
-        const noStore = url.pathname.endsWith('/status.json') || url.pathname.endsWith('sw.js');
+        const noStore = url.pathname.endsWith('/status.json') || url.pathname.endsWith('work-log-data.json') || url.pathname.endsWith('sw.js');
         if (res && res.ok && !noStore) {
           const copy = res.clone();
           caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
