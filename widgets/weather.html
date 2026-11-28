@@ -27,6 +27,8 @@
   }
   .panel{
     height:100vh;
+    max-width:68rem;
+    margin:0 auto;
     padding:1.1rem 1.25rem 1rem;
     display:flex;
     flex-direction:column;
@@ -416,9 +418,9 @@
 
   /* ---------- 임베드 크기에 맞춘 글자 크기 ---------- */
   function layout(){
-    var W = window.innerWidth, H = window.innerHeight;
+    var W = Math.min(window.innerWidth, 1088), H = window.innerHeight;
     var base = Math.min(W / 23, H / 12.2);
-    base = Math.max(9, Math.min(base, 30));
+    base = Math.max(9, Math.min(base, 44));
     document.documentElement.style.fontSize = base.toFixed(2) + 'px';
   }
   window.addEventListener('resize', layout);
