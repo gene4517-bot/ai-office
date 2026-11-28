@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Clock</title>
+<style>
+  :root{
+    --bg:#191919;
+    --card:#232323;
+    --card-edge:#2f2f2f;
+    --digit:#f4f4f4;
+    --muted:#8b8b8b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    background:var(--bg);
+    color:var(--digit);
+    font-family:"Helvetica Neue",Helvetica,"Apple SD Gothic Neo","Malgun Gothic",Arial,sans-serif;
+    height:100vh;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    -webkit-font-smoothing:antialiased;
+    user-select:none;
+  }
+  .clock{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:var(--gap);
+    padding:2vh 2vw;
+  }
+  .cards{
+    display:flex;
+    align-items:center;
+    gap:var(--card-gap);
+  }
+  .card{
+    position:relative;
+    width:var(--w);
+    height:var(--h);
+    border-radius:var(--radius);
+    background:linear-gradient(180deg,#2a2a2a 0%,#222 49.6%,#1d1d1d 50.4%,#262626 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.06),
+      inset 0 -1px 0 rgba(0,0,0,.55),
+      0 8px 20px rgba(0,0,0,.45);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  /* 플립 가운데 선 */
+  .card::after{
+    content:"";
+    position:absolute;
+    left:0;right:0;top:50%;
+    height:2px;
+    transform:translateY(-1px);
+    background:linear-gradient(90deg,rgba(0,0,0,.15),rgba(0,0,0,.85) 15%,rgba(0,0,0,.85) 85%,rgba(0,0,0,.15));
+    box-shadow:0 1px 0 rgba(255,255,255,.045);
+    pointer-events:none;
+  }
+  /* 좌우 힌지 홈 */
+  .card::before{
+    content:"";
+    position:absolute;
+    top:50%;left:0;right:0;
+    height:0;
+    pointer-events:none;
+  }
+  .num{
+    font-size:var(--fs);
+    font-weight:800;
+    line-height:1;
+    letter-spacing:-.02em;
+    font-variant-numeric:tabular-nums;
+    font-feature-settings:"tnum" 1;
+    text-shadow:0 2px 6px rgba(0,0,0,.55);
+    transform:translateY(-.02em);
+  }
+  .num.flip{animation:tick .18s ease-out;}
+  @keyframes tick{
+    0%{opacity:.45;transform:translateY(-.10em) scaleY(.94);}
+    100%{opacity:1;transform:translateY(-.02em) scaleY(1);}
+  }
+  .date{
+    display:flex;
+    align-items:center;
+    gap:.6em;
+    color:#d8d8d8;
+    font-size:var(--ds);
+    font-weight:500;
+    letter-spacing:-.01em;
+    white-space:nowrap;
+  }
+  .date .bar{color:#4a4a4a;font-weight:400;}
+  .date-en{
+    color:var(--muted);
+    font-size:calc(var(--ds) * .68);
+    font-weight:500;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    white-space:nowrap;
+  }
+  .wrap-date{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:.55em;
+    margin-top:.15em;
+  }
+</style>
+</head>
+<body>
+  <div class="clock">
+    <div class="cards">
+      <div class="card"><span class="num" id="hh">00</span></div>
+      <div class="card"><span class="num" id="mm">00</span></div>
+      <div class="card"><span class="num" id="ss">00</span></div>
+    </div>
+    <div class="wrap-date">
+      <div class="date">
+        <span id="weekday">토요일</span><span class="bar">|</span><span id="kdate">2026년 11월 28일</span>
+      </div>
+      <div class="date-en" id="edate">SATURDAY · NOVEMBER 28, 2026</div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  var WEEK_KO = ["일요일","월요일","화요일","수요일","목요일","금요일","토요일"];
+  var WEEK_EN = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
+  var MON_EN  = ["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
+
+  var hh = document.getElementById('hh');
+  var mm = document.getElementById('mm');
+  var ss = document.getElementById('ss');
+  var wd = document.getElementById('weekday');
+  var kd = document.getElementById('kdate');
+  var ed = document.getElementById('edate');
+  var el = document.querySelector('.clock');
+  var last = {};
+
+  function setNum(node, val){
+    if(last[node.id] === val) return;
+    var first = last[node.id] === undefined;
+    last[node.id] = val;
+    node.textContent = val;
+    if(!first){
+      node.classList.remove('flip');
+      void node.offsetWidth;
+      node.classList.add('flip');
+    }
+  }
+
+  function pad(n){ return n < 10 ? '0' + n : '' + n; }
+
+  function tick(){
+    var d = new Date();
+    setNum(hh, pad(d.getHours()));
+    setNum(mm, pad(d.getMinutes()));
+    setNum(ss, pad(d.getSeconds()));
+    var key = d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate();
+    if(last.date !== key){
+      last.date = key;
+      wd.textContent = WEEK_KO[d.getDay()];
+      kd.textContent = d.getFullYear() + '년 ' + (d.getMonth() + 1) + '월 ' + d.getDate() + '일';
+      ed.textContent = WEEK_EN[d.getDay()] + ' · ' + MON_EN[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+    }
+  }
+
+  /* 임베드 박스 크기에 맞춰 카드 크기 계산 (가로·세로 모두 꽉 차게, 스크롤 없음) */
+  function layout(){
+    var W = window.innerWidth, H = window.innerHeight;
+    var padX = W * 0.05, padY = H * 0.06;
+    var availW = W - padX * 2;
+    var availH = H - padY * 2;
+
+    /* 날짜 영역이 차지할 높이: 카드 높이의 약 30% */
+    var cardH = availH / 1.34;
+    var cardW = cardH * 0.74;
+
+    var gap = Math.min(W * 0.028, cardH * 0.10);
+    var totalW = cardW * 3 + gap * 2;
+    if(totalW > availW){
+      var k = availW / totalW;
+      cardW *= k; cardH *= k; gap *= k;
+    }
+
+    var root = document.documentElement.style;
+    root.setProperty('--w', cardW.toFixed(2) + 'px');
+    root.setProperty('--h', cardH.toFixed(2) + 'px');
+    root.setProperty('--fs', (cardH * 0.60).toFixed(2) + 'px');
+    root.setProperty('--card-gap', gap.toFixed(2) + 'px');
+    root.setProperty('--radius', (cardH * 0.16).toFixed(1) + 'px');
+    root.setProperty('--gap', (cardH * 0.16).toFixed(1) + 'px');
+    root.setProperty('--ds', Math.max(9, Math.min(cardH * 0.145, 17)).toFixed(2) + 'px');
+    el.style.width = W + 'px';
+  }
+
+  window.addEventListener('resize', layout);
+  window.addEventListener('orientationchange', layout);
+  layout();
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
+</body>
+</html>

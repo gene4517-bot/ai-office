@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Weather</title>
+<style>
+  :root{
+    --bg:#191919;
+    --panel:#212121;
+    --line:rgba(255,255,255,.09);
+    --text:#f2f2f2;
+    --muted:#8b8b8b;
+    --accent:#9ee7c4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{font-size:16px;}
+  html,body{height:100%;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Helvetica Neue",Helvetica,"Apple SD Gothic Neo","Malgun Gothic",Arial,sans-serif;
+    height:100vh;
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+    user-select:none;
+  }
+  .panel{
+    height:100vh;
+    padding:1.1rem 1.25rem 1rem;
+    display:flex;
+    flex-direction:column;
+    gap:.55rem;
+    background:
+      radial-gradient(120% 90% at 100% 0%, rgba(158,231,196,.10) 0%, rgba(25,25,25,0) 55%),
+      linear-gradient(180deg,#1c1c1c 0%,#191919 100%);
+  }
+  .head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.6rem;
+    flex:0 0 auto;
+  }
+  .brand{
+    display:flex;
+    flex-direction:column;
+    gap:.18rem;
+    min-width:0;
+  }
+  .title{
+    font-size:.72rem;
+    font-weight:700;
+    letter-spacing:.18em;
+    color:#e9e9e9;
+    white-space:nowrap;
+  }
+  .sub{
+    font-size:.56rem;
+    letter-spacing:.10em;
+    color:var(--muted);
+    text-transform:uppercase;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .tabs{
+    display:flex;
+    gap:.22rem;
+    flex:0 0 auto;
+  }
+  .tab{
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--muted);
+    font:inherit;
+    font-size:.58rem;
+    font-weight:600;
+    padding:.26rem .52rem;
+    border-radius:999px;
+    cursor:pointer;
+    transition:background .15s,color .15s,border-color .15s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .tab:hover{color:#dcdcdc;}
+  .tab.on{
+    background:rgba(158,231,196,.14);
+    border-color:rgba(158,231,196,.45);
+    color:var(--accent);
+  }
+  .now{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.5rem;
+    flex:1 1 auto;
+    min-height:0;
+    padding:.1rem 0 .15rem;
+  }
+  .cond{
+    display:flex;
+    flex-direction:column;
+    gap:.1rem;
+    min-width:0;
+  }
+  .cond-label{
+    font-size:.62rem;
+    color:var(--muted);
+    letter-spacing:.02em;
+    white-space:nowrap;
+  }
+  .cond-text{
+    font-size:1.02rem;
+    font-weight:700;
+    letter-spacing:-.01em;
+    white-space:nowrap;
+  }
+  .temp-wrap{
+    display:flex;
+    align-items:center;
+    gap:.5rem;
+    flex:0 0 auto;
+  }
+  .temp{
+    font-size:2.35rem;
+    font-weight:800;
+    letter-spacing:-.03em;
+    line-height:1;
+    font-variant-numeric:tabular-nums;
+  }
+  .temp sup{
+    font-size:.42em;
+    font-weight:700;
+    vertical-align:super;
+    top:0;
+  }
+  .now-icon{
+    width:2.1rem;
+    height:2.1rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .now-icon svg{width:100%;height:100%;}
+  .rule{
+    height:1px;
+    background:var(--line);
+    flex:0 0 auto;
+  }
+  .days{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:.3rem;
+    flex:0 0 auto;
+  }
+  .day{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:.3rem;
+    padding:.32rem .1rem;
+    border-radius:.55rem;
+    background:rgba(255,255,255,.028);
+    border:1px solid transparent;
+  }
+  .day.today{
+    background:rgba(158,231,196,.07);
+    border-color:rgba(158,231,196,.22);
+  }
+  .day-w{
+    font-size:.57rem;
+    color:var(--muted);
+    letter-spacing:.04em;
+  }
+  .day.today .day-w{color:var(--accent);font-weight:700;}
+  .day-ic{width:1.25rem;height:1.25rem;}
+  .day-ic svg{width:100%;height:100%;}
+  .hi{font-size:.68rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;}
+  .lo{font-size:.6rem;color:var(--muted);line-height:1;font-variant-numeric:tabular-nums;}
+  .foot{
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    flex:0 0 auto;
+    min-height:.6rem;
+  }
+  .credit{font-size:.42rem;color:#525252;letter-spacing:.06em;}
+  .err{
+    color:#e8a0a0;
+    font-size:.62rem;
+    cursor:pointer;
+    text-decoration:underline dotted;
+  }
+  .skel{opacity:.35;}
+</style>
+</head>
+<body>
+<div class="panel">
+  <div class="head">
+    <div class="brand">
+      <div class="title">SOUTH KOREA WEATHER</div>
+      <div class="sub" id="sub">GYEONGGI · ANSEONG</div>
+    </div>
+    <div class="tabs">
+      <button class="tab on" data-city="anseong" type="button">안성</button>
+      <button class="tab" data-city="changwon" type="button">창원</button>
+    </div>
+  </div>
+
+  <div class="now">
+    <div class="cond">
+      <div class="cond-label" id="loc">경기 안성</div>
+      <div class="cond-text" id="cond">불러오는 중…</div>
+    </div>
+    <div class="temp-wrap">
+      <div class="now-icon" id="nowIcon"></div>
+      <div class="temp" id="temp">–<sup>°</sup></div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <div class="days" id="days"></div>
+
+  <div class="foot"><span class="credit" id="credit">OPEN-METEO</span></div>
+</div>
+
+<script>
+(function(){
+  var CITIES = {
+    anseong:  {name:'안성', loc:'경기 안성', sub:'GYEONGGI · ANSEONG',  lat:37.0080, lon:127.2797},
+    changwon: {name:'창원', loc:'경남 창원', sub:'GYEONGNAM · CHANGWON', lat:35.2280, lon:128.6811}
+  };
+  var WEEK = ['일','월','화','수','목','금','토'];
+  var CODE_KO = {
+    0:'맑음',1:'대체로 맑음',2:'구름 조금',3:'흐림',45:'안개',48:'안개',
+    51:'약한 이슬비',53:'이슬비',55:'이슬비',56:'어는 이슬비',57:'어는 이슬비',
+    61:'약한 비',63:'비',65:'강한 비',66:'어는 비',67:'어는 비',
+    71:'약한 눈',73:'눈',75:'많은 눈',77:'싸락눈',
+    80:'소나기',81:'소나기',82:'강한 소나기',85:'소낙눈',86:'소낙눈',
+    95:'천둥번개',96:'천둥번개',99:'천둥번개'
+  };
+
+  var current = 'anseong';
+  var cache = {};           /* city -> {at:ms, data:{now, days}} */
+  var TTL = 10 * 60 * 1000;
+  var busy = false;
+
+  var elSub = document.getElementById('sub');
+  var elLoc = document.getElementById('loc');
+  var elCond = document.getElementById('cond');
+  var elTemp = document.getElementById('temp');
+  var elNowIcon = document.getElementById('nowIcon');
+  var elDays = document.getElementById('days');
+  var elCredit = document.getElementById('credit');
+
+  /* ---------- 아이콘 ---------- */
+  function svg(inner){
+    return '<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">' + inner + '</svg>';
+  }
+  function sunShape(cx,cy,r,col){
+    var s = '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+(col||'#FFD166')+'"/>';
+    var rim = r + 3.2, ro = r + 6.4;
+    for(var i=0;i<8;i++){
+      var a = i * Math.PI / 4, c = Math.cos(a), n = Math.sin(a);
+      s += '<line x1="'+(cx+c*rim).toFixed(2)+'" y1="'+(cy+n*rim).toFixed(2)+'" x2="'+(cx+c*ro).toFixed(2)+'" y2="'+(cy+n*ro).toFixed(2)+'" stroke="'+(col||'#FFD166')+'" stroke-width="2.1" stroke-linecap="round"/>';
+    }
+    return s;
+  }
+  var CLOUD = 'M10.2 23.6h12.9a4.05 4.05 0 0 0 .35-8.07 6.25 6.25 0 0 0-11.78-1.42A4.62 4.62 0 0 0 10.2 23.6Z';
+  function cloudShape(y,col,dim){
+    return '<path d="'+CLOUD+'" fill="'+(col||'#cfd8e3')+'" transform="translate(0,'+(y||0)+')" opacity="'+(dim||1)+'"/>';
+  }
+  function rainDrops(y){
+    var s = '';
+    [-3,-0.4,2.2].forEach(function(dx,i){
+      var x = 13 + i*4 + dx*0.15;
+      s += '<line x1="'+x+'" y1="'+(24.6+y)+'" x2="'+(x-1.6)+'" y2="'+(28.6+y)+'" stroke="#7fb8ff" stroke-width="1.9" stroke-linecap="round"/>';
+    });
+    return s;
+  }
+  function snowDots(y){
+    var s = '';
+    [12.4,16.8,21.2].forEach(function(x){
+      s += '<circle cx="'+x+'" cy="'+(27+y)+'" r="1.25" fill="#cfe8ff"/>';
+    });
+    return s;
+  }
+  function iconFor(code, isDay){
+    var c = Number(code);
+    if(c === 0) return svg(sunShape(16,16,6.2));
+    if(c === 1 || c === 2){
+      return svg(sunShape(11.6,11.2,4.3) + cloudShape(3.2,'#cfd8e3',0.98));
+    }
+    if(c === 3) return svg(cloudShape(0,'#b9c4d0'));
+    if(c === 45 || c === 48){
+      return svg(cloudShape(-1.2,'#b9c4d0') +
+        '<line x1="7" y1="26.6" x2="25" y2="26.6" stroke="#9aa6b2" stroke-width="1.8" stroke-linecap="round"/>' +
+        '<line x1="9.5" y1="29.8" x2="22.5" y2="29.8" stroke="#7f8b97" stroke-width="1.6" stroke-linecap="round"/>');
+    }
+    if((c>=51&&c<=57) || (c>=61&&c<=67)) return svg(cloudShape(-2.2) + rainDrops(0));
+    if((c>=71&&c<=77) || c===85 || c===86) return svg(cloudShape(-2.4) + snowDots(-0.4));
+    if(c>=80&&c<=82) return svg(cloudShape(-2.2) + rainDrops(-0.4));
+    if(c>=95) return svg(cloudShape(-2.0) + '<path d="M16.4 24.4l-3.2 5.1h2.8l-1.5 4.2 4.6-5.6h-2.9l1.9-3.7z" fill="#FFD166"/>');
+    return svg(cloudShape(0,'#b9c4d0'));
+  }
+
+  /* ---------- 날씨 코드 → 상태 ---------- */
+  function isWet(c){ return (c>=51&&c<=67)||(c>=80&&c<=82)||(c>=95); }
+  function isSnow(c){ return (c>=71&&c<=77)||c===85||c===86; }
+
+  /* ---------- 렌더 ---------- */
+  function render(city, data){
+    var c = CITIES[city];
+    elSub.textContent = c.sub;
+    elLoc.textContent = c.loc;
+
+    var n = data.now;
+    elTemp.innerHTML = Math.round(n.temp) + '<sup>°</sup>';
+    elCond.textContent = CODE_KO[n.code] || '—';
+    elNowIcon.innerHTML = iconFor(n.code, n.isDay);
+
+    var html = '';
+    data.days.forEach(function(d, i){
+      var dt = new Date(d.date + 'T00:00:00');
+      var label = i === 0 ? '오늘' : WEEK[dt.getDay()];
+      html += '<div class="day' + (i === 0 ? ' today' : '') + '">' +
+                '<div class="day-w">' + label + '</div>' +
+                '<div class="day-ic">' + iconFor(d.code, true) + '</div>' +
+                '<div class="hi">' + Math.round(d.hi) + '°</div>' +
+                '<div class="lo">' + Math.round(d.lo) + '°</div>' +
+              '</div>';
+    });
+    elDays.innerHTML = html;
+    elCredit.textContent = 'OPEN-METEO';
+    elCredit.className = 'credit';
+  }
+
+  function renderLoading(){
+    elTemp.innerHTML = '–<sup>°</sup>';
+    elCond.textContent = '불러오는 중…';
+    elNowIcon.innerHTML = iconFor(0, true);
+  }
+
+  function renderError(){
+    elCond.innerHTML = '<span class="err" id="retry">날씨를 불러오지 못했어요 · 다시 시도</span>';
+    elCredit.textContent = 'OPEN-METEO';
+    var r = document.getElementById('retry');
+    if(r) r.onclick = function(){ delete cache[current]; load(current, true); };
+  }
+
+  /* ---------- 불러오기 ---------- */
+  function url(c){
+    return 'https://api.open-meteo.com/v1/forecast?latitude=' + c.lat + '&longitude=' + c.lon +
+      '&current=temperature_2m,weather_code,is_day' +
+      '&daily=weather_code,temperature_2m_max,temperature_2m_min' +
+      '&timezone=Asia%2FSeoul&forecast_days=6&wind_speed_unit=ms';
+  }
+
+  function load(city, force){
+    var c = CITIES[city];
+    var hit = cache[city];
+    if(!force && hit && (Date.now() - hit.at) < TTL){
+      render(city, hit.data);
+      return;
+    }
+    if(city === current){ renderLoading(); }
+    busy = true;
+
+    var ctrl = ('AbortController' in window) ? new AbortController() : null;
+    var to = ctrl ? setTimeout(function(){ ctrl.abort(); }, 9000) : null;
+
+    fetch(url(c), ctrl ? {signal: ctrl.signal, cache:'no-store'} : {cache:'no-store'})
+      .then(function(r){
+        if(!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(j){
+        if(to) clearTimeout(to);
+        var d = j.daily || {}, cur = j.current || {};
+        if(!d.time || !d.temperature_2m_max) throw new Error('bad payload');
+        var days = d.time.slice(0, 5).map(function(t, i){
+          return {
+            date: t,
+            code: d.weather_code ? d.weather_code[i] : 3,
+            hi: d.temperature_2m_max[i],
+            lo: d.temperature_2m_min[i]
+          };
+        });
+        var data = {
+          now: {temp: cur.temperature_2m, code: cur.weather_code, isDay: cur.is_day === 1},
+          days: days
+        };
+        cache[city] = {at: Date.now(), data: data};
+        if(city === current) render(city, data);
+      })
+      .catch(function(){
+        if(to) clearTimeout(to);
+        if(city === current) renderError();
+      })
+      .then(function(){ busy = false; });
+  }
+
+  /* ---------- 탭 ---------- */
+  document.querySelectorAll('.tab').forEach(function(b){
+    b.addEventListener('click', function(){
+      var city = b.getAttribute('data-city');
+      if(city === current) return;
+      current = city;
+      document.querySelectorAll('.tab').forEach(function(x){
+        x.classList.toggle('on', x === b);
+      });
+      load(city, false);
+    });
+  });
+
+  /* ---------- 임베드 크기에 맞춘 글자 크기 ---------- */
+  function layout(){
+    var W = window.innerWidth, H = window.innerHeight;
+    var base = Math.min(W / 23, H / 12.2);
+    base = Math.max(9, Math.min(base, 30));
+    document.documentElement.style.fontSize = base.toFixed(2) + 'px';
+  }
+  window.addEventListener('resize', layout);
+  window.addEventListener('orientationchange', layout);
+
+  layout();
+  load(current, false);
+  setInterval(function(){ load(current, true); }, TTL);
+  document.addEventListener('visibilitychange', function(){
+    if(!document.hidden) load(current, false);
+  });
+})();
+</script>
+</body>
+</html>
